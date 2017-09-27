@@ -32,7 +32,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num', 'isBtn'],
+    props: ['path', 'num', 'isBtn', 'idx'],
     data() {
       return {
         isShow: false,
@@ -51,12 +51,17 @@ export default {
         this.curPath = datas.url
         var data = {
           index: this.num,
-          url: datas.url
+          url: datas.url,
+          id: this.idx
         }
         this.$emit('changeImg', data)
       },
       deleImg () {
-        this.$emit('delImg', this.num)
+        var data = {
+          index: this.num,
+          id: this.idx
+        }
+        this.$emit('delImg', data)
       },
       postImg (e) {
         util.upFile(e).then(res => {
@@ -65,7 +70,8 @@ export default {
           this.curPath = imgUrl
           var data = {
             index: this.num,
-            url: this.curPath
+            url: this.curPath,
+            id: this.idx
           }
           this.isShow = false
           this.$emit('changeImg', data)
@@ -82,7 +88,8 @@ export default {
         this.curPath = ''
         var data = {
           index: this.num,
-          url: ''
+          url: '',
+          id: this.idx
         }
         this.$emit('changeImg', data)
       }

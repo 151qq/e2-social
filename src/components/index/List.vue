@@ -15,13 +15,14 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.id, item3.tmpCode, index1, index2, index3)">
+                    @click="getInfo(item3.id, item3.tplCode, index1, index2, index3)">
                   <img class="img-box" :src="item3.imgUrl">
                   <div class="p-box">
                     <span class="title">{{item3.title}}</span>
                     <span class="des">{{item3.address}}</span>
                     <div>
-                      <img @click.stop="delItem(item3.id, index1, index2, index3)" src="../../assets/images/delete-icon.png">
+                      <img v-if="!item3.state" @click.stop="submitItem(item3.id, item3.html5PageCode, index1, index2, index3)" src="../../assets/images/yfb.png">
+                      <img @click.stop="delItem(item3.id, item3.html5PageCode, index1, index2, index3)" src="../../assets/images/delete-icon.png">
                     </div>
                   </div>
                 </div>
@@ -114,27 +115,29 @@
           this.treeData = res.result.datas
           if (this.treeData[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].id
-            let tmpCode = this.treeData[0].children[0].children[0].tmpCode
+            let tplCode = this.treeData[0].children[0].children[0].tplCode
+            let fileCode = this.treeData[0].children[0].children[0].fileCode
 
             let data = {
               id: id,
-              tmpCode: tmpCode
+              tplCode: tplCode
             }
             this.$emit('getInfo', data)
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
-            localStorage.setItem("tmpCode", tmpCode)
+            localStorage.setItem("tplCode", tplCode)
+            localStorage.setItem("fileCode", fileCode)
             this.isfirst = false
           }
         })
       },
-      delItem (id, index1, index2, index3) {
+      delItem (id, html5PageCode, index1, index2, index3) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.deleteById(id, index1, index2, index3)
+          this.deleteById(id, html5PageCode, index1, index2, index3)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -142,7 +145,21 @@
           })       
         })
       },
-      getInfo (id, tmpCode, index1, index2, index3) {
+      submitItem (id, html5PageCode, index1, index2, index3) {
+        this.$confirm('此操作将发布该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.submitById(id, html5PageCode, index1, index2, index3)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          })       
+        })
+      },
+      getInfo (id, tplCode, index1, index2, index3) {
         if (this.curIndex === index3) {
           return false
         }
@@ -150,19 +167,20 @@
         this.activeName = index1 + '-' + index2 + '-' + index3
         var data = {
           id: id,
-          tmpCode: tmpCode
+          tplCode: tplCode
         }
         this.$emit('getInfo', data)
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
-        localStorage.setItem("tmpCode", tmpCode)
+        localStorage.setItem("tplCode", tplCode)
       },
-      deleteById (id, index1, index2, index3) {
+      deleteById (id, html5PageCode, index1, index2, index3) {
         util.request({
           method: 'post',
-          interface: 'delete' + this.$route.name,
+          interface: 'deleteDraftFile',
           data: {
-            id: id
+            id: id,
+            html5PageCode: html5PageCode
           }
         }).then(res => {
           if (this.treeData[index1].children[index2].children.length === 1) {
@@ -183,6 +201,22 @@
           this.$message({
             type: 'success',
             message: '删除成功!'
+          })
+        })
+      },
+      submitById (id, html5PageCode, index1, index2, index3) {
+        util.request({
+          method: 'post',
+          interface: 'publishArticle',
+          data: {
+            id: id,
+            html5PageCode: html5PageCode
+          }
+        }).then(res => {
+          this.treeData[index1].children[index2].children[index3].state = 1
+          this.$message({
+            type: 'success',
+            message: '发布成功!'
           })
         })
       }
@@ -269,19 +303,20 @@
               display: none;
               position: absolute;
               right: -20px;
-              top: 22px;
-              width: 16px;
+              top: 10px;
+              width: 48px;
               height: 16px;
               cursor: pointer;
 
               img {
-                display: block;
+                float: right;
                 width: 16px;
                 height: 16px;
-              }
+                margin-left: 8px;
 
-              &:hover {
-                opacity: 0.8;
+                &:hover {
+                  opacity: 0.8;
+                }
               }
             }
           }

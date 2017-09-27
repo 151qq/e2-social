@@ -117,12 +117,13 @@ export default {
               method: 'get',
               interface: 'reportDetail',
               data: {
-                id: localStorage.getItem("id")
+                id: localStorage.getItem("id"),
+                fileCode: localStorage.getItem("fileCode")
               }
           }).then(res => {
-              this.title = res.result.datas.title
-              this.investor = res.result.datas.investor
-              this.articleinfo = res.result.datas.article
+              this.title = res.result.result.title
+              this.investor = res.result.result.investor
+              this.articleinfo = res.result.result.fileAreaList
           })
         },
         getArticles () {
@@ -138,7 +139,6 @@ export default {
           })
         },
         checkTitle () {
-          console.log(this.title.length)
           if (this.title.length > 25) {
             this.$message({
               message: '最多只能输入25个字符',
@@ -168,7 +168,7 @@ export default {
 
             util.request({
                 method: 'post',
-                interface: 'savehouse',
+                interface: 'draftArticle',
                 data: formData
             }).then(res => {
                 console.log(res)

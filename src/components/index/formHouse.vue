@@ -286,6 +286,7 @@
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                 @click="saveData('public')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyle" title="物业周围环境图片" name="7">
@@ -293,6 +294,7 @@
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                 @click="saveData('surround')">保存</el-button>
+            <div class="clear"></div>
           </el-collapse-item>
         </el-collapse>
   
@@ -454,16 +456,17 @@ export default {
               this.surround = res.result.datas.surround
           })
         },
-        getArticle () {
+        getArticle () {     
           util.request({
               method: 'get',
               interface: 'articleHouse',
               data: {
-                id: localStorage.getItem("id")
+                id: localStorage.getItem("id"),
+                fileCode: localStorage.getItem("fileCode")
               }
           }).then(res => {
-              this.investor = res.result.datas.investor
-              this.articleinfo = res.result.datas.article
+              this.investor = res.result.result.investor
+              this.articleinfo = res.result.result.fileAreaList
           })
         },
         getChanges () {
@@ -522,7 +525,7 @@ export default {
 
             util.request({
                 method: 'post',
-                interface: 'savehouse',
+                interface: 'draftArticle',
                 data: formData
             }).then(res => {
                 console.log(res)

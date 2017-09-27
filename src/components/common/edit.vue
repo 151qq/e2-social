@@ -3,37 +3,37 @@
       <section v-html="templateBg"></section>
       <ul id="articleArea" name="content" class="list-group">
         <li class="list-group-item" v-for="(item, index) in articleList" :data-id="index"> 
-            <div class="show-box" v-if="item.type === 'upload'">
+            <div class="show-box" v-if="item.areaTxt.code === 'upload'">
                 <div v-if="disabled">
-                    <upload :path="item.imgUrl" :num="index" :is-btn.sync="disabled" @delImg="delImg" @changeImg="changeImg"></upload>
+                    <upload :path="item.areaTxt.imgUrl" :num="index" :idx="item.id" :is-btn.sync="disabled" @delImg="delImg" @changeImg="changeImg"></upload>
                 </div>
-                <img @click.prevent="preHandl" v-if="!disabled && item.imgUrl"
-                        :src="item.imgUrl" :style="imgStyle">
-                <img @click.prevent="preHandl" v-if="!disabled && !item.imgUrl"
+                <img @click.prevent="preHandl" v-if="!disabled && item.areaTxt.imgUrl"
+                        :src="item.areaTxt.imgUrl" :style="imgStyle">
+                <img @click.prevent="preHandl" v-if="!disabled && !item.areaTxt.imgUrl"
                         src="../../assets/images/img-default.jpg" :style="imgStyle">
             </div>
 
-            <div class="show-box btn-show" v-if="item.type === 'text'">
+            <div class="show-box btn-show" v-if="item.areaTxt.code === 'text'">
                 <ueditor v-if="disabled" :editor-id="'editor' + index" :index="index" :content="item.content"
                         @setContent="setContent"></ueditor>
-                <div v-show="!disabled && item.content" v-html="item.content"></div>
-                <div v-show="!disabled && !item.content">编辑中的文本样式</div>
+                <div v-show="!disabled && item.areaTxt.html" v-html="item.areaTxt.html"></div>
+                <div v-show="!disabled && !item.areaTxt.html">编辑中的文本样式</div>
                 <div class="btn-hover" v-if="disabled">
                     <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteText(index)">删除</el-button>
                 </div>
             </div>
 
-            <div class="show-box btn-show" v-if="item.type === 'title'">
-                <input v-if="disabled && item.style" type="text" v-model="item.title"
-                        @blur="titleBlur(item, index)" :style="item.style" placeholder="编辑中的内标题样式">
-                <div v-if="!disabled && item.title" :style="item.style">{{item.title}}</div>
-                <div v-if="!disabled && !item.title" :style="item.style">编辑中的内标题样式</div>
-                <img v-if="!item.style && !disabled" class="img-default"
-                        @click.prevent="setStyle(index, item.style)"
+            <div class="show-box btn-show" v-if="item.areaTxt.code === 'title'">
+                <input v-if="disabled && item.areaTxt.style" type="text" v-model="item.areaTxt.title"
+                        @blur="titleBlur(item.areaTxt, index)" :style="item.areaTxt.style" placeholder="编辑中的内标题样式">
+                <div v-if="!disabled && item.areaTxt.title" :style="item.areaTxt.style">{{item.areaTxt.title}}</div>
+                <div v-if="!disabled && !item.areaTxt.title" :style="item.areaTxt.style">编辑中的内标题样式</div>
+                <img v-if="!item.areaTxt.style && !disabled" class="img-default"
+                        @click.prevent="setStyle(index, item.areaTxt.style)"
                         src="../../assets/images/title-default.jpg">
-                <div class="btns" v-if="item.style && disabled">
+                <div class="btns" v-if="item.areaTxt.style && disabled">
                     <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleteTitle(index)">
-                    <img src="../../assets/images/pen-icon.png" @click="setStyle(index, item.style)">
+                    <img src="../../assets/images/pen-icon.png" @click="setStyle(index, item.areaTxt.style)">
                     <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetTitle(index)">
                 </div>
             </div>
@@ -150,7 +150,6 @@ export default {
         addTem (type) {
             switch (type) {
                 case 'upload':
-                    console.log('upload')
                     this.disabled = true
                     this.sortable.option('disabled', true)
                     var data = {
@@ -161,7 +160,6 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'text':
-                    console.log('text')
                     this.disabled = true
                     this.sortable.option('disabled', true)
                     var data = {
@@ -171,7 +169,6 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'title':
-                    console.log('title')
                     this.disabled = true
                     this.sortable.option('disabled', true)
                     var data = {
@@ -183,7 +180,6 @@ export default {
                     this.articleList.push(data)
                     break
                 case 'change':
-                    console.log(this.sortable, 's')
                     this.sortable.option('disabled', !this.sortable.option('disabled'))
                     this.disabled = !this.disabled
                     
@@ -194,23 +190,25 @@ export default {
                             this.articleList = this.articleSave
                         }, 0)
                     }
-                    console.log(this.articleList, 'change')
                     break
             }
         },
-        delImg (index) {
-            this.articleList.splice(index, 1)
+        delImg (data) {
+            this.articleList.splice(data.index, 1)
         },
         changeImg (data) {
             var imgData = {
-                type: 'upload',
-                imgUrl: data.url,
-                content: '<img src="' + data.url + '" style="' + this.imgStyle +'">'
+                id: data.id,
+                areaTxt: {
+                    code: 'upload',
+                    imgUrl: data.url,
+                    html: '<img src="' + data.url + '" style="' + this.imgStyle +'">'
+                }
             }
             this.articleList.splice(data.index, 1, imgData)
         },
         setContent (data) {
-            this.articleList[data.index].content = data.content
+            this.articleList[data.index].areaTxt.html = data.content
          
         },
         deleteText (index) {
@@ -238,7 +236,7 @@ export default {
             this.curStyle = this.titleLists[index].style
         },
         confirmSelect () {
-            this.articleList[this.titleIndex].style = this.curStyle
+            this.articleList[this.titleIndex].areaTxt.style = this.curStyle
             this.isStyle = false
         },
         closeSelect () {
@@ -257,8 +255,8 @@ export default {
             this.articleList.splice(index, 1, data)
         },
         titleBlur (item, index) {
-            this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
-            this.articleList[index].style = item.style            
+            this.articleList[index].areaTxt.content = '<div style="' + item.style + '">' + item.title + '</div>'
+            this.articleList[index].areaTxt.style = item.style            
         },
         // 获取添加模版
         getTemplate () {
@@ -266,14 +264,14 @@ export default {
                 method: 'get',
                 interface: 'getTemplate',
                 data: {
-                    tmpCode: localStorage.getItem("tmpCode")
+                    tplCode: localStorage.getItem("tplCode")
                 }
             }).then(res => {
                 this.templateBg = res.result.datas.bgTem
                 this.titleLists = res.result.datas.titles
                 setTimeout(() => {
                     $('.bodyMain').html($('#articleArea'))
-                }, 0)  
+                }, 0)
             })
         },
         preHandl () {}

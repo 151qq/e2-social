@@ -45,7 +45,7 @@ export default {
 
       util.request({
         method: 'post',
-        interface: 'taskList',
+        interface: 'changePassword',
         data: formData
       }).then(res => {
         this.$message({

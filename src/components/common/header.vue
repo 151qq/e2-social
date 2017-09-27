@@ -75,8 +75,6 @@
       </el-popover>
     </div>
 
-    <div class="save-box" @click="saveData"></div>
-
     <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
     <password :dialog-form-visible="dialogFormVisible"></password>
   </section>
@@ -137,9 +135,6 @@ export default {
         this.$router.push(path)
       })
     },
-    saveData () {
-      this.$emit('savedata')
-    },
     getUserInfo () {
       util.request({
         method: 'get',
@@ -188,7 +183,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .add-mess {
     .a-box {
       display: block;
@@ -219,7 +214,7 @@ export default {
     background: #000000;
     color: #fff;
     padding: 0 20px;
-    z-index: 99;
+    z-index: 99999;
 
     .logo-box {
       float: left;

@@ -49,7 +49,7 @@ Vue.use(Element)
 
 // 实例化VueRouter
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   routes
 })
 
