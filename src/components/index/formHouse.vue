@@ -73,6 +73,17 @@
                     <span>容积率</span>
                     <el-input-number class="input-box" size="small" :step="0.01" :min="0" :max="1" v-model="base.ratio"></el-input-number>
                 </section>
+                <section class="baseInput rightF">
+                    <span>星标</span>
+                    <el-select class="input-box" v-model="base.star" placeholder="请选择">
+                        <el-option
+                          v-for="item in stars"
+                          :key="item"
+                          :label="item.text"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
+                </section>
                 <section class="baseInput bigB">
                     <span>业主信息</span>
                     <el-input
@@ -325,6 +336,7 @@ export default {
               massif: '',
               year: 0,
               ratio: 1,
+              star: 1,
               owner: '',
               property: '',
               rent: '',
@@ -365,6 +377,16 @@ export default {
                 hold: [],
                 measure: []
             },
+            stars: [
+              {
+                value: 0,
+                text: '否'
+              },
+              {
+                value: 1,
+                text: '是'
+              }
+            ],
             benchList: [],
             activeNames: ['1'],
             pickerPre: {
