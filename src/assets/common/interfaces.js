@@ -14,6 +14,8 @@ export default {
         "draftArticle": platform + "siteEdit/draftArticle.json",          //保存草草
         "publishArticle": platform + "siteEdit/publishArticle.json",       //发布
         "changePassword": platform + "changePassword.json",         //修改密码
+        "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
+        "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
         /**
         * 我的任务列表 get
         * pageSize 每页多少条
