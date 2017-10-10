@@ -21,7 +21,7 @@
             <edit-box :article-in="articleinfo"></edit-box>
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('articleinfo')">保存</el-button>
+                @click="saveArticle">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
           <div class="line-bold"></div>
@@ -161,11 +161,25 @@ export default {
               formData.index = index
             }
 
-            if (type === 'articleinfo') {
-              formData.title = this.title
-              formData.investor = this.investor
+            util.request({
+                method: 'post',
+                interface: 'draftArticle',
+                data: formData
+            }).then(res => {
+                console.log(res)
+            })
+        },
+        saveArticle () {
+            var formData = {
+                id: localStorage.getItem("id"),
+                type: this.$route.name,
+                data: this.articleinfo,
+                investor: this.investor,
+                title: this.title
             }
 
+            console.log(JSON.stringify(formData))
+            
             util.request({
                 method: 'post',
                 interface: 'draftArticle',
