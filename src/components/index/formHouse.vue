@@ -28,10 +28,10 @@
                         <span>所属商圈</span>
                         <el-select class="input-box" v-model="base.mall" placeholder="请选择">
                             <el-option
-                                    v-for="item in malls"
-                                    :key="item.id"
-                                    :label="item.typeName"
-                                    :value="item.id">
+                                    v-for="(item,index) in malls"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.nodeCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -554,7 +554,9 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    console.log(res)
+                    if (type === 'base') {
+                        localStorage.setItem("id", res.result.result.id)
+                    }
                 })
             },
             saveArticle () {
@@ -599,8 +601,8 @@
             },
             drawMap (mapInfo) {
                 if (mapInfo) {
-                    base.city = mapInfo.city
-                    base.point = {
+                    this.base.city = mapInfo.city
+                    this.base.point = {
                         lng: mapInfo.point.lng,
                         lat: mapInfo.point.lat
                     }
@@ -608,7 +610,6 @@
                 } else {
                     var point = new window.BMap.Point(this.base.point.lng, this.base.point.lat)
                 }
-
                 this.getMalls()
                 this.map.clearOverlays()
                 this.map.panTo(point)
@@ -617,7 +618,7 @@
             },
             getMalls () {
                 util.request({
-                    method: 'get',
+                    method: 'post',
                     interface: 'malls',
                     data: {
                         city: this.base.city

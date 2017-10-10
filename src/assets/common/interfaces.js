@@ -162,12 +162,14 @@ export default {
         /**
         * 获取商圈list get
         * city 要过滤的数据
+         * '/static/api/property/malls.json'
         */
-        malls: '/static/api/property/malls.json',
+        malls: platform +'houses/housesTrade.json',
         /**
         * 地图过滤条件 get
+         * '/static/api/property/typeMap.json'
         */
-        typeMap: '/static/api/property/typeMap.json',
+        typeMap: platform+'houses/dictionary.json',
         /**
         * 楼盘对标列表 get
         * type 列表类型
