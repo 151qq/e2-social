@@ -1,5 +1,18 @@
 {
-  "statusCode": 0,
-  "datas": ["投资顾问一", "投资顾问二", "投资顾问三"],
-  "mess": ""
+    "statusCode": 0,
+    "datas": [
+        {
+            "id": 0,
+            "typeName": "投资顾问一"
+        },
+        {
+            "id": 1,
+            "typeName": "投资顾问二"
+        },
+        {
+            "id": 2,
+            "typeName": "投资顾问三"
+        }
+    ],
+    "mess": ""
 }

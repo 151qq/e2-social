@@ -49,12 +49,16 @@ export default {
             axios.interceptors.response.use(function (response) {
 
                     let status = response.data.success;
+                    if(status == undefined){
+                        status == 200
+                    }
                     console.log("进入状态" + status);
                     if (status == 203) { //无认证状态
                         console.log("进入203状态")
-                        window.location.href = "/profile.html";
+                        window.location.href = "/login.html";
                         return;
                     }
+
                     common.removeLoading();
                     return response;
                 }

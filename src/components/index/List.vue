@@ -11,14 +11,15 @@
         <template slot="title">{{item1.label}}</template>
         <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
           <template slot="title">{{item2.label}}</template>
-          <el-menu-item v-for="(item3, index3) in item2.children" 
+          <el-menu-item v-for="(item3, index3) in item2.children"
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
                     @click="getInfo(item3.id, item3.tplCode, index1, index2, index3)">
                   <img class="img-box" :src="item3.imgUrl">
+                  <!--<img class="img-box" src="/static/images/report1.png" >-->
                   <div class="p-box">
-                    <span class="title">{{item3.title}}</span>
+                    <span class="title">{{item3.label}}</span>
                     <span class="des">{{item3.address}}</span>
                     <div>
                       <img v-if="!item3.state" @click.stop="submitItem(item3.id, item3.html5PageCode, index1, index2, index3)" src="../../assets/images/yfb.png">
@@ -26,7 +27,6 @@
                     </div>
                   </div>
                 </div>
-
           </el-menu-item>
         </el-submenu>
       </el-submenu>
@@ -36,10 +36,10 @@
 </template>
 <script>
   import util from '../../assets/common/util'
+  import interfaces from '../../assets/common/interfaces';
   export default{
     data(){
       return {
-        curIndex: 0,
         isfirst: true,
         filterText: '',
         treeData: [],
@@ -107,19 +107,20 @@
   		},
       loadList(){
         var formData = {}
-        util.request({
+          util.request({
           method: 'get',
+          //interface: 'houseTree',
           interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
-          this.treeData = res.result.datas
+          this.treeData = res.result.result
           if (this.treeData[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].id
             let tplCode = this.treeData[0].children[0].children[0].tplCode
             let fileCode = this.treeData[0].children[0].children[0].fileCode
 
             let data = {
-              id: id,
+              id: id!=null || id!='undefine'?id:0,
               tplCode: tplCode
             }
             this.$emit('getInfo', data)
@@ -160,11 +161,12 @@
         })
       },
       getInfo (id, tplCode, index1, index2, index3) {
-        if (this.curIndex === index3) {
+        
+        var curIndex = index1 + '-' + index2 + '-' + index3
+        if (this.activeName === curIndex) {
           return false
         }
-        this.curIndex = index3
-        this.activeName = index1 + '-' + index2 + '-' + index3
+        this.activeName = curIndex
         var data = {
           id: id,
           tplCode: tplCode
@@ -175,6 +177,7 @@
         localStorage.setItem("tplCode", tplCode)
       },
       deleteById (id, html5PageCode, index1, index2, index3) {
+        var curIndex = index1 + '-' + index2 + '-' + index3
         util.request({
           method: 'post',
           interface: 'deleteDraftFile',
@@ -192,7 +195,7 @@
           } else {
             this.treeData[index1].children[index2].children.splice(index3, 1)
           }
-          if (this.curIndex === index3) {
+          if (this.activeName === curIndex) {
             let id = this.treeData[0].children[0].children[0].id
             this.$emit('getInfo', id)
             this.activeName = '0-0-0'

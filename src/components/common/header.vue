@@ -29,10 +29,10 @@
           <div class="mess-list">
             <section v-for="item in noticeList">
               <div class="top">
-                <img :src="item.imgUrl">
+                <img :src="item.taskIcon">
                 <p>
-                  <span class="people">{{item.name}}</span>
-                  <span>{{item.company}}</span>
+                  <span class="people">{{item.taskTitle}}</span>
+                  <span>{{item.taskDescribe}}</span>
                 </p>
               </div>
               <div class="mid">
@@ -155,8 +155,9 @@ export default {
         interface: 'notice',
         data: formData
       }).then(res => {
-        this.noticeList = res.result.datas
-        this.page.total = Number(res.result.total)
+          console.log(res)
+        this.noticeList = res.result.result
+        this.page.total = Number(res.result.pageNumber)
       })
     },
     changePage (value) {

@@ -37,14 +37,14 @@
             const _this = this;
             this.editor = UE.getEditor(this.editorId, this.config)
             this.editor.addListener("ready", function () {
-                _this.editor.setContent(_this.content)
+                _this.editor.setContent(_this.content!=null?_this.content:"")
             })
             this.editor.addListener("blur", function () {
                 var data = {
                     content: _this.editor.getContent(),
                     index: _this.index
                 }
-                _this.$emit('setContent', data)
+                _this.$emit('setContent', data!=null?data:"")
             })
         },
         destroyed() {

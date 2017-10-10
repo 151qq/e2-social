@@ -8,7 +8,7 @@
         "lat": 39.918
       },
       "city": "北京",
-      "mall": "商圈一",
+      "mall": 0,
       "proType": "物业类型一",
       "name": "北京佳程广场",
       "type": "北京佳程广场",
@@ -30,7 +30,7 @@
       "floor": 20,
       "holding": "北京佳程",
       "traffic": "临近地铁",
-      "benchmark": ["瑞信投资物业报告定制服务", "瑞信投资报告定制服务"]
+      "benchmark": [0, 1]
     },
     "changes": [
         {

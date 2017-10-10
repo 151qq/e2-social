@@ -20,8 +20,9 @@ export default {
         * 我的任务列表 get
         * pageSize 每页多少条
         * currentPage 当前页数
+         * '/static/api/common/notice.json'
         */
-        notice: '/static/api/common/notice.json',
+        notice: platform +'task/list.json',
         /**
         * 我的任务列表 get
         * tmpCode 模版号
@@ -51,8 +52,14 @@ export default {
         getInfoId: '/static/api/report/getInfoId.json',
         /**
         * 楼盘列表 get
+         * '/static/api/property/houseTree.json'
         */
-        houseTree: '/static/api/property/houseTree.json',
+        houseTree: platform +'houses/houseTree.json',
+
+        /**
+         * 楼盘基本信息 post
+         */
+        houseInfo: platform +'houses/info.json',
         /**
         * 楼盘列表 get
         * id 楼盘序列标识
@@ -87,17 +94,18 @@ export default {
         * 物业公共区域图片 get
         * id 楼盘序列标识
         */
-        public: '/static/api/property/public.json',
+        public: platform +'houses/image/public.json',
         /**
         * 物业外观图片 get
         * id 楼盘序列标识
+         * '/static/api/property/appearance.json'
         */
-        appearance: '/static/api/property/appearance.json',
+        appearance: platform +'houses/image/appearance.json',
         /**
         * 物业周围环境图片 get
         * id 楼盘序列标识
         */
-        surround: '/static/api/property/surround.json',
+        surround: platform +'houses/image/surround.json',
         /**
         * 我的报告列表 get
         * key 搜索时使用，返回搜索相关数据
@@ -105,8 +113,9 @@ export default {
         reportList: '/static/api/report/reportList.json',
         /**
         * 我的报告列表 get
+         * '/static/api/report/reportTree.json'
         */
-        reportTree: '/static/api/report/reportTree.json',
+        reportTree: platform +'report/reportTree.json',
         /**
         * 我的选中报告列表 get
         * ids 文章报告id eg: 1,2,3
