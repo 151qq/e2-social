@@ -4,25 +4,21 @@
           <el-collapse-item class="formStyleR" title="报告详情" name="1">
             <section class="title-input">
                 <el-input type="text" placeholder="请输入标题,最多25个字符" v-model="title"
-                    @change="checkTitle" @blur="saveData" autofocus></el-input>
+                    @change="checkTitle" autofocus></el-input>
             </section>
             <section class="abInput">
               <el-select class="se-box"
                   v-model="investor" placeholder="请选择投资顾问">
                   <el-option
                     v-for="item in investors"
-                    :key="item"
-                    :label="item"
-                    :value="item">
+                    :key="item.id"
+                    :label="item.typeName"
+                    :value="item.id">
                   </el-option>
               </el-select>
             </section>
             <div class="clear"></div>
-            <edit-box :article-in="articleinfo"></edit-box>
-            <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveArticle">保存</el-button>
-            <div class="clear"></div>
+            <edit-box :article-in="articleinfo" :page-title="title"></edit-box>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="推荐文章" name="2">
@@ -94,19 +90,19 @@ export default {
     },
     mounted () {
         this.type = this.$route.params.type
-        if (this.type !== 'add') {
+        if (this.type === 'edit') {
             var reportColl = localStorage.getItem("reportColl")
             if (reportColl) {
                 this.activeNames = reportColl.split(',')
             }
         }
+
         this.getAllData()
     },
     methods: {
         getAllData () {
-          if (this.type !== 'add') {
+          if (this.type === 'edit') {
             this.getArticle()
-            this.getArticles()
           }
           this.getReportList()
           this.getInvestors()
@@ -115,27 +111,13 @@ export default {
         getArticle () {
           util.request({
               method: 'get',
-              interface: 'reportDetail',
+              interface: 'findArticleByFileCode',
               data: {
-                id: localStorage.getItem("id"),
-                fileCode: localStorage.getItem("fileCode")
+                fileCode: localStorage.getItem("id")
               }
           }).then(res => {
-              this.title = res.result.result.title
-              this.investor = res.result.result.investor
               this.articleinfo = res.result.result.fileAreaList
-          })
-        },
-        getArticles () {
-          util.request({
-              method: 'get',
-              interface: 'articles',
-              data: {
-                id: localStorage.getItem("id")
-              }
-          }).then(res => {
-              this.articles = res.result.datas.articles
-              this.getSelectList()
+              this.title = res.result.result.html5PageTitle
           })
         },
         checkTitle () {
@@ -163,26 +145,7 @@ export default {
 
             util.request({
                 method: 'post',
-                interface: 'draftArticle',
-                data: formData
-            }).then(res => {
-                console.log(res)
-            })
-        },
-        saveArticle () {
-            var formData = {
-                id: localStorage.getItem("id"),
-                type: this.$route.name,
-                data: this.articleinfo,
-                investor: this.investor,
-                title: this.title
-            }
-
-            console.log(JSON.stringify(formData))
-            
-            util.request({
-                method: 'post',
-                interface: 'draftArticle',
+                interface: 'savereport',
                 data: formData
             }).then(res => {
                 console.log(res)

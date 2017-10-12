@@ -3,7 +3,7 @@
       <div class="picBox">
         <div class="piclist">
             <div class="iBox" v-for="(item, index) in lists" :class="curIndex === index ? 'active' : ''">
-                <img :src="'http://'+item.link" @click="selPic(item.link, index)">
+                <img :src="item.link" @click="selPic(item.link, index)">
             </div>
         </div>
         <div class="more" @click="tplNextPage">加载更多</div>
@@ -36,7 +36,7 @@ export default{
     methods: {
         selPic(link, index){
           this.curIndex = index
-          this.curPath = 'http://' + link
+          this.curPath =  link
         },
         confirmH () {
           this.seData = {

@@ -3,8 +3,8 @@
     <router-link class="logo-box" :to="{name: 'house'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'house'}">楼盘维护</router-link>
-      <router-link :to="{ name: 'report'}">报告维护</router-link>
+      <router-link :to="{ name: 'house', params: { type: 'edit' }}">楼盘维护</router-link>
+      <router-link :to="{ name: 'report', params: { type: 'edit' }}">报告维护</router-link>
     </div>
 
     <div class="member-box">
@@ -56,7 +56,7 @@
 
     <div class="line-box"></div>
 
-    <div class="add-box" v-popover:popover2>
+    <!-- <div class="add-box" v-popover:popover2>
       <i class="el-icon-add"></i>
       <span class="circle"></span>
       <el-popover
@@ -73,7 +73,7 @@
           </router-link>
         </div>
       </el-popover>
-    </div>
+    </div> -->
 
     <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
     <password :dialog-form-visible="dialogFormVisible"></password>

@@ -279,10 +279,6 @@
                 </section>
                 <div class="clear"></div>
                 <edit-box :article-in="articleinfo"></edit-box>
-                <div class="clear"></div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveArticle()">保存</el-button>
-                <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
@@ -415,7 +411,7 @@
             this.getInvestors()
 
             this.type = this.$route.params.type
-            if (this.type !== 'add') {
+            if (this.type === 'add') {
                 var houseColl = localStorage.getItem("houseColl")
                 if (houseColl) {
                     this.activeNames = houseColl.split(',')
@@ -444,7 +440,6 @@
                     }
                 }).then(res => {
                     this.base = res.result.result.base
-                    console.log(this.base, 'base')
                 })
             },
             getAppearance () {
@@ -483,14 +478,13 @@
             getArticle () {
                 util.request({
                     method: 'get',
-                    interface: 'articleHouse',
+                    interface: 'findArticleByFileCode',
                     data: {
-                        id: localStorage.getItem("id"),
-                        fileCode: localStorage.getItem("fileCode")
+                        fileCode: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.investor = res.result.result.investor
                     this.articleinfo = res.result.result.fileAreaList
+                    this.title = res.result.result.html5PageTitle
                 })
             },
             getChanges () {
@@ -501,7 +495,8 @@
                         id: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.changes = res.result.datas.changes
+                    this.changes = res.result.result.changes
+                    console.log(res.result.result.changes)
                 })
             },
             getRents () {
@@ -512,7 +507,7 @@
                         id: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.rents = res.result.datas.rents
+                    this.rents = res.result.result.rents
                 })
             },
             showImg (index) {
@@ -547,8 +542,6 @@
                     formData.data = this[type][index]
                 }
 
-                console.log(JSON.stringify(formData))
-
                 util.request({
                     method: 'post',
                     interface: 'houseInfo',
@@ -559,24 +552,6 @@
                     }
                 })
             },
-            saveArticle () {
-                var formData = {
-                    id: localStorage.getItem("id"),
-                    type: this.$route.name,
-                    data: this.articleinfo,
-                    investor: this.investor
-                }
-
-                console.log(JSON.stringify(formData))
-                
-                util.request({
-                    method: 'post',
-                    interface: 'draftArticle',
-                    data: formData
-                }).then(res => {
-                    console.log(res)
-                })
-            },
             getTypes () {
                 util.request({
                     method: 'get',
@@ -584,7 +559,6 @@
                     data: {}
                 }).then(res => {
                     this.types = res.result.result
-                    console.log(this.types, 'types')
                 })
             },
             getBenchList () {
@@ -596,7 +570,6 @@
                     }
                 }).then(res => {
                     this.benchList = res.result.result
-                    console.log(this.benchList, 'benchList')
                 })
             },
             drawMap (mapInfo) {

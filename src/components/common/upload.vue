@@ -4,9 +4,10 @@
       <img v-if="!curPath" class="img-big" src="../../assets/images/img-default.jpg" @click="showSelect">
       <img v-else class="img-big" :src="curPath">
       <div v-if="isBtn">
-        <img class="del-btn" src="../../assets/images/del-icon.png" @click="deleImg">
-        <img class="del-btn" src="../../assets/images/pen-icon.png" @click="showSelect">
-        <img class="del-btn" src="../../assets/images/del-icon.png" @click="resetPath">
+        <i class="del-btn el-icon-close" @click="resetPath"></i>
+        <i class="del-btn el-icon-document" @click="savePath"></i>
+        <i class="del-btn el-icon-delete2" @click="deleImg"></i>
+        <i class="del-btn el-icon-picture" @click="showSelect"></i>
       </div>
     </section>
     
@@ -92,6 +93,9 @@ export default {
           id: this.idx
         }
         this.$emit('changeImg', data)
+      },
+      savePath () {
+        this.$emit('saveImg')
       }
     },
     components: {
@@ -121,10 +125,8 @@ export default {
     padding: 16px 0;
     overflow: hidden;
       
-    img {
+    .del-btn {
       float: right;
-      width: 16px;
-      height: 16px;
       cursor: pointer;
       margin-right: 13px;
 

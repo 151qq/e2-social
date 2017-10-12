@@ -32,7 +32,6 @@
                 editor: null
             }
         },
-
         mounted() {
             const _this = this;
             this.editor = UE.getEditor(this.editorId, this.config)
@@ -46,6 +45,13 @@
                 }
                 _this.$emit('setContent', data!=null?data:"")
             })
+        },
+        watch: {
+            content () {
+                if (this.editor) {
+                    this.editor.setContent(this.content)
+                }
+            }
         },
         destroyed() {
             this.editor.destroy();

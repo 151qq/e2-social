@@ -11,11 +11,57 @@ export default {
         "deleteDraftFile": platform + "html5SiteInfo/deleteDraftFile.json",                       //文章删除接口,参数 html5PageCode,id
         "mediaList": platform + "html5SiteInfo/mediaList.json",
         "getUserInfo": platform + "getUserInfo.json",
-        "draftArticle": platform + "siteEdit/draftArticle.json",          //保存草草
-        "publishArticle": platform + "siteEdit/publishArticle.json",       //发布
         "changePassword": platform + "changePassword.json",         //修改密码
         "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
         "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
+
+
+        /**
+        * 保存草草 post
+        * html5PageCode
+        * id pageID                                  
+        */
+        "draftArticle": platform + "siteEdit/draftArticle.json",
+        /**
+        * 我的任务列表 get
+        * html5PageCode
+        * id pageID                                  
+        */
+        "findArticleByFileCode": platform + "siteEdit/findArticleByFileCode.json",
+        /**
+        * 我的任务列表 post
+        * fileCode: html5PageCode
+        * areaCode: rowData.code
+        * id pageID
+        * areaTxt
+        * areaType
+        * sequence: index                                
+        */
+        "saveArticleArea": platform + "siteEdit/saveArticleArea.json",
+        /**
+        * 取指定模板 get
+        * fileCode: html5PageCode
+        * id pageID
+        * tplCode       
+        */
+        "getTemplateBytplCode": platform + "siteTpl/getTemplateBytplCode.json",
+        /**
+        * 模板列表 get
+        * unitcode: html5PageCode
+        */
+        "templateList": platform + "siteTpl/templateList.json",
+        /**
+        * 发布 post
+        */
+        "publishArticle": platform + "siteEdit/publishArticle.json",
+        /**
+        * 删除文章 post
+        */
+        "deleteDraftFile": platform + 'html5SiteInfo/deleteDraftFile.json',
+        /**
+        * 删除块 post
+        */
+        "deleteArticleArea": platform + 'siteEdit/deleteArticleArea.json',
         /**
         * 我的任务列表 get
         * pageSize 每页多少条
@@ -28,6 +74,9 @@ export default {
         * tmpCode 模版号
         */
         getTemplate: '/static/api/common/getTemplate.json',
+
+
+
         /**
         * 任务详情 get
         * id 任务标识
@@ -73,18 +122,21 @@ export default {
         /**
         * 物业基本信息 get
         * id 楼盘序列标识
+         * '/static/api/property/base.json',
         */
-        base: '/static/api/property/base.json',
+        base: platform +'houses/findHousesBase.json',
         /**
         * 物业交易历史 get
         * id 楼盘序列标识
+         * '/static/api/property/changes.json'
         */
-        changes: '/static/api/property/changes.json',
+        changes: platform +'houses/findHousesTrade.json',
         /**
         * 物业租金历史 get
         * id 楼盘序列标识
+         * '/static/api/property/rent.json'
         */
-        rent: '/static/api/property/rent.json',
+        rent: platform +'houses/findHousesRent.json',
         /**
         * 物业评述 get
         * id 楼盘序列标识
