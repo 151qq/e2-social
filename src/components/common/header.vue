@@ -16,7 +16,7 @@
       </a>
     </div>
 
-    <div class="mess-box" v-popover:popover1>
+    <!-- <div class="mess-box" v-popover:popover1>
       <i class="el-icon-message"></i>
       <span class="circle"></span>
       <el-popover
@@ -54,7 +54,7 @@
       </el-popover>
     </div>
 
-    <div class="line-box"></div>
+    <div class="line-box"></div> -->
 
     <!-- <div class="add-box" v-popover:popover2>
       <i class="el-icon-add"></i>
@@ -75,7 +75,7 @@
       </el-popover>
     </div> -->
 
-    <upload-file :path="userInfo.imgUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
+    <upload-file :path="userInfo.iconUrl" :dialog-form-visible="dialogFormVisible" @imgChange="changeImg"></upload-file>
     <password :dialog-form-visible="dialogFormVisible"></password>
   </section>
 </template>
@@ -90,7 +90,7 @@ export default {
       origin: window._SettingOrigin,
       userInfo: {
         name: '',
-        imgUrl: ''
+        iconUrl: ''
       },
       noticeList: [],
       dialogFormVisible: {
@@ -169,7 +169,7 @@ export default {
       this.$router.push({name: 'notice', params: {id: id}})
     },
     changeImg (path) {
-      this.userInfo.imgUrl = path
+      this.userInfo.iconUrl = path
     },
     editImgUrl () {
       this.dialogFormVisible.visibleF = true
@@ -268,6 +268,7 @@ export default {
         overflow: hidden;
         line-height: 0;
         background: url(../../assets/images/head-icon.png) left top no-repeat;
+        background-size: 100% auto;
 
         img {
           width: 24px;

@@ -1,7 +1,7 @@
 <template>
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
-        <section class="leftBox" v-if="$route.params.type !== 'add'">
+        <section class="leftBox" v-if="$route.params.type === 'edit'">
             <articles @getInfo="getInfo"></articles>
         </section>
         <!-- 中间文章编辑区域 -->
@@ -23,7 +23,7 @@ export default {
     },
     methods: {
         getInfo (data) {
-            if (this.$route.params.type === 'add') {
+            if (this.$route.params.type !== 'edit') {
                 return false
             }
             // 编辑区域获取初始数据

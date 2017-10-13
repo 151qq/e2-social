@@ -278,7 +278,7 @@
                     </el-select>
                 </section>
                 <div class="clear"></div>
-                <edit-box :article-in="articleinfo"></edit-box>
+                <edit-box :article-in="articleinfo" :page-title="base.name"></edit-box>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">

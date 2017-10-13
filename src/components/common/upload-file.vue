@@ -43,8 +43,12 @@ export default {
   },
   methods: {
     fileChange (event) {
-      util.upFile(event).then(res => {
-        this.imgPath = res.result.result.path
+      var data = {
+        url: 'headImage',
+        event: event
+      }
+      util.uploadFile(data).then(res => {
+        this.imgPath = res.result.result.headImg
         this.$message({
           showClose: true,
           message: '恭喜你，修改成功'
@@ -65,6 +69,13 @@ export default {
 
     .el-dragger {
       width: 180px;
+      height: 180px;
+      margin: 0 auto 10px;
+      background: url(http://img2.imgtn.bdimg.com/it/u=1651318081,2860235060&fm=214&gp=0.jpg) center no-repeat;
+      background-size: 100% auto;
+      border: 1px solid #f2f2f2;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     .preview-img {

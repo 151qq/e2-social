@@ -15,6 +15,10 @@ export default {
         "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
         "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
 
+        /**
+        * 上传头像 post                                
+        */
+        "headImage": platform + "headImage.json",
 
         /**
         * 保存草草 post
