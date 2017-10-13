@@ -123,7 +123,20 @@ export default {
             curIndex: '',
             curStyle: '',
             titleIndex: '',
-            titleLists: [],
+            titleLists: [
+                {
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                },
+                {
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                },
+                {
+                    imgUrl: "/static/images/title-default.jpg",
+                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                }
+            ],
             templateAdd: [
                 {
                     type: "upload"
@@ -215,7 +228,6 @@ export default {
             setTimeout(() => {
                 $('.bodyMain').html($('#articleArea'))
                 this.setSortable()
-                console.log(2222222)
             }, 0)
             this.disabled = true
             if (this.sortable) {
