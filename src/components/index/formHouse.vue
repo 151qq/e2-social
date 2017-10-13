@@ -490,9 +490,15 @@
                     }
                 }).then(res => {
                     if (res.result.success !== '0') {
-                        this.articleinfo = res.result.result.fileAreaList ? res.result.result.fileAreaList : []
-                        this.base.name = res.result.result.html5PageTitle
-                        this.$refs.editForm.editInte(this.articleinfo)
+                        var resData = res.result.result
+                        this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
+                        this.base.name = resData.html5PageTitle
+
+                        var data = {
+                            article: this.articleinfo,
+                            bgImg: resData.backgroundImg
+                        }
+                        this.$refs.editForm.editInte(data)
                     }
                 })
             },

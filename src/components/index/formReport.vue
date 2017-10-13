@@ -135,14 +135,19 @@ export default {
                 fileCode: localStorage.getItem("id")
               }
           }).then(res => {
-              this.articleinfo = res.result.result.fileAreaList ? res.result.result.fileAreaList : []
-              this.title = res.result.result.html5PageTitle
-              this.articleId = res.result.result.id
-              this.investor = res.result.result.editorCode
-              this.coverImg = res.result.result.html5PageindexImg
-              console.log(this.coverImg, 'coverImg')
+              var resData = res.result.result
+              this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
+              this.title = resData.html5PageTitle
+              this.articleId = resData.id
+              this.investor = resData.editorCode
+              this.coverImg = resData.html5PageindexImg
 
-              this.$refs.articleForm.editInte(this.articleinfo)
+              var data = {
+                article: this.articleinfo,
+                bgImg: resData.backgroundImg
+              }
+
+              this.$refs.articleForm.editInte(data)
           })
         },
         changeImg (data) {
