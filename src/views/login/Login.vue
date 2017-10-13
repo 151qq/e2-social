@@ -83,20 +83,7 @@
             <div class="form-b">
                 <section>
                     <span>手机</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.tel">
-                        <template slot="append">
-                            <span class="code-b" v-if="iscanPost" @click="getCode">获取验证码</span>
-                            <span v-else>{{leastSencond}}</span>
-                        </template>
-                    </el-input>
-                </section>
-                <section>
-                    <span>验证码</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.code"></el-input>
-                </section>
-                <section>
-                    <span>新密码</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.password"></el-input>
+                    <el-input placeholder="请输入内容" v-model="forgetData.tel"></el-input>
                 </section>
             </div>
 
@@ -135,64 +122,25 @@
                     ]
                 },
                 dialogVisible: false,
-                leastSencond: 90,
                 forgetData: {
-                    tel: '',
-                    code: '',
-                    password: ''
-                },
-                telCode: '',
-                iscanPost: true,
-                timer: null
+                    tel: ''
+                }
             }
         },
         mounted() {
 
         },
         methods: {
-            getCode () {
-                if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.forgetData.tel.trim())) {
-                    this.$message.error('请输入11位注册手机号')
-                    return
-                }
-                
-                util.request({
-                    method: 'get',
-                    interface: 'getTelCode',
-                    data: {
-                        tel: this.forgetData.tel
-                    }
-                }).then((res) => {
-                    this.telCode = res.result.result.code
-                    this.leastSencond = 90
-                    this.iscanPost = false
-                    this.timer = setInterval(() => {
-                        this.leastSencond = this.leastSencond - 1
-                        if (this.leastSencond === 0) {
-                            this.iscanPost = true
-                            clearInterval(this.timer)
-                        }
-                    }, 1000)
-                })
-            },
             updaetPassword () {
                 if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.forgetData.tel.trim())) {
                     this.$message.error('请输入11位注册手机号')
                     return
                 }
-                if (this.forgetData.code == '' || this.forgetData.code !== this.telCode) {
-                    this.$message.error('请输入正确验证码')
-                    return
-                }
-                if (this.forgetData.password === '') {
-                    this.$message.error('请输入新密码')
-                    return
-                }
                 util.request({
                     method: 'post',
-                    interface: 'forgetPassword',
+                    interface: 'resetPassword',
                     data: {
-                        password: this.forgetData.password
+                        mobile: this.forgetData.tel
                     }
                 }).then((res) => {
                     this.dialogVisible = false
@@ -219,14 +167,12 @@
                     corpId: this.corpId,
                     wechatName: this.wechatName
                 }
-                console.log(data);
 
                 util.request({
                     method: 'post',
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    console.log(res);
                     window.location.href = '/';
                 });
             },
@@ -252,14 +198,12 @@
                     userCname: this.userCname,
                     userPhone: this.userPhone
                 }
-                console.log(data);
 
                 util.request({
                     method: 'post',
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    console.log(res);
                     window.location.href = '/';
                 });
 

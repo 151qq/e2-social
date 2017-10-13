@@ -12,8 +12,7 @@ export default {
         "mediaList": platform + "html5SiteInfo/mediaList.json",
         "getUserInfo": platform + "getUserInfo.json",
         "changePassword": platform + "changePassword.json",         //修改密码
-        "getTelCode": "/static/api/common/telcode.json",      // 获取手机验证码
-        "forgetPassword": "/static/api/common/telcode.json",   // 提交新密码
+        "resetPassword": platform + "resetPassword.json",  // 重置密码
 
         /**
         * 上传头像 post                                

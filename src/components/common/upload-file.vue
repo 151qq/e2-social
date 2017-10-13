@@ -2,12 +2,10 @@
   <el-dialog title="头像更改" v-model="dialogFormVisible.visibleF" size="tiny">
     <div class="el-upload file-container">
       <div class="el-dragger">
-        <a target="_blank" :href="imgPath">
-          <img class="preview-img" :src="imgPath" v-show="imgPath" />
-        </a>
+        <img class="preview-img" :src="imgPath" v-show="imgPath" />
+        <input class="btn_file" type="file" @change="fileChange"/>
       </div>
-      <el-button size="small" type="primary" >点击上传</el-button> {{remark}}
-      <input class="btn_file" type="file" @change="fileChange"/>
+      {{remark}}
     </div>
   </el-dialog>
 </template>
@@ -24,7 +22,7 @@ export default {
     path: String,
     remark: {
       type: String,
-      default: '（请上传1:1的图片）'
+      default: '请上传1:1的图片'
     }
   },
   data () {
@@ -68,6 +66,7 @@ export default {
     transform: translateX(-50%);
 
     .el-dragger {
+      position: relative;
       width: 180px;
       height: 180px;
       margin: 0 auto 10px;
@@ -85,11 +84,11 @@ export default {
 
     .btn_file {
       position: absolute;
-      bottom: 0;
+      top: 0;
       left: 0;
-      width: 65px;
-      height: 30px;
-      opacity: 0;
+      width: 180px;
+      height: 180px;
+      opacity: 0.001;
       cursor: pointer;
     }
 
