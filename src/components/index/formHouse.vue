@@ -37,7 +37,7 @@
                     </section>
                     <section class="baseInput">
                         <span>物业类型</span>
-                        <el-select class="input-box" v-model="base.property" placeholder="请选择">
+                        <el-select class="input-box" v-model="base.propType" placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.propertys"
                                     :key="index"
@@ -327,7 +327,7 @@
                     },
                     city: '',
                     mall: '',
-                    property: '',
+                    propType: '',
                     level: '',
                     massif: '',
                     year: 0,
