@@ -23,6 +23,7 @@ export default {
     },
     methods: {
         getInfo (data) {
+            console.log(this.$route.params.type, 'type')
             if (this.$route.params.type !== 'edit') {
                 return false
             }

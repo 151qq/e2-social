@@ -230,6 +230,6 @@ export default {
         * type 列表类型
         * id 楼盘序列标识
         */
-        benchList: '/static/api/property/benchList.json'
+        benchList: platform + 'houses/findHousesByCityCode.json'
     }
 }

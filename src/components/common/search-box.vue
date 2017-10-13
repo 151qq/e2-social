@@ -24,7 +24,8 @@ export default {
     isPage: {
       type: Boolean,
       default: false
-    }
+    },
+    city: String
   },
   data () {
     return {
@@ -43,27 +44,6 @@ export default {
     })
   },
   methods: {
-    // 获取搜索数据
-    getDatas (vr) {
-      // 记录被调用序号
-      var count = this.count
-
-      let formData = {
-        type: this.$route.name,
-        vr: vr
-      }
-
-      util.request({
-          method: 'get',
-          interface: 'searchMap',
-          data: formData
-      }).then(res => {
-          if (count !== this.count) {
-            return false
-          }
-          this.messDate = res.result.datas
-      })
-    },
     getMess () {
       if (this.keyValue === '') {
         return false
@@ -75,11 +55,13 @@ export default {
         onSearchComplete (results) {
           // 更新调用记录
           _self.count++
-          _self.getDatas(results.vr)
+          console.log(results.vr, 'vr')
+          _self.messDate = results.vr
         },
         autoViewport: true
       }
-      var local = new window.BMap.LocalSearch('北京', options)
+      console.log(this.city, 'city')
+      var local = new window.BMap.LocalSearch(this.city, options)
       local.search(this.keyValue)
     },
     showModel () {
@@ -89,11 +71,7 @@ export default {
       this.isShow = false
     },
     goMap (item) {
-      if (this.keyValue === '') {
-        this.$message.error('请输入搜索关键字')
-        return false
-      }
-
+      this.keyValue = item.title
       this.isShow = false
       this.$emit('mapChange', item)
     }

@@ -234,6 +234,10 @@ export default {
                 formData.html5CatalogCode = localStorage.getItem('dirCode')
             }
 
+            if (this.$route.name === 'house') {
+                formData.html5CatalogCode = localStorage.getItem('id')
+            }
+
             if (data) {
                 if (data.title) {
                     formData.html5PageTitle = data.title
@@ -264,7 +268,7 @@ export default {
                 method: 'get',
                 interface: 'getTemplateBytplCode',
                 data: {
-                    tplCode: 'tpl_0003'
+                    tplCode: 'tpl_003'
                 }
             }).then(res => {
                 var templateStr = ''

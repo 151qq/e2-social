@@ -11,7 +11,9 @@
                             v-model="base.name">
                     </el-input>
                 </section>
-                <search-box v-if="$route.params.type !== 'edit'" :is-page="true" @mapChange="drawMap"></search-box>
+                <search-box v-if="$route.params.type !== 'edit'" :is-page="true"
+                        @mapChange="drawMap"
+                        :city="houseCity"></search-box>
                 <div id="container"></div>
                 <div class="form-box">
                     <div class="clear"></div>
@@ -26,21 +28,19 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>所属商圈</span>
-                        <el-select class="input-box" v-model="base.mall" placeholder="请选择">
-                            <el-option
-                                    v-for="(item,index) in malls"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.nodeCode">
-                            </el-option>
-                        </el-select>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.mall"
+                                :disabled="true">
+                        </el-input>
                     </section>
                     <section class="baseInput">
                         <span>物业类型</span>
-                        <el-select class="input-box" v-model="base.proType" placeholder="请选择">
+                        <el-select class="input-box" v-model="base.property" placeholder="请选择">
                             <el-option
-                                    v-for="item in types.propertys"
-                                    :key="item.id"
+                                    v-for="(item, index) in types.propertys"
+                                    :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
                             </el-option>
@@ -50,8 +50,8 @@
                         <span>楼盘等级</span>
                         <el-select class="input-box" v-model="base.level" placeholder="请选择">
                             <el-option
-                                    v-for="item in types.level"
-                                    :key="item.id"
+                                    v-for="(item, index) in types.level"
+                                    :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
                             </el-option>
@@ -130,8 +130,8 @@
                         <span>地板类型</span>
                         <el-select class="input-box" v-model="base.floor" placeholder="请选择">
                             <el-option
-                                    v-for="item in types.floors"
-                                    :key="item.id"
+                                    v-for="(item, index) in types.floors"
+                                    :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
                             </el-option>
@@ -141,8 +141,8 @@
                         <span>物业持有</span>
                         <el-select class="input-box" v-model="base.holding" placeholder="请选择">
                             <el-option
-                                    v-for="item in types.hold"
-                                    :key="item.id"
+                                    v-for="(item, index) in types.hold"
+                                    :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
                             </el-option>
@@ -270,15 +270,15 @@
                     <el-select class="se-box"
                                v-model="investor" placeholder="请选择投资顾问">
                         <el-option
-                                v-for="item in investors"
-                                :key="item.id"
+                                v-for="(item, index) in investors"
+                                :key="index"
                                 :label="item.typeName"
                                 :value="item.id">
                         </el-option>
                     </el-select>
                 </section>
                 <div class="clear"></div>
-                <edit-box :article-in="articleinfo" :page-title="base.name"></edit-box>
+                <edit-box :article-in="articleinfo" ref="editForm"></edit-box>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
@@ -327,7 +327,7 @@
                     },
                     city: '',
                     mall: '',
-                    proType: '',
+                    property: '',
                     level: '',
                     massif: '',
                     year: 0,
@@ -398,7 +398,8 @@
                 articleinfo: [],
                 appearance: [],
                 public: [],
-                surround: []
+                surround: [],
+                houseCity: ''
             }
         },
         mounted () {
@@ -411,13 +412,15 @@
             this.getInvestors()
 
             this.type = this.$route.params.type
-            if (this.type === 'add') {
+            if (this.type === 'edit') {
                 var houseColl = localStorage.getItem("houseColl")
                 if (houseColl) {
                     this.activeNames = houseColl.split(',')
                 }
-                this.getAllData()
-                this.drawMap()
+            } else {
+                this.houseCity = localStorage.getItem('houseCity')
+                this.base.city = this.houseCity
+                this.base.mall = localStorage.getItem('houseMall')
             }
         },
         methods: {
@@ -440,6 +443,9 @@
                     }
                 }).then(res => {
                     this.base = res.result.result.base
+                    setTimeout(() => {
+                        this.drawMap()
+                    }, 0)
                 })
             },
             getAppearance () {
@@ -483,8 +489,11 @@
                         fileCode: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.articleinfo = res.result.result.fileAreaList
-                    this.title = res.result.result.html5PageTitle
+                    if (res.result.success !== '0') {
+                        this.articleinfo = res.result.result.fileAreaList ? res.result.result.fileAreaList : []
+                        this.base.name = res.result.result.html5PageTitle
+                        this.$refs.editForm.editInte()
+                    }
                 })
             },
             getChanges () {
@@ -552,6 +561,13 @@
                     }
                 })
             },
+            saveForm () {
+              var obj = {
+                investor: this.investor
+              }
+
+              this.$refs.editForm.saveArticle(obj)
+            },
             getTypes () {
                 util.request({
                     method: 'get',
@@ -574,16 +590,15 @@
             },
             drawMap (mapInfo) {
                 if (mapInfo) {
-                    this.base.city = mapInfo.city
                     this.base.point = {
                         lng: mapInfo.point.lng,
                         lat: mapInfo.point.lat
                     }
+                    this.base.name = mapInfo.title
                     var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
                 } else {
                     var point = new window.BMap.Point(this.base.point.lng, this.base.point.lat)
                 }
-                this.getMalls()
                 this.map.clearOverlays()
                 this.map.panTo(point)
                 var marker = new BMap.Marker(point)
@@ -605,10 +620,10 @@
                     method: 'get',
                     interface: 'getInvestors',
                     data: {
-                        id: localStorage.getItem("id")
+                        roleCode: 'entadconsultant'
                     }
                 }).then(res => {
-                    this.investors = res.result.datas
+                    this.investors = res.result.result
                 })
             },
             addChange () {

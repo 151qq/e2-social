@@ -12,10 +12,9 @@
         <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
           <template slot="title">
             {{item2.label}}
-            <router-link target="_blank" class="add-box"
-              :to="{name: $route.name, params: { type: item2.nodeCode }}">
+            <span @click="setData(item1, item2)" class="add-box">
             +
-            </router-link>
+            </span>
           </template>
           <el-menu-item v-for="(item3, index3) in item2.children"
               :index="index1 + '-' + index2 + '-' + index3">
@@ -126,12 +125,14 @@
           this.treeData = this.filterData(res.result.result)
           if (this.treeData[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].nodeCode
+            let dirCode = this.treeData[0].children[0].nodeCode
 
             let data = {
               id: id
             }
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
+            localStorage.setItem("dirCode", dirCode)
             this.$emit('getInfo', data)
             this.isfirst = false
           }
@@ -153,6 +154,11 @@
           return item1.children && item1.children.length
         })
         return opDatas
+      },
+      setData (item1, item2) {
+        localStorage.setItem('houseCity', item1.label)
+        localStorage.setItem('houseMall', item2.nodeCode)
+        window.open ('/#/index/' + this.$route.name + '/' + item2.nodeCode, '_blank')
       },
       delItem (id, nodeCode) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
