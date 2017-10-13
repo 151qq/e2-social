@@ -50,6 +50,11 @@ export default {
     mounted () {
       this.curPath = this.path
     },
+    watch: {
+      path () {
+        this.curPath = this.path
+      }
+    },
     methods: {
       suSelect (datas) {
         this.curPath = datas.url

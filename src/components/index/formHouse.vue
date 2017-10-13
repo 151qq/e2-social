@@ -278,7 +278,7 @@
                     </el-select>
                 </section>
                 <div class="clear"></div>
-                <edit-box :article-in="articleinfo" ref="editForm"></edit-box>
+                <edit-box ref="editForm"></edit-box>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
@@ -492,7 +492,7 @@
                     if (res.result.success !== '0') {
                         this.articleinfo = res.result.result.fileAreaList ? res.result.result.fileAreaList : []
                         this.base.name = res.result.result.html5PageTitle
-                        this.$refs.editForm.editInte()
+                        this.$refs.editForm.editInte(this.articleinfo)
                     }
                 })
             },

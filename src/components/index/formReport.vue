@@ -140,8 +140,9 @@ export default {
               this.articleId = res.result.result.id
               this.investor = res.result.result.editorCode
               this.coverImg = res.result.result.html5PageindexImg
+              console.log(this.coverImg, 'coverImg')
 
-              this.$refs.articleForm.editInte()
+              this.$refs.articleForm.editInte(this.articleinfo)
           })
         },
         changeImg (data) {

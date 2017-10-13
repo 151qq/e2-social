@@ -110,7 +110,7 @@ import $ from 'Jquery'
 import sortable from 'sortablejs'
 
 export default {
-    props: ['articleIn', 'isSave'],
+    props: ['isSave'],
     data () {
         return {
             articleList: [],
@@ -167,10 +167,10 @@ export default {
         }
     },
     methods:{
-        editInte () {
+        editInte (articleIn) {
             var templateStr = ''
             var arrData = []
-            this.articleIn.forEach((item) => {
+            articleIn.forEach((item) => {
                 if (item.sequence >= 20) {
                     switch (item.areaType) {
                         case 'upload':
@@ -209,6 +209,7 @@ export default {
                     templateStr += item.areaTxt
                 }
             })
+            console.log(arrData, 'data')
             this.articleList = arrData
             this.templateBg = templateStr
             setTimeout(() => {

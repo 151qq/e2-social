@@ -38,7 +38,6 @@ export default {
   created () {
     var _self = this
     $('body').click(function () {
-      _self.keyValue = ''
       _self.messDate = []
       _self.isShow = false
     })
@@ -55,12 +54,10 @@ export default {
         onSearchComplete (results) {
           // 更新调用记录
           _self.count++
-          console.log(results.vr, 'vr')
           _self.messDate = results.vr
         },
         autoViewport: true
       }
-      console.log(this.city, 'city')
       var local = new window.BMap.LocalSearch(this.city, options)
       local.search(this.keyValue)
     },
