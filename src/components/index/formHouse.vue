@@ -597,7 +597,8 @@
                     this.base.name = mapInfo.title
                     var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
                 } else {
-                    var point = new window.BMap.Point(this.base.point.lng, this.base.point.lat)
+                    var pointData = this.base.point.split(',')
+                    var point = new window.BMap.Point(pointData[1], pointData[0])
                 }
                 this.map.clearOverlays()
                 this.map.panTo(point)
