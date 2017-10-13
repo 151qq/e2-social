@@ -7,7 +7,7 @@
       @change="getMess"
       >
     </el-input>
-    <el-button class="search-btn" type="primary" icon="search" @click.stop="goMap(messDate[0])">
+    <el-button class="search-btn" type="primary" icon="search" @click.stop="getMess">
       搜索
     </el-button>
     <div class="mess-box" v-show="messDate.length !== 0 && isShow">

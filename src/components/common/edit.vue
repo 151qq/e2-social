@@ -1,12 +1,7 @@
 <template>
     <section class="edit-box">
-        <section class="select-template"
-                v-if="!hasTemplate"
-                @click="showTemplate">
-            +请选择模版
-        </section>
-        <section v-if="hasTemplate" v-html="templateBg"></section>
-        <ul v-if="hasTemplate" id="articleArea" name="content" class="list-group">
+        <section v-html="templateBg"></section>
+        <ul id="articleArea" name="content" class="list-group">
             <li class="list-group-item"
                     v-for="(item, index) in articleList"
                     :data-id="index"> 
@@ -75,7 +70,7 @@
                 </div>
             </li> 
         </ul>
-        <div v-if="hasTemplate" class="edit-btn">
+        <div class="edit-btn">
             <div v-for="item in templateAdd">
                 <img v-if="item.type === 'upload'"
                         src="../../assets/images/img-btn.png"
@@ -104,23 +99,6 @@
                 <el-button type="primary" @click="confirmSelect">确 定</el-button>
             </div>
         </el-dialog>
-
-        <el-dialog class="template-b" title="选择模版"
-                :visible.sync="isTemplate"
-                v-if="$route.params.type !== 'edit'">
-            <div class="template-outer">
-                <div class="templateList-box"
-                        v-for="(item, index) in templateList"
-                        @click="curTemIndex = index"
-                        :class="index === curTemIndex ? 'active' : ''">
-                    <img :src="item.microimg">
-                </div>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="closeTemplate">取 消</el-button>
-                <el-button type="primary" @click="confirmTemplate">确 定</el-button>
-            </div>
-        </el-dialog>
     </section>
 </template>
 <script>
@@ -132,7 +110,7 @@ import $ from 'Jquery'
 import sortable from 'sortablejs'
 
 export default {
-    props: ['articleIn', 'pageTitle'],
+    props: ['articleIn', 'isSave'],
     data () {
         return {
             articleList: [],
@@ -141,8 +119,6 @@ export default {
             templateAdd: [],
             imgStyle: 'display: block; max-width: 100%; margin: 10px 0;',
             isStyle: false,
-            isTemplate: false,
-            hasTemplate: false,
             curTemIndex: '',
             curIndex: '',
             curStyle: '',
@@ -180,20 +156,18 @@ export default {
                 ]]
             },
             templateList: [],
-            selectTemplate: {}
+            selectTemplate: {},
+            articleId: '',
+            html5PageCode: ''
         }
     },
     mounted () {
-        if (this.$route.params.type === 'edit') {
-            this.hasTemplate = true
-            this.setSortable()
-        } else {
-            this.getTemplateList()
-            this.articleId = '' 
+        if (this.$route.params.type !== 'edit') {
+            this.getTemplateBytplCode()
         }
     },
-    watch: {
-        articleIn () {
+    methods:{
+        editInte () {
             var templateStr = ''
             var arrData = []
             this.articleIn.forEach((item) => {
@@ -240,54 +214,39 @@ export default {
             setTimeout(() => {
                 $('.bodyMain').html($('#articleArea'))
                 this.setSortable()
+                console.log(2222222)
             }, 0)
             this.disabled = true
             if (this.sortable) {
                 this.sortable.option('disabled', true)
             }
-        }
-    },
-    methods:{
-        // // 获取添加模版
-        // getTemplate () {
-        //     util.request({
-        //         method: 'get',
-        //         interface: 'getTemplate',
-        //         data: {
-        //             tplCode: localStorage.getItem("tplCode")
-        //         }
-        //     }).then(res => {
-        //         this.templateBg = res.result.datas.bgTem
-        //         this.titleLists = res.result.datas.titles
-        //         setTimeout(() => {
-        //             $('.bodyMain').html($('#articleArea'))
-        //         }, 0)
-        //     })
-        // },
-        // 获取模版列表
-        getTemplateList () {
-            util.request({
-                method: 'get',
-                interface: 'templateList',
-                data: {
-                    unitcode: '0001'
-                }
-            }).then(res => {
-                this.templateList = res.result.result
-                console.log(this.templateList, 'templateList')
-            })
         },
-        saveArticle (code) {
+        saveArticle (data) {
             var formData = {
                 id: this.articleId,
                 type: this.$route.name,
                 areaTxt: '',
-                html5TemplateCode: code,
+                html5TemplateCode: 'tpl_0003',
                 html5CatalogCode: this.$route.params.type
             }
 
-            if (this.pageTitle) {
-                formData.html5PageTitle = this.pageTitle
+            if (this.$route.params.type === 'edit') {
+                formData.html5CatalogCode = localStorage.getItem('dirCode')
+            }
+
+            if (data) {
+                if (data.title) {
+                    formData.html5PageTitle = data.title
+                }
+                if (data.investor) {
+                    formData.editorCode = data.investor
+                }
+                if (data.pageImg) {
+                    formData.html5PageindexImg = data.pageImg
+                }
+                if (data.id) {
+                    formData.id = data.id
+                }
             }
             
             util.request({
@@ -300,12 +259,12 @@ export default {
                 this.articleId = res.result.result.id
             })
         },
-        getTemplateBytplCode (code) {
+        getTemplateBytplCode () {
             util.request({
                 method: 'get',
                 interface: 'getTemplateBytplCode',
                 data: {
-                    tplCode: code
+                    tplCode: 'tpl_0003'
                 }
             }).then(res => {
                 var templateStr = ''
@@ -313,31 +272,11 @@ export default {
                     templateStr += item.areaTxt
                 })
                 this.templateBg = templateStr
-                this.hasTemplate = true
-                this.isTemplate = false
                 setTimeout(() => {
                     $('.bodyMain').html($('#articleArea'))
                     this.setSortable()
                 }, 0)
             })
-        },
-        showTemplate () {
-            if (!this.pageTitle) {
-                this.$message.error('请先填写报告标题！')
-                return false
-            }
-            this.saveTemBg = this.templateBg
-            this.isTemplate = true
-        },
-        closeTemplate () {
-            this.templateBg = this.saveTemBg
-            this.isTemplate = false
-        },
-        confirmTemplate () {
-            var temData = this.templateList[this.curTemIndex]
-            this.saveArticle(temData.tplCode)
-            this.getTemplateBytplCode(temData.tplCode)
-            
         },
         saveData (type, index) {
             util.request({
@@ -508,32 +447,6 @@ export default {
 .edit-box {
     position: relative;
     min-height: 300px;
-
-    .template-b {
-
-        .el-dialog--small {
-            width: 640px;
-        }
-
-        .template-outer {
-            max-height: 400px;
-            overflow: auto;
-        }
-
-        .templateList-box {
-            width: 500px;
-            margin: 0 auto 15px;
-
-            img {
-                display: block;
-                width: 100%;
-            }
-            &.active {
-                border: 1px solid #FF4949;
-                border-radius: 3px;
-            }
-        }
-    }
 
     .select-template {
         background: #f0f0f0;

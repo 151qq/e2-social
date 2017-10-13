@@ -121,7 +121,7 @@ export default {
         * 投资顾问 get
         * id 序列标识
         */
-        getInvestors: '/static/api/common/getInvestors.json',
+        getInvestors: platform +'getUserInfoByRoleCode.json',
         /**
         * 物业基本信息 get
         * id 楼盘序列标识

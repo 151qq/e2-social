@@ -1,27 +1,44 @@
 <template>
     <div class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
-          <el-collapse-item class="formStyleR" title="报告详情" name="1">
-            <section class="title-input">
-                <el-input type="text" placeholder="请输入标题,最多25个字符" v-model="title"
-                    @change="checkTitle" autofocus></el-input>
+          <el-collapse-item class="formStyleR" title="基础信息" name="0">
+            <section class="baseInput bigB">
+                <span>标题</span>
+                <el-input
+                        class="input-box"
+                        placeholder="请输入内容"
+                        v-model="title">
+                </el-input>
             </section>
-            <section class="abInput">
-              <el-select class="se-box"
-                  v-model="investor" placeholder="请选择投资顾问">
-                  <el-option
+            <section class="baseInput">
+                <span>投资顾问</span>
+                <el-select class="input-box" v-model="investor" placeholder="请选择">
+                    <el-option
                     v-for="item in investors"
                     :key="item.id"
-                    :label="item.typeName"
-                    :value="item.id">
+                    :label="item.userLoginName"
+                    :value="item.userCode">
                   </el-option>
-              </el-select>
+                </el-select>
             </section>
+
             <div class="clear"></div>
-            <edit-box :article-in="articleinfo" :page-title="title"></edit-box>
+            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                @click="saveForm">保存</el-button>
+            <div class="clear"></div>
+          </el-collapse-item>
+          <el-collapse-item class="formStyleR" title="报告封面" name="1">
+            <upLoad :path="coverImg" :is-btn="true"
+                :is-not-del="true"
+                :bg-path="true"
+                @changeImg="changeImg"
+                @saveImg="saveForm"></upLoad>
+          </el-collapse-item>
+          <el-collapse-item class="formStyleR" title="报告详情" name="2">
+            <edit-box :article-in="articleinfo" ref="articleForm"></edit-box>
           </el-collapse-item>
           <div class="line-bold"></div>
-          <el-collapse-item class="formStyleR" title="推荐文章" name="2">
+          <el-collapse-item class="formStyleR" title="推荐文章" name="3">
             <el-button class="add-b" type="primary" size="small" icon="plus" @click="addReport">增加</el-button>
             <div v-for="(item, index) in reportSelect" class="report-box">
                 <img class="report-i" :src="item.imgUrl">
@@ -68,6 +85,7 @@
 <script>
 import util from '../../assets/common/util'
 import editBox from '../../components/common/edit'
+import upLoad from '../../components/common/upLoad'
 import $ from 'Jquery'
 
 export default {
@@ -85,7 +103,9 @@ export default {
             investors: [],
             activeNames: ['1'],
             dialogVisible: false,
-            articleinfo: []
+            articleinfo: [],
+            coverImg: '',
+            articleId: ''
         }
     },
     mounted () {
@@ -106,7 +126,6 @@ export default {
           }
           this.getReportList()
           this.getInvestors()
-          $('.title-input input').focus()
         },
         getArticle () {
           util.request({
@@ -116,9 +135,17 @@ export default {
                 fileCode: localStorage.getItem("id")
               }
           }).then(res => {
-              this.articleinfo = res.result.result.fileAreaList
+              this.articleinfo = res.result.result.fileAreaList ? res.result.result.fileAreaList : []
               this.title = res.result.result.html5PageTitle
+              this.articleId = res.result.result.id
+              this.investor = res.result.result.editorCode
+              this.coverImg = res.result.result.html5PageindexImg
+
+              this.$refs.articleForm.editInte()
           })
+        },
+        changeImg (data) {
+          this.coverImg = data.url
         },
         checkTitle () {
           if (this.title.length > 25) {
@@ -151,15 +178,25 @@ export default {
                 console.log(res)
             })
         },
+        saveForm () {
+          var obj = {
+            title: this.title,
+            investor: this.investor,
+            pageImg: this.coverImg,
+            id: this.articleId
+          }
+
+          this.$refs.articleForm.saveArticle(obj)
+        },
         getInvestors () {
             util.request({
                 method: 'get',
                 interface: 'getInvestors',
                 data: {
-                    id: localStorage.getItem("id")
+                    roleCode: 'entadconsultant'
                 }
             }).then(res => {
-                this.investors = res.result.datas
+                this.investors = res.result.result
             })
         },
         getSelectList () {
@@ -267,7 +304,8 @@ export default {
         }
     },
     components: {
-      editBox
+      editBox,
+      upLoad
     }
 }
 </script>
@@ -287,6 +325,38 @@ export default {
     position: relative;
     width: 640px;
     margin: 0 auto;
+
+    .baseInput {
+        float: left;
+        margin-bottom: 20px;
+
+        &>span {
+            float: left;
+            width: 65px;
+            font-size: 14px;
+            color: #1F2D3D;
+            line-height: 30px;
+        }
+
+        .input-box {
+            float: left;
+            width: 235px;
+
+            input {
+                height: 30px;
+            }
+        }
+    }
+
+    .bigB {
+        .input-box {
+            width: 575px;
+
+            .el-select {
+                width: 575px;
+            }
+        }
+    }
 
     .save-btn {
       float: right;

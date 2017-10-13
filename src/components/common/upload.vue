@@ -1,7 +1,10 @@
 <template>
   <div>
     <section class="upload-box">
-      <img v-if="!curPath" class="img-big" src="../../assets/images/img-default.jpg" @click="showSelect">
+      <img v-if="!curPath && !bgPath" class="img-big"
+          src="../../assets/images/img-default.jpg" @click="showSelect">
+      <img v-if="!curPath && bgPath" class="img-big"
+          src="../../assets/images/page-img.jpg" @click="showSelect">
       <img v-else class="img-big" :src="curPath">
       <div v-if="isBtn">
         <i class="del-btn el-icon-close" @click="resetPath"></i>
@@ -33,7 +36,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num', 'isBtn', 'idx'],
+    props: ['path', 'num', 'isBtn', 'idx', 'bgPath'],
     data() {
       return {
         isShow: false,

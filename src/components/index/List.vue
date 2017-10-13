@@ -21,7 +21,7 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.nodeCode, item3.nodeCode, index1, index2, index3)">
+                    @click="getInfo(item3.nodeCode, item3.nodeCode, index1, index2, index3, item2.nodeCode)">
                   <img class="img-box" :src="item3.imgUrl">
                   <!--<img class="img-box" src="/static/images/report1.png" >-->
                   <div class="p-box">
@@ -124,7 +124,6 @@
           data: formData
         }).then(res => {
           this.treeData = this.filterData(res.result.result)
-          console.log(this.treeData, 'treeData')
           if (this.treeData[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].nodeCode
 
@@ -183,7 +182,7 @@
           })       
         })
       },
-      getInfo (id, tplCode, index1, index2, index3) {
+      getInfo (id, tplCode, index1, index2, index3, dirCode) {
         
         var curIndex = index1 + '-' + index2 + '-' + index3
         if (this.activeName === curIndex) {
@@ -195,6 +194,7 @@
         }
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
+        localStorage.setItem("dirCode", dirCode)
 
         this.$emit('getInfo', data)
       },
