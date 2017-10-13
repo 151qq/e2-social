@@ -173,7 +173,7 @@
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    window.location.href = '/';
+                    window.location.href = '#/';
                 });
             },
             regBtn(){
@@ -204,7 +204,7 @@
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    window.location.href = '/';
+                    window.location.href = '#/';
                 });
 
             }

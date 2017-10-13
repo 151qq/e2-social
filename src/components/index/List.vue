@@ -158,7 +158,7 @@
       setData (item1, item2) {
         localStorage.setItem('houseCity', item1.label)
         localStorage.setItem('houseMall', item2.nodeCode)
-        window.open ('/#/index/' + this.$route.name + '/' + item2.nodeCode, '_blank')
+        window.open ('#/index/' + this.$route.name + '/' + item2.nodeCode, '_blank')
       },
       delItem (id, nodeCode) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
