@@ -33,9 +33,7 @@ export default {
     methods: {
       postImg (e, index) {
         util.upFile(e).then(res => {
-          console.log(res)
           let imgUrl = res.result.result[0];
-          console.log(res)
           var imgObject = {link:imgUrl};
           if (index !== undefined) {
             this.imgLists.splice(index, 1, imgObject)

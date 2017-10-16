@@ -5,67 +5,97 @@ html, body, #app {
 .wrap {
   background: #383a4c;
   height: 100%;
+  overflow: hidden;
 }
 
 .swiper-container .swiper-wrapper .swiper-slide img {
-  object-fit: cover;
+  display: block;
+  width: 100%;
 }
 
 .loginBox {
-  width: 70%;
-  height: 100%;
+  width: 1160px;
   overflow: hidden;
   box-sizing: border-box;
   padding: 125px 0 0;
   background: #383a4c;
   margin: auto;
-  .l {
-    width: 60%;
-    overflow: hidden;
-    display: inline-block;
-    height: 460px;
-    float: left;
-    padding-top: 0px;
-    box-sizing: border-box;
 
-  }
-  .r {
-    width: 35%;
-    height: 460px;
-    background-color: #424458;
-    display: inline-block;
-    float: right;
+  .l {
+    width: 756px;
     overflow: hidden;
-    box-sizing: border-box;
-    padding: 20px 20px 10px;
-    .login-form {
-      width: 100%;
-      overflow: hidden;
-      height: auto;
-      label {
-        color: #a1a3a0;
+    float: left;
+
+    .swiper-pagination {
+      position: static;
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+
+      .swiper-pagination-bullet {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin: 0 6px;
+        background: #7d7f8a;
+        box-shadow: 0 1px 1px 0 #000000 inset;
+        cursor: pointer;
       }
-      .btn {
-        width: 100%;
+
+      .swiper-pagination-bullet-active {
         background: #64a0d7;
-      }
-      .forgetBtn {
-        width: 100%;
-        text-align: right;
+        box-shadow: 0 1px 1px 0 #f0f0f0 inset;
       }
     }
   }
-}
 
-.forget-p {
-  font-size: 12px;
-  color: #a1a3a0;
-  text-align: right;
-  cursor: pointer;
-  margin-bottom: 15px;
+  .r {
+    width: 360px;
+    background-color: #424458;
+    float: right;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 30px 24px 20px;
+    box-shadow: 0 0 10px 1px #1f1e1e;
 
-  &:hover {
-    text-decoration: underline;
+    .el-form-item__label {
+      color: #ffffff;
+    }
+
+    .el-form-item {
+      margin-bottom: 10px;
+    }
+
+    .el-button--primary {
+      width: 100%;
+    }
+
+    .dased-border {
+      width: 120%;
+      height: 1px;
+      border-top: 1px dashed #999999;
+      margin: 20px 0 20px -40px;
+    }
+
+    .forget-p {
+      font-size: 12px;
+      color: #a1a3a0;
+      text-align: right;
+      cursor: pointer;
+      line-height: 20px;
+      margin-top: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .message-box {
+      font-size: 12px;
+      color: #75778d;
+      line-height: 20px;
+      margin-top: 8px;
+    }
   }
 }
 
