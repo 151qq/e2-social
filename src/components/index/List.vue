@@ -56,7 +56,7 @@
         },
         activeName: '0-0-0',
         openeds: ['0', '0-0'],
-        addData: {}
+        addData: ''
       }
     },
     mounted(){
@@ -136,24 +136,32 @@
           }
         })
       },
-      reloadList(newId, isChange){
+      reloadList(newId){
         util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
           data: {}
         }).then(res => {
           this.treeData = this.filterData(res.result.result)
+          console.log(newId, 'newId')
           var tree = {}
-          if (isChange) {
+          if (!this.addData) {
             var arrs = this.activeName.split('-')
             tree = {
-              index1: arrs[0],
-              index2: arrs[1]
+              index1: Number(arrs[0]),
+              index2: Number(arrs[1])
             }
           } else {
-            tree = this.addData
+            tree = {
+              index1: this.addData.index1,
+              index2: this.addData.index2 
+            }
           }
 
+          this.addData = ''
+
+          console.log(tree, 'tree')
+          console.log(this.treeData)
           var arrData = this.treeData[tree.index1].children[tree.index2]
 
           this.openeds = [String(tree.index1), tree.index1 + '-' + tree.index2]
@@ -163,6 +171,8 @@
               break
             }
           }
+
+          console.log(this.activeName, 'activeName')
 
 
           let formData = {

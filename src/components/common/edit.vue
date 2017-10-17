@@ -256,13 +256,7 @@ export default {
                 if (data.pageImg) {
                     formData.html5PageindexImg = data.pageImg
                 }
-                if (data.id) {
-                    formData.id = data.id
-                }
-
-                if (data.isAdd) {
-                    formData.id = ''
-                }
+                formData.id = data.id
             }
 
 
@@ -283,7 +277,7 @@ export default {
                 this.html5PageCode = resData.html5PageCode
                 this.articleId = resData.id
 
-                if (data && data.isAdd) {
+                if (data) {
                     this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
                 }
             })

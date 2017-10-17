@@ -248,9 +248,6 @@ export default {
           }
 
           this.$refs.articleForm.saveArticle(obj)
-          setTimeout(() => {
-            this.$parent.$refs.listBox.reloadList(localStorage.getItem('id'), true)
-          }, 300)
         },
         saveAll () {
           this.saveForm()
@@ -265,7 +262,7 @@ export default {
           this.title = data.title
           var obj = {
             title: this.title,
-            isAdd: true
+            id: this.articleId
           }
           this.$refs.articleForm.saveArticle(obj)
           this.isAdd.value = false
