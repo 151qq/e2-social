@@ -9,12 +9,26 @@
 
     <div class="member-box">
       <a class="img-box" @click="editImgUrl"><img :src="userInfo.iconUrl"></a>
-      <a @click="editPassword">
-        您好
-        <span>{{userInfo.userCnName}}</span>
-        <i class="el-icon-caret-bottom"></i>
-      </a>
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          您好
+          <span>{{userInfo.userCnName}}</span>
+          <i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <div @click="editPassword">修改密码</div>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <div @click="loginOut">退出登录</div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
+
+    <div class="line-box"></div>
+
+    <div class="save-box" @click="saveAll"></div>
 
     <!-- <div class="mess-box" v-popover:popover1>
       <i class="el-icon-message"></i>
@@ -52,9 +66,7 @@
           </el-pagination>
         </div>
       </el-popover>
-    </div>
-
-    <div class="line-box"></div> -->
+    </div> -->
 
     <!-- <div class="add-box" v-popover:popover2>
       <i class="el-icon-add"></i>
@@ -114,27 +126,27 @@ export default {
     next()
   },
   methods: {
-    getSearch () {
-      var formData = {
-        type: this.$route.name,
-        key: this.keyValue
-      }
+    // getSearch () {
+    //   var formData = {
+    //     type: this.$route.name,
+    //     key: this.keyValue
+    //   }
 
-      util.request({
-        method: 'get',
-        interface: 'getInfoId',
-        data: formData
-      }).then(res => {
-        var path = {
-          name: this.$route.name + 'Add',
-          params: {
-            id: res.result.datas.id
-          }
-        }
-        this.keyValue = ''
-        this.$router.push(path)
-      })
-    },
+    //   util.request({
+    //     method: 'get',
+    //     interface: 'getInfoId',
+    //     data: formData
+    //   }).then(res => {
+    //     var path = {
+    //       name: this.$route.name + 'Add',
+    //       params: {
+    //         id: res.result.datas.id
+    //       }
+    //     }
+    //     this.keyValue = ''
+    //     this.$router.push(path)
+    //   })
+    // },
     getUserInfo () {
       util.request({
         method: 'get',
@@ -144,30 +156,37 @@ export default {
         this.userInfo = res.result.result
       })
     },
-    getNotice () {
-      var formData = {
-        pageSize: this.page.pageSize,
-        currentPage: this.page.currentPage
-      }
+    loginOut () {
+      alert('退出登录')
+      var exp = new Date()
+      exp.setTime(exp.getTime() - 1)
+      document.cookie= 'e2_enterprise_staff' + "=" + '' + ";expires=" + exp.toGMTString()
+      window.location.reload()
+    },
+    // getNotice () {
+    //   var formData = {
+    //     pageSize: this.page.pageSize,
+    //     currentPage: this.page.currentPage
+    //   }
 
-      util.request({
-        method: 'get',
-        interface: 'notice',
-        data: formData
-      }).then(res => {
-          console.log(res)
-        this.noticeList = res.result.result
-        this.page.total = Number(res.result.pageNumber)
-      })
-    },
-    changePage (value) {
-      console.log(value)
-      this.page.currentPage = value
-      this.getNotice()
-    },
-    goUrl (id) {
-      this.$router.push({name: 'notice', params: {id: id}})
-    },
+    //   util.request({
+    //     method: 'get',
+    //     interface: 'notice',
+    //     data: formData
+    //   }).then(res => {
+    //       console.log(res)
+    //     this.noticeList = res.result.result
+    //     this.page.total = Number(res.result.pageNumber)
+    //   })
+    // },
+    // changePage (value) {
+    //   console.log(value)
+    //   this.page.currentPage = value
+    //   this.getNotice()
+    // },
+    // goUrl (id) {
+    //   this.$router.push({name: 'notice', params: {id: id}})
+    // },
     changeImg (path) {
       this.userInfo.iconUrl = path
     },
@@ -176,6 +195,9 @@ export default {
     },
     editPassword () {
       this.dialogFormVisible.visibleP = true
+    },
+    saveAll () {
+      this.$emit('saveall')
     }
   },
   components: {
@@ -185,6 +207,14 @@ export default {
 }
 </script>
 <style lang="scss">
+  .el-dropdown-menu__item {
+    font-size: 14px;
+  }
+
+  .el-dropdown-menu {
+    min-width: 120px;
+  }
+
   .add-mess {
     .a-box {
       display: block;
@@ -245,22 +275,17 @@ export default {
 
     .member-box {
       float: right;
-      margin-left: 26px;
+      margin-left: 20px;
 
-      a {
-        float: left;
+      .el-dropdown-link {
         font-size: 14px;
         line-height: 50px;
         color: #A4A4A4;
         cursor: pointer;
-
-        i {
-          margin-left: 10px;
-          color: #999999;
-        }
       }
 
       .img-box {
+        float: left;
         width: 24px;
         height: 24px;
         margin: 13px 20px 0 0;
@@ -269,6 +294,7 @@ export default {
         line-height: 0;
         background: url(../../assets/images/head-icon.png) left top no-repeat;
         background-size: 100% auto;
+        cursor: pointer;
 
         img {
           width: 24px;
@@ -305,7 +331,7 @@ export default {
       float: right;
       width: 1px;
       height: 20px;
-      margin: 15px 23px;
+      margin: 15px 0;
       background: #555555;
     }
 
@@ -330,7 +356,7 @@ export default {
       float: right;
       width: 16px;
       height: 50px;
-      margin-right: 23px;
+      margin-right: 20px;
       cursor: pointer;
       background: url(../../assets/images/save-icon.png) center no-repeat;
     }

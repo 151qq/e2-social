@@ -68,8 +68,8 @@ router.beforeEach((to, from, next) => {
 new Vue({
     el: '#app',
     methods: {
-      saveData () {
-        this.$refs.showBox.$refs.editBox.saveData()
+      saveAll () {
+        this.$refs.showBox.$refs.editBox.saveAll()
       }
     },
     router,

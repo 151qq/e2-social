@@ -5,13 +5,24 @@
           src="../../assets/images/img-default.jpg" @click="showSelect">
       <img v-if="!curPath && bgPath" class="img-big"
           src="../../assets/images/page-img.jpg" @click="showSelect">
-      <img v-else class="img-big" :src="curPath">
-      <div v-if="isBtn">
-        <i class="del-btn el-icon-close" @click="resetPath"></i>
-        <i class="del-btn el-icon-document" @click="savePath"></i>
-        <i class="del-btn el-icon-delete2" @click="deleImg"></i>
-        <i class="del-btn el-icon-picture" @click="showSelect"></i>
-      </div>
+      <img v-else class="img-big" :src="curPath" @click="showSelect">
+      <section v-if="isBtn">
+        <el-button class="op-btn"
+            type="info"
+            :plain="true"
+            size="small"
+            icon="document"
+            @click="savePath">保存</el-button>
+        <el-button v-if="!noDel"
+            class="op-btn"
+            type="danger"
+            :plain="true"
+            size="small"
+            icon="delete"
+            @click="deleImg">删除</el-button>
+      </section>
+
+      
     </section>
     
     <!-- 本地或素材库选择框 -->
@@ -36,7 +47,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num', 'isBtn', 'idx', 'bgPath'],
+    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath'],
     data() {
       return {
         isShow: false,
@@ -118,9 +129,9 @@ export default {
 }
 
 .upload-box {
+  overflow: hidden;
   position: relative;
   cursor: pointer;
-  background: #EFF2F7;
 
   .img-big {
     display: block;
@@ -142,6 +153,11 @@ export default {
         opacity: 0.8;
       }
     }
+  }
+
+  .op-btn {
+    float: right;
+    margin: 10px 0 0 10px;
   }
 }
 

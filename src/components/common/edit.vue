@@ -61,32 +61,43 @@
                                 class="img-default"
                                 @click.prevent="setStyle(index, item.style)"
                                 src="../../assets/images/title-default.jpg">
-                        <div class="btns" v-if="disabled">
-                            <i class="del-btn el-icon-close" @click="resetTitle(index)"></i>
-                            <i class="del-btn el-icon-document" @click="saveData('title', index)"></i>
-                            <i class="del-btn el-icon-delete2" @click="deleteArticleArea(item.id, index)"></i>
-                            <i class="del-btn el-icon-setting" @click="setStyle(index, item.style)"></i>
+                        <div class="btn-hover" v-if="disabled">
+                            <el-button class="delete-btn" type="primary"
+                                    :plain="true" size="small" icon="document"
+                                    @click="saveData('title', index)">保存</el-button>
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small" icon="delete"
+                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
+                            <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small" icon="setting"
+                                    @click="setStyle(index, item.style)">配置</el-button>
                         </div>
                     </div>
                 </li> 
             </ul>
         </section>
         <div class="edit-btn">
-            <div v-for="item in templateAdd">
-                <img v-if="item.type === 'upload'"
-                        src="../../assets/images/img-btn.png"
-                        @click="addTem(item.type)">
-                <img v-if="item.type === 'text'"
-                        src="../../assets/images/text-btn.png"
-                        @click="addTem(item.type)">
-                <img v-if="item.type === 'title'"
-                        src="../../assets/images/title-btn.png"
-                        @click="addTem(item.type)">
-                <img :class="disabled ? '' : 'active'"
-                        v-if="item.type === 'change'"
-                        src="../../assets/images/change-btn.png"
-                        @click="addTem(item.type)">
-              </div>
+            <div @click="addTem('upload')">
+                <img class="gray-box" src="../../assets/images/add-img-icon.png">
+                <img class="now-box" src="../../assets/images/img-now.png">
+            </div>
+            <div @click="addTem('text')">
+                <img class="gray-box" src="../../assets/images/add-text-icon.png">
+                <img class="now-box" src="../../assets/images/text-now.png">
+            </div>
+            <div class="title-box" @click="addTem('title')">
+                <img class="gray-box" src="../../assets/images/add-title-icon.png">
+                <img class="now-box" src="../../assets/images/title-now.png">
+            </div>
+            <div @click="addTem('change')">
+                <img v-if="disabled" class="gray-box" src="../../assets/images/change-model-icon.png">
+                <img v-if="disabled" class="now-box" src="../../assets/images/change-now.png">
+                <img v-if="!disabled" src="../../assets/images/change-now.png">
+            </div>
+            <div class="save-box" @click="saveAll">
+                <img class="gray-box" src="../../assets/images/save-all-data.png">
+                <img class="now-box" src="../../assets/images/save-now.png">
+            </div>
         </div>
         <el-dialog class="style-b" title="选择内标题样式" :visible.sync="isStyle">
             <div class="style-box"
@@ -136,20 +147,6 @@ export default {
                 {
                     imgUrl: "/static/images/title-default.jpg",
                     style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
-                }
-            ],
-            templateAdd: [
-                {
-                    type: "upload"
-                },
-                {
-                    type: "text"
-                },
-                {
-                    type: "title"
-                },
-                {
-                    type: "change"
                 }
             ],
             config: {
@@ -262,7 +259,13 @@ export default {
                 if (data.id) {
                     formData.id = data.id
                 }
+
+                if (data.isAdd) {
+                    formData.id = ''
+                }
             }
+
+
             
             util.request({
                 method: 'post',
@@ -279,6 +282,10 @@ export default {
                 this.html5TemplateCode = resData.html5TemplateCode
                 this.html5PageCode = resData.html5PageCode
                 this.articleId = resData.id
+
+                if (data && data.isAdd) {
+                    this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
+                }
             })
         },
         saveData (type, index) {
@@ -295,6 +302,11 @@ export default {
                 }
             }).then(res => {
                 this.articleList[index].id = res.result.result
+            })
+        },
+        saveAll () {
+            this.articleList.forEach((item, index) => {
+                this.saveData(item.type, index)
             })
         },
         setSortable () {
@@ -343,9 +355,10 @@ export default {
                         type: 'title',
                         title: '',
                         content: '',
-                        style: ''
+                        style: this.titleLists[0].style
                     }
                     this.articleList.push(data)
+                    this.selectStyle(0)
                     break
                 case 'change':
                     this.sortable.option('disabled', !this.sortable.option('disabled'))
@@ -471,7 +484,8 @@ export default {
 
     .show-box {
         cursor: pointer;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
+        overflow: hidden;
 
         .img-default {
             display: block;
@@ -482,10 +496,9 @@ export default {
 
     .btn-show {
         .btn-hover {
-            background: #EFF2F7;
             display: block;
             overflow: hidden;
-            padding: 12px;
+            margin-top: 10px;
         }
 
         .btns {
@@ -521,8 +534,8 @@ export default {
         bottom: 0;
 
         div {
-            width: 100px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             overflow: hidden;
             margin-top: 10px;
             border-radius: 5px;
@@ -530,15 +543,36 @@ export default {
 
             img {
                 display: block;
-                width: 100px;
-                height: 60px;
+                width: 100%;
                 box-sizing: border-box;
                 border: 1px solid #ffffff;
+            }
 
-                &.active {
-                    border: 1px solid #FF4949;
+            .now-box {
+                display: none;
+            }
+
+            &:hover {
+                .gray-box {
+                    display: none;
+                }
+
+                .now-box {
+                    display: block;
                 }
             }
+        }
+
+        .title-box {
+            width: 54px;
+            height: 54px;
+            margin-left: -3px;
+        }
+
+        .save-box {
+            width: 42px;
+            height: 42px;
+            margin-left: 3px;
         }
     }
 }

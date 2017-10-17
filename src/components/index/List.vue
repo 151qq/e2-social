@@ -12,7 +12,7 @@
         <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
           <template slot="title">
             {{item2.label}}
-            <span @click="setData(item1, item2)" class="add-box">
+            <span @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
           </template>
@@ -22,10 +22,8 @@
                 <div class="lists-box"
                     @click="getInfo(item3.nodeCode, item3.nodeCode, index1, index2, index3, item2.nodeCode)">
                   <img class="img-box" :src="item3.imgUrl">
-                  <!--<img class="img-box" src="/static/images/report1.png" >-->
                   <div class="p-box">
                     <span class="title">{{item3.label}}</span>
-                    <span class="des">{{item3.address}}</span>
                     <div>
                       <img v-if="!item3.status && $route.name === 'report'"
                           @click.stop="submitItem(item3.nodeCode, item3.nodeCode, index1, index2, index3)"
@@ -57,7 +55,8 @@
           label: 'label'
         },
         activeName: '0-0-0',
-        openeds: ['0', '0-0']
+        openeds: ['0', '0-0'],
+        addData: {}
       }
     },
     mounted(){
@@ -118,7 +117,6 @@
         var formData = {}
           util.request({
           method: 'get',
-          //interface: 'houseTree',
           interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
@@ -138,6 +136,44 @@
           }
         })
       },
+      reloadList(newId, isChange){
+        util.request({
+          method: 'get',
+          interface: this.$route.name + 'Tree',
+          data: {}
+        }).then(res => {
+          this.treeData = this.filterData(res.result.result)
+          var tree = {}
+          if (isChange) {
+            var arrs = this.activeName.split('-')
+            tree = {
+              index1: arrs[0],
+              index2: arrs[1]
+            }
+          } else {
+            tree = this.addData
+          }
+
+          var arrData = this.treeData[tree.index1].children[tree.index2]
+
+          this.openeds = [String(tree.index1), tree.index1 + '-' + tree.index2]
+          for(var i = 0, len = arrData.children.length; i < len; i++) {
+            if (arrData.children[i].nodeCode == newId) {
+              this.activeName = tree.index1 + '-' + tree.index2 + '-' + i
+              break
+            }
+          }
+
+
+          let formData = {
+            id: newId
+          }
+          // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+          localStorage.setItem("id", newId)
+          localStorage.setItem("dirCode", arrData.nodeCode)
+          this.$emit('getInfo', formData)
+        })
+      },
       filterData (datas) {
         var opDatas = datas.concat([])
         opDatas = opDatas.filter((item1, index1) => {
@@ -155,10 +191,21 @@
         })
         return opDatas
       },
-      setData (item1, item2) {
+      setData (item1, item2, index1, index2) {
         localStorage.setItem('houseCity', item1.label)
         localStorage.setItem('houseMall', item2.nodeCode)
-        window.open ('#/index/' + this.$route.name + '/' + item2.nodeCode, '_blank')
+        this.addData = {
+          index1: index1,
+          index2: index2
+        }
+        var data = {
+          houseCity: item1.label,
+          houseMall: item2.label,
+          houseMName: item2.label
+        }
+
+        this.$parent.$refs.editBox.showAdd(data)
+        
       },
       delItem (id, nodeCode) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -303,29 +350,24 @@
 
           .p-box {
             float: left;
-            width: 230px;
+            width: 200px;
             margin-top: 10px;
 
             .title {
               display: block;
               font-size: 14px;
+              height: 40px;
               color: #000000;
-              line-height: 18px
-            }
-
-            .des {
-              display: block;
-              height: 26px;
-              font-size: 12px;
-              color: #5E6D82;
-              overflow: hidden;
-              line-height: 26px;
+              line-height: 20px;
+              white-space: normal;
+              word-wrap:break-word;
+              word-break:break-all;
             }
 
             div {
               display: none;
               position: absolute;
-              right: -20px;
+              right: -27px;
               top: 10px;
               width: 48px;
               height: 16px;

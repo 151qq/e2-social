@@ -21,16 +21,18 @@ const routers = [
         resolve(require('./article/report.vue'))
       })
     }
-  }, {
-    // 任务列表
-    path: '/notice/detail/:id',
-    name: 'notice',
-    component (resolve) {
-      require.ensure(['./notice/detail.vue'], () => {
-        resolve(require('./notice/detail.vue'))
-      })
-    }
   }
+  // ,
+  // {
+  //   // 任务列表
+  //   path: '/notice/detail/:id',
+  //   name: 'notice',
+  //   component (resolve) {
+  //     require.ensure(['./notice/detail.vue'], () => {
+  //       resolve(require('./notice/detail.vue'))
+  //     })
+  //   }
+  // }
 ]
 
 export default routers

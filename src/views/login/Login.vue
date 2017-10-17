@@ -12,10 +12,10 @@
             </div>
             <div class="r">
                 <el-form :label-position="'left'" label-width="80px">
-                    <el-form-item label="用户名">
+                    <el-form-item label="用户名称">
                         <el-input v-model="userLoginAccount"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码">
+                    <el-form-item label="用户密码">
                         <el-input v-model="userPassword" type="password"></el-input>
                         <div class="forget-p" @click="dialogVisible = true">
                             忘记密码
@@ -35,7 +35,7 @@
                             请填写公司的工商注册名称，填写不正确或填写公司简称等都会影响贵公司体验的申请。
                         </div>
                     </el-form-item>
-                    <el-form-item label="申请人">
+                    <el-form-item label="申请人名">
                         <el-input v-model="userCname"></el-input>
                     </el-form-item>
                     <el-form-item label="注册手机">

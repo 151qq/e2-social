@@ -71,6 +71,9 @@ export default {
       this.keyValue = item.title
       this.isShow = false
       this.$emit('mapChange', item)
+    },
+    resetKey () {
+      this.keyValue = ''
     }
   }
 }
@@ -79,11 +82,12 @@ export default {
   .input-out {
     position: relative;
     display: inline-block;
+    margin-bottom: 15px;
 
     .mess-box {
       position: absolute;
       left: 0;
-      top: 49px;
+      top: 36px;
       width: 534px;
       box-sizing: border-box;
       padding: 15px 0;

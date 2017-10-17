@@ -2,7 +2,7 @@
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
         <section class="leftBox" v-if="$route.params.type === 'edit'">
-            <articles @getInfo="getInfo"></articles>
+            <articles @getInfo="getInfo" ref="listBox"></articles>
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">

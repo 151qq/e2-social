@@ -5,10 +5,12 @@
             <section class="baseInput bigB">
                 <span>标题</span>
                 <el-input
+                        :maxlength="25"
                         class="input-box"
                         placeholder="请输入内容"
                         v-model="title">
                 </el-input>
+                <div class="abstract-num">剩余<span>{{titleNum}}</span>个字</div>
             </section>
             <section class="baseInput">
                 <span>投资顾问</span>
@@ -21,19 +23,43 @@
                   </el-option>
                 </el-select>
             </section>
+            <section class="baseInput rightF">
+                <span>创作时间</span>
+                <el-input
+                        class="input-box"
+                        placeholder="请输入内容"
+                        v-model="createTime"
+                        :disabled="true">
+                </el-input>
+            </section>
+
+            <section class="baseInput bigB">
+                <span>报告摘要</span>
+                <el-input
+                  type="textarea"
+                  :rows="4"
+                  :maxlength="70"
+                  placeholder="请输入内容"
+                  v-model="abstract">
+                </el-input>
+                <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
+            </section>
 
             <div class="clear"></div>
             <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                 @click="saveForm">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
+          <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="报告封面" name="1">
-            <upLoad :path="coverImg" :is-btn="true"
-                :is-not-del="true"
+            <upLoad :path="coverImg"
+                :no-del="true"
                 :bg-path="true"
+                :is-btn="true"
                 @changeImg="changeImg"
                 @saveImg="saveForm"></upLoad>
           </el-collapse-item>
+          <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="报告详情" name="2">
             <edit-box :article-in="articleinfo" ref="articleForm"></edit-box>
           </el-collapse-item>
@@ -80,12 +106,17 @@
             <el-button type="primary" @click="confirmSelect">确 定</el-button>
           </div>
         </el-dialog>
+
+        <add-report :is-add="isAdd"
+                @addReports="addNewReport"
+                ref="addReports"></add-report>
     </div>
 </template>
 <script>
 import util from '../../assets/common/util'
 import editBox from '../../components/common/edit'
 import upLoad from '../../components/common/upLoad'
+import addReport from './addReport'
 import $ from 'Jquery'
 
 export default {
@@ -94,6 +125,8 @@ export default {
         return {
             title: '',
             investor: '',
+            abstract: '',
+            createTime: '',
             articles: '',
             pageSize: 2,
             pageNum: 1,
@@ -105,7 +138,12 @@ export default {
             dialogVisible: false,
             articleinfo: [],
             coverImg: '',
-            articleId: ''
+            articleId: '',
+            isAdd: {
+              value: false
+            },
+            abstractNum: 70,
+            titleNum: 25
         }
     },
     mounted () {
@@ -119,6 +157,14 @@ export default {
 
         this.getAllData()
     },
+    watch: {
+      abstract () {
+        this.abstractNum = 70 - this.abstract.length
+      },
+      title () {
+        this.titleNum = 25 - this.title.length
+      }
+    },
     methods: {
         getAllData () {
           if (this.type === 'edit') {
@@ -126,6 +172,14 @@ export default {
           }
           this.getReportList()
           this.getInvestors()
+
+          if (this.timer) {
+              clearInterval(this.timer)
+          }
+
+          this.timer = setInterval(() => {
+              this.saveAll()
+          }, 180000)
         },
         getArticle () {
           util.request({
@@ -141,6 +195,7 @@ export default {
               this.articleId = resData.id
               this.investor = resData.editorCode
               this.coverImg = resData.html5PageindexImg
+              this.createTime = res.result.responsetime.split(' ')[0]
 
               var data = {
                 article: this.articleinfo,
@@ -193,6 +248,27 @@ export default {
           }
 
           this.$refs.articleForm.saveArticle(obj)
+          setTimeout(() => {
+            this.$parent.$refs.listBox.reloadList(localStorage.getItem('id'), true)
+          }, 300)
+        },
+        saveAll () {
+          this.saveForm()
+          this.$refs.articleForm.saveAll()
+          // this.saveData('articles')
+        }, 
+        showAdd () {
+          this.$refs.addReports.initData()
+          this.isAdd.value = true
+        },
+        addNewReport (data) {
+          this.title = data.title
+          var obj = {
+            title: this.title,
+            isAdd: true
+          }
+          this.$refs.articleForm.saveArticle(obj)
+          this.isAdd.value = false
         },
         getInvestors () {
             util.request({
@@ -311,7 +387,8 @@ export default {
     },
     components: {
       editBox,
-      upLoad
+      upLoad,
+      addReport
     }
 }
 </script>
@@ -354,6 +431,13 @@ export default {
         }
     }
 
+    .abstract-num {
+      float: right;
+      span {
+        color: red;
+      }
+    }
+
     .bigB {
         .input-box {
             width: 575px;
@@ -362,6 +446,14 @@ export default {
                 width: 575px;
             }
         }
+
+        .el-textarea {
+          width: 575px;
+        }
+    }
+
+    .rightF {
+        float: right;
     }
 
     .save-btn {
