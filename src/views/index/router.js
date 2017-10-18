@@ -21,6 +21,24 @@ const routers = [
         resolve(require('./article/report.vue'))
       })
     }
+  }, {
+    // 租金历史
+    path: '/index/rents',
+    name: 'rents',
+    component (resolve) {
+      require.ensure(['./article/rents.vue'], () => {
+        resolve(require('./article/rents.vue'))
+      })
+    }
+  }, {
+    // 租金历史
+    path: '/index/changes',
+    name: 'changes',
+    component (resolve) {
+      require.ensure(['./article/changes.vue'], () => {
+        resolve(require('./article/changes.vue'))
+      })
+    }
   }
   // ,
   // {

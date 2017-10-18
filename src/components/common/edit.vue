@@ -238,6 +238,9 @@ export default {
                 if (data.investor) {
                     formData.editorCode = data.investor
                 }
+                if (data.abstract) {
+                    formData.html5Summary = data.abstract
+                }
                 if (data.pageImg) {
                     formData.html5PageindexImg = data.pageImg
                 }
@@ -247,8 +250,6 @@ export default {
                 formData.id = data.id
                 formData.html5CatalogCode = data.html5CatalogCode
             }
-
-
             
             util.request({
                 method: 'post',
@@ -279,7 +280,7 @@ export default {
                     areaType: type,
                     html5TemplateCode: this.html5TemplateCode,
                     areaTxt: this.articleList[index].content,
-                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("id"),
+                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("htmlHouseCode"),
                     id: this.articleList[index].id ? this.articleList[index].id : '',
                     sequence: index + 20
                 }

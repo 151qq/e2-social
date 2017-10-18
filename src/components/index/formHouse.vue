@@ -51,7 +51,7 @@
                                     v-for="(item, index) in investors"
                                     :key="index"
                                     :label="item.userLoginName"
-                                    :value="item.id">
+                                    :value="item.userCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -72,7 +72,7 @@
                     <section class="baseInput">
                         <span>物业类型</span>
                         <el-select class="input-box"
-                                    v-model="base.type"
+                                    v-model="base.logisticsType"
                                     name="type"
                                     placeholder="请选择">
                             <el-option
@@ -201,16 +201,28 @@
                                     allow-create
                                     name="benchmark"
                                     :multiple-limit="3"
-                                    placeholder="请选择文章标签">
+                                    placeholder="请选择3个物业标签">
                                 <el-option
                                         v-for="item in benchList"
-                                        :key="item.id"
-                                        :label="item.title"
-                                        :value="item.id">
+                                        :key="item.housesId"
+                                        :label="item.housesDesc"
+                                        :value="String(item.housesId)">
                                 </el-option>
                             </el-select>
                         </div>
                     </section>
+
+                    <section class="baseInput bigB">
+                        <span>标志图片</span>
+                        <div class="input-box">
+                            <upLoad :path="base.housesImg"
+                                    :no-del="true"
+                                    :bg-path="true"
+                                    @changeImg="changeImg"></upLoad>
+                        </div>
+                    </section>
+
+                    
                     <div class="clear"></div>
                 </div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -220,6 +232,7 @@
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业交易历史" name="2">
                 <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addChange">增加</el-button>
+                <router-link class="link-btn" target="_blank" :to="{name: 'changes'}">明细</router-link>
                 <div v-for="(item, index) in changes" :key="index" class="over-box">
                     <section class="baseInput">
                         <span>交易日期</span>
@@ -254,12 +267,19 @@
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                @click="saveData('changes', item.id, index)">保存</el-button>
-                    <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteChange(index, item.id)">删除</el-button>
+                    <el-button v-if="!item.id"
+                            class="delete-btn"
+                            type="danger"
+                            :plain="true"
+                            size="small"
+                            icon="delete"
+                            @click="deleteChange(index)">删除</el-button>
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业租金历史" name="3">
                 <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addRent">增加</el-button>
+                <router-link class="link-btn" target="_blank" :to="{name: 'rents'}">明细</router-link>
                 <div v-for="(item, index) in rents" :key="index" class="over-box">
                     <section class="baseInput">
                         <span>交易日期</span>
@@ -288,7 +308,13 @@
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                @click="saveData('rents', item.id, index)">保存</el-button>
-                    <el-button class="delete-btn" type="danger" :plain="true" size="small" icon="delete" @click="deleteRent(index, item.id)">删除</el-button>
+                    <el-button v-if="!item.id"
+                                class="delete-btn"
+                                type="danger"
+                                :plain="true"
+                                size="small"
+                                icon="delete"
+                                @click="deleteRent(index)">删除</el-button>
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
@@ -297,7 +323,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
-                <upload-list :img-lists="appearance" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('appearance')">保存</el-button>
@@ -305,7 +331,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业公共区域图片" name="6">
-                <upload-list :img-lists="public" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="public" :type="'public'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('public')">保存</el-button>
@@ -313,7 +339,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业周围环境图片" name="7">
-                <upload-list :img-lists="surround" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('surround')">保存</el-button>
@@ -332,6 +358,7 @@
 <script>
     import searchBox from '../common/search-box.vue'
     import util from '../../assets/common/util'
+    import upLoad from '../../components/common/upLoad'
     import uploadList from '../../components/index/upload-list'
     import swiperImg from '../../components/common/swiper-img.vue'
     import editBox from '../../components/common/edit'
@@ -349,12 +376,12 @@
                     },
                     city: '',
                     mall: '',
-                    type: '',
+                    logisticsType: '',
                     level: '',
                     massif: '',
                     year: 0,
-                    ratio: 1,
-                    star: 0,
+                    ratio: 0,
+                    star: '0',
                     owner: '',
                     property: '',
                     rent: '',
@@ -366,7 +393,8 @@
                     benchmark: [],
                     holding: '',
                     traffic: '',
-                    investor: ''
+                    investor: '',
+                    housesImg: ''
                 },
                 changes: [
                     {
@@ -384,6 +412,7 @@
                         priceB: ''
                     }
                 ],
+                addBase: {},
                 malls: [],
                 investors: [],
                 types: {
@@ -396,11 +425,11 @@
                 },
                 stars: [
                     {
-                        value: 0,
+                        value: '0',
                         text: '否'
                     },
                     {
-                        value: 1,
+                        value: '1',
                         text: '是'
                     }
                 ],
@@ -446,6 +475,7 @@
                 this.activeNames = houseColl.split(',')
             }
             document.title = '楼盘维护'
+            this.addBase = Object.assign({}, this.base)
         },
         methods: {
             getAllData () {
@@ -466,6 +496,7 @@
                 //     this.saveAll()
                 // }, 180000)
                 
+                this.bigImgs = []
             },
             getBase () {
                 util.request({
@@ -487,10 +518,12 @@
                     method: 'get',
                     interface: 'appearance',
                     data: {
-                        id: localStorage.getItem("id")
+                        fileCode: localStorage.getItem("id"),
+                        catalogCode: 'appearance'
                     }
                 }).then(res => {
                     this.appearance = res.result.result
+                    this.bigImgs = this.bigImgs.concat(this.appearance)
                 })
             },
             getPublic () {
@@ -498,10 +531,14 @@
                     method: 'get',
                     interface: 'public',
                     data: {
-                        id: localStorage.getItem("id")
+                        fileCode: localStorage.getItem("id"),
+                        catalogCode: 'public'
                     }
                 }).then(res => {
                     this.public = res.result.result
+                    setTimeout (() => {
+                        this.bigImgs = this.bigImgs.concat(this.public)
+                    }, 150)
                 })
             },
             getSurround () {
@@ -509,25 +546,28 @@
                     method: 'get',
                     interface: 'surround',
                     data: {
-                        id: localStorage.getItem("id")
+                        fileCode: localStorage.getItem("id"),
+                        catalogCode: 'surround'
                     }
                 }).then(res => {
                     this.surround = res.result.result
+                    setTimeout (() => {
+                        this.bigImgs = this.bigImgs.concat(this.surround)
+                    }, 300)
                 })
             },
             getArticle () {
                 util.request({
                     method: 'get',
-                    interface: 'findArticleByFileCode',
+                    interface: 'findArticleByCatalogCode',
                     data: {
-                        fileCode: localStorage.getItem("id")
+                        catalogCode: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    if (res.result.success !== '0') {
-                        var resData = res.result.result
+                    if (res.result.success !== '0' && res.result.result.length) {
+                        var resData = res.result.result[0]
                         this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
-                        this.base.name = resData.html5PageTitle
-
+                        localStorage.setItem("htmlHouseCode", resData.html5PageCode)
                         var data = {
                             article: this.articleinfo,
                             bgImg: resData.backgroundImg
@@ -545,7 +585,6 @@
                     }
                 }).then(res => {
                     this.changes = res.result.result.changes
-                    console.log(res.result.result.changes)
                 })
             },
             getRents () {
@@ -560,21 +599,14 @@
                 })
             },
             showImg (index) {
-                util.request({
-                    method: 'get',
-                    interface: 'bigImgs',
-                    data: {
-                        id: localStorage.getItem("id")
-                    }
-                }).then(res => {
-                    this.bigImgs = res.result.datas
-                    console.log(this.bigImgs)
-                    this.index = index
-                    this.isShow.value = true
-                })
+                this.index = index
+                this.isShow.value = true
             },
             collChange () {
                 localStorage.setItem("houseColl", this.activeNames)
+            },
+            changeImg (data) {
+                this.base.housesImg = data.url
             },
             saveData (type, itemId, index) {
                 var formData = {
@@ -589,6 +621,14 @@
 
                 if (index !== undefined) {
                     formData.data = this[type][index]
+                }
+
+                if (type === 'base' && this.base.benchmark.length != 3) {
+                    this.$message({
+                        message: '请务必选择3个对标物业！',
+                        type: 'warning'
+                    })
+                    return false
                 }
 
                 util.request({
@@ -622,8 +662,8 @@
             },
             showAdd (data) {
                 this.houseCity = data.houseCity
-                this.base.city = data.houseCity
-                this.base.mall = data.houseMall
+                this.addBase.city = data.houseCity
+                this.addBase.mall = data.houseMall
                 this.isAdd.value = true
                 setTimeout(() => {
                     this.getMalls()
@@ -635,12 +675,12 @@
                 }, 0)
             },
             addHouse (data) {
-                this.base.name = data.name
-                this.base.point = data.point
+                this.addBase.name = data.name
+                this.addBase.point = data.point
 
                 var formData = {
                     type: 'base',
-                    data: this.base
+                    data: this.addBase
                 }
 
                 util.request({
@@ -672,7 +712,7 @@
                     method: 'get',
                     interface: 'benchList',
                     data: {
-                        id: localStorage.getItem("id")
+                        cityCode: localStorage.getItem("cityCode")
                     }
                 }).then(res => {
                     this.benchList = res.result.result
@@ -764,6 +804,7 @@
         },
         components: {
             searchBox,
+            upLoad,
             uploadList,
             swiperImg,
             editBox,
@@ -781,10 +822,25 @@
         width: 640px;
         margin: 0 auto;
 
+        .link-btn {
+            position: absolute;
+            right: 70px;
+            top: 7px;
+            width: 60px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            font-size: 12px;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #20a0ff;
+        }
+
         .add-btn {
             position: absolute;
             right: 0;
             top: 7px;
+            
         }
 
         .save-btn {

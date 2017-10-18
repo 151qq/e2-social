@@ -1,0 +1,82 @@
+<template>
+    <section class="mid-box">
+        <el-table
+                :data="rents"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="date"
+                    label="交易日期"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="priceT"
+                    label="高区租金"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="priceM"
+                    label="中区租金">
+            </el-table-column>
+            <el-table-column
+                    prop="priceB"
+                    label="低区租金">
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            v-if="total"
+            class="page-box"
+            layout="prev, pager, next"
+            @current-change="pageChange"
+            :page-sizes="pageSize"
+            :total="total">
+        </el-pagination>
+    </section>
+</template>
+<script>
+import util from '../../../assets/common/util'
+
+export default {
+    data () {
+        return {
+            rents: [],
+            total: 0,
+            pageSize: 10,
+            pageNumber: 1
+        }
+    },
+    mounted () {
+        this.getRents()
+    },
+    methods: {
+        getRents () {
+            util.request({
+                method: 'get',
+                interface: 'rent',
+                data: {
+                    id: localStorage.getItem("id"),
+                    pageSize: this.pageSize,
+                    pageNumber: this.pageNumber
+                }
+            }).then(res => {
+                this.rents = res.result.result.rents
+                this.total = this.total ? this.total : 0
+            })
+        },
+        pageChange (page) {
+            this.pageNumber++
+            this.getRents()
+        }
+    }
+}
+</script>
+<style lang="scss">
+.mid-box {
+    width: 1000px;
+    margin: 30px auto;
+
+    .page-box {
+        margin-top: 15px;
+    }
+}
+</style>

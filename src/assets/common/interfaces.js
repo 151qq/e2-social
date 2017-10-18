@@ -31,6 +31,7 @@ export default {
         * id pageID                                  
         */
         "findArticleByFileCode": platform + "siteEdit/findArticleByFileCode.json",
+        "findArticleByCatalogCode": platform + "siteEdit/findArticleByCatalogCode.json",
         /**
         * 我的任务列表 post
         * fileCode: html5PageCode
@@ -163,11 +164,6 @@ export default {
         surround: platform +'houses/image/surround.json',
         /**
         * 我的报告列表 get
-        * key 搜索时使用，返回搜索相关数据
-        */
-        reportList: '/static/api/report/reportList.json',
-        /**
-        * 我的报告列表 get
          * '/static/api/report/reportTree.json'
         */
         reportTree: platform +'report/reportTree.json',
@@ -175,7 +171,7 @@ export default {
         * 我的选中报告列表 get
         * ids 文章报告id eg: 1,2,3
         */
-        reportSelectList: '/static/api/report/reportSelectList.json',
+        findRecommendArticleByCode: platform + 'siteEdit/findRecommendArticleByCode.json',
         /**
         * 删除文章或报告 post
         * id
@@ -230,6 +226,9 @@ export default {
         * type 列表类型
         * id 楼盘序列标识
         */
-        benchList: platform + 'houses/findHousesByCityCode.json'
+        benchList: platform + 'houses/findHousesByCityCode.json',
+
+        setArticles: platform + 'siteEdit/setRecommendArticle.json'
+
     }
 }

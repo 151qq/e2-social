@@ -70,10 +70,9 @@
                 v-if="reportSelect.length"
                 :key="index"
                 class="report-box">
-                <img class="report-i" :src="item.imgUrl">
+                <img class="report-i" :src="item.html5PageindexImg">
                 <div class="content-b">
-                  <p class="title">{{item.title}}</p>
-                  <p class="des">{{item.des}}</p>
+                  <p class="title">{{item.html5PageTitle}}</p>
                 </div>
                 <el-button class="delete-b"
                             type="danger"
@@ -93,19 +92,18 @@
                         :plain="true"
                         size="small"
                         icon="document"
-                        @click="saveData('articles')">保存</el-button>
+                        @click="setArticles">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
         </el-collapse>
 
         <el-dialog class="report-m" title="选择文章" :visible.sync="dialogVisible">
-          <div class="articles-box" v-for="(item, index) in reportList.slice(0, 2)"
+          <div class="articles-box" v-for="(item, index) in reportList"
               @click="changeReport(index)"
               :class="item.isSelected ? 'active' : ''">
-            <img class="report-i" :src="item.imgUrl">
+            <img class="report-i" :src="item.html5PageindexImg">
             <div class="content-b">
-              <p class="title">{{item.title}}</p>
-              <p class="des">{{item.des}}</p>
+              <p class="title">{{item.html5PageTitle}}</p>
               <p>
                 
               </p>
@@ -145,7 +143,7 @@ export default {
             createTime: '',
             articles: '',
             pageSize: 2,
-            pageNum: 1,
+            pageNumber: 1,
             total: 0,
             reportSelect: [],
             reportList: [],
@@ -184,11 +182,12 @@ export default {
     },
     methods: {
         getAllData () {
-          if (this.type === 'edit') {
-            this.getArticle()
-          }
+          this.getArticle()
+          this.getSelectList()
           this.getReportList()
           this.getInvestors()
+
+          this.pageNumber = 1
 
           if (this.timer) {
               clearInterval(this.timer)
@@ -237,29 +236,44 @@ export default {
         collChange () {
             localStorage.setItem("reportColl", this.activeNames)
         },
-        saveData (type, index) {
-            var formData = {
-              id: localStorage.getItem("id"),
-              type: type,
-              data: this[type],
-            }
+        // saveData (type, index) {
+        //     var formData = {
+        //       id: localStorage.getItem("id"),
+        //       type: type,
+        //       data: this[type],
+        //     }
 
-            if (index !== undefined) {
-              formData.index = index
-            }
+        //     if (index !== undefined) {
+        //       formData.index = index
+        //     }
 
-            util.request({
-                method: 'post',
-                interface: 'savereport',
-                data: formData
-            }).then(res => {
-                console.log(res)
-            })
+        //     util.request({
+        //         method: 'post',
+        //         interface: 'savereport',
+        //         data: formData
+        //     }).then(res => {
+        //         console.log(res)
+        //     })
+        // },
+        setArticles () {
+          var formData = {
+            articleCode: localStorage.getItem("id"),
+            recommend: this.articles
+          }
+
+          util.request({
+              method: 'post',
+              interface: 'setArticles',
+              data: formData
+          }).then(res => {
+              console.log(res)
+          })
         },
         saveForm () {
           var obj = {
             title: this.title,
             investor: this.investor,
+            abstract: this.abstract,
             pageImg: this.coverImg,
             id: this.articleId,
             html5CatalogCode: localStorage.getItem('dirCode'),
@@ -271,7 +285,7 @@ export default {
         saveAll () {
           this.saveForm()
           this.$refs.articleForm.saveAll()
-          // this.saveData('articles')
+          this.setArticles()
         }, 
         showAdd () {
           this.$refs.addReports.initData()
@@ -300,31 +314,37 @@ export default {
         },
         getSelectList () {
           var formD = {
-            ids: this.articles
+            fileCode: localStorage.getItem("id")
           }
 
           util.request({
               method: 'get',
-              interface: 'reportSelectList',
+              interface: 'findRecommendArticleByCode',
               data: formD
           }).then(res => {
-              this.reportSelect = res.result.datas
+              this.reportSelect = res.result.result
+
+              var dataArrs = []
+              this.reportSelect.forEach((item) => {
+                dataArrs.push(item.html5PageCode)
+              })
+
+              this.articles = dataArrs.join(',')
           })
         },
         getReportList () {
-            var formD = {
+            var formData = {
               pageSize: this.pageSize,
-              pageNum: this.pageNum,
-              id: localStorage.getItem("id")
+              pageNumber: this.pageNumber
             }
 
             util.request({
                 method: 'get',
-                interface: 'reportList',
-                data: formD
+                interface: 'findRecommendArticleByCode',
+                data: formData
             }).then(res => {
-                this.total = res.result.total
-                this.reportList = res.result.datas
+                this.total = Number(res.result.total)
+                this.reportList = res.result.result
                 this.resetReport()
             })
         },
@@ -337,7 +357,7 @@ export default {
           this.reportSelect.splice(index, 1)
           this.articles = selects.join(',')
           this.resetReport()
-          this.saveData()
+          this.setArticles()
         },
         resetReport () {
           // 存储选择状态
@@ -356,7 +376,6 @@ export default {
             }
           })
           this.reportList = this.reportList.concat([])
-          console.log(this.reportList)
         },
         changeReport (index) {
           let item = this.reportList[index]
@@ -378,7 +397,7 @@ export default {
           this.selListInit = []
           var selects = this.articles.split(',')
           this.reportList.forEach((item, num) => {
-            var index = selects.indexOf(String(item.id))
+            var index = selects.indexOf(item.html5PageCode)
             // 存储选择状态
             this.selListInit.push(item.isSelected)
 
@@ -388,7 +407,7 @@ export default {
               this.reportSelect.splice(index, 1)
             } if (index < 0 && item.isSelected) {
               // 添加
-              selects.push(item.id)
+              selects.push(item.html5PageCode)
               this.reportSelect.push(item)
             }
           })
@@ -396,7 +415,7 @@ export default {
           this.dialogVisible = false
         },
         changePage (size) {
-          this.pageNum = size
+          this.pageNumber = size
           this.getReportList()
         }
     },

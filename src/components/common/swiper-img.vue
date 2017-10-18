@@ -6,9 +6,9 @@
       :color="'transparent'"
       :width="'800px'"
       :top="'10%'">
-    <swiper :options="swiperOption" :not-next-tick="notNextTick" ref="mySwiper">
+    <swiper :options="swiperOption" class="img-big-box" :not-next-tick="notNextTick" ref="mySwiper">
       <!-- slides -->
-      <swiper-slide v-for="item in bigImgs"><img :src="item"></swiper-slide>
+      <swiper-slide v-for="item in bigImgs"><img :src="item.link"></swiper-slide>
       <!-- Optional controls -->
       <div class="swiper-scrollbar"   slot="scrollbar"></div>
     </swiper>
@@ -57,8 +57,15 @@ export default {
 }
 </script>
 <style lang="scss">
-  .swiper-slide img {
-    width: 100%;
+  .img-big-box {
+    width: 740px;
+    height: 480px;
+    overflow: hidden;
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+    }
   }
 
   .swiper-button-prev {

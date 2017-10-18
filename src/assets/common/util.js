@@ -128,6 +128,11 @@ export default {
             param.append('file', file, file.name);//通过append向form对象添加数据
             //param.append('chunk','0');//添加form表单中其他数据
             //console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+            if (option.data) {
+                for (var key in option.data) {
+                    param.append(key, option.data[key])
+                }
+            }
             let config = {
                 headers: {'Content-Type': 'multipart/form-data'}
             };  //添加请求头

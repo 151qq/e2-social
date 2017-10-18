@@ -20,7 +20,7 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.nodeCode, item3.nodeCode, index1, index2, index3, item2.nodeCode)">
+                    @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode)">
                   <img class="img-box" :src="item3.imgUrl">
                   <div class="p-box">
                     <span class="title">{{item3.label}}</span>
@@ -124,6 +124,7 @@
           if (this.treeData[0].children.length && this.treeData[0].children[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode
+            let cityCode = this.treeData[0].nodeCode
 
             let data = {
               id: id
@@ -131,6 +132,7 @@
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
+            localStorage.setItem("cityCode", cityCode)
             this.$emit('getInfo', data)
             this.isfirst = false
           }
@@ -180,6 +182,7 @@
           // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
           localStorage.setItem("id", newId)
           localStorage.setItem("dirCode", arrData.nodeCode)
+          localStorage.setItem("cityCode", this.treeData[tree.index1].nodeCode)
           this.$emit('getInfo', formData)
         })
       },
@@ -235,7 +238,7 @@
           })       
         })
       },
-      getInfo (id, tplCode, index1, index2, index3, dirCode) {
+      getInfo (id, cityCode, index1, index2, index3, dirCode) {
         
         var curIndex = index1 + '-' + index2 + '-' + index3
         if (this.activeName === curIndex) {
@@ -248,6 +251,7 @@
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
         localStorage.setItem("dirCode", dirCode)
+        localStorage.setItem("cityCode", cityCode)
 
         this.$emit('getInfo', data)
       },

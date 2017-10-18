@@ -41,10 +41,7 @@ export default {
             map.centerAndZoom(point, 15)
         },
         drawMap (mapInfo) {
-            this.houseDatas.point = {
-                lng: mapInfo.point.lng,
-                lat: mapInfo.point.lat
-            }
+            this.houseDatas.point = mapInfo.point.lat + ',' + mapInfo.point.lng
             this.houseDatas.name = mapInfo.title
             var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
             this.map.clearOverlays()

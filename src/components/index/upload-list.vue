@@ -22,7 +22,7 @@ import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['imgLists'],
+    props: ['imgLists', 'type'],
     data() {
       return {
         imgList: []
@@ -32,7 +32,16 @@ export default {
     },
     methods: {
       postImg (e, index) {
-        util.upFile(e).then(res => {
+        var opotion = {
+          url: 'uploadArticleAreaImage',
+          event: e,
+          data: {
+            fileCode: localStorage.getItem("id"),
+            catalogCode: this.type
+          }
+        }
+
+        util.uploadFile(opotion).then(res => {
           let imgUrl = res.result.result[0];
           var imgObject = {link:imgUrl};
           if (index !== undefined) {
