@@ -172,11 +172,6 @@ export default {
             html5PageCode: ''
         }
     },
-    mounted () {
-        if (this.$route.params.type !== 'edit') {
-            this.setSortable()
-        }
-    },
     methods:{
         editInte (data) {
             var templateStr = ''
@@ -231,19 +226,9 @@ export default {
         },
         saveArticle (data) {
             var formData = {
-                id: this.articleId,
                 type: this.$route.name,
                 areaTxt: '',
-                html5TemplateCode: 'tpl_0003',
-                html5CatalogCode: this.$route.params.type
-            }
-
-            if (this.$route.params.type === 'edit') {
-                formData.html5CatalogCode = localStorage.getItem('dirCode')
-            }
-
-            if (this.$route.name === 'house') {
-                formData.html5CatalogCode = localStorage.getItem('id')
+                html5TemplateCode: 'tpl_0003'
             }
 
             if (data) {
@@ -256,7 +241,11 @@ export default {
                 if (data.pageImg) {
                     formData.html5PageindexImg = data.pageImg
                 }
+                if (data.html5PageCode) {
+                    formData.html5PageCode = data.html5PageCode
+                }
                 formData.id = data.id
+                formData.html5CatalogCode = data.html5CatalogCode
             }
 
 
@@ -277,7 +266,7 @@ export default {
                 this.html5PageCode = resData.html5PageCode
                 this.articleId = resData.id
 
-                if (data) {
+                if (data.state) {
                     this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
                 }
             })

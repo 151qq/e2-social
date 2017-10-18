@@ -28,28 +28,39 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>所属商圈</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="mallName"
-                                :disabled="true">
-                        </el-input>
+                        <el-select class="input-box"
+                                   v-model="base.mall"
+                                   name="investor"
+                                   :disabled="true"
+                                   placeholder="请选择投资顾问">
+                            <el-option
+                                    v-for="(item, index) in malls"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.nodeCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput">
                         <span>投资顾问</span>
                         <el-select class="input-box"
-                                   v-model="base.investor" placeholder="请选择投资顾问">
+                                   v-model="base.investor"
+                                   name="investor"
+                                   placeholder="请选择投资顾问">
                             <el-option
                                     v-for="(item, index) in investors"
                                     :key="index"
-                                    :label="item.typeName"
+                                    :label="item.userLoginName"
                                     :value="item.id">
                             </el-option>
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
                         <span>星标</span>
-                        <el-select class="input-box" v-model="base.star" placeholder="请选择">
+                        <el-select class="input-box"
+                                    v-model="base.star"
+                                    name="star"
+                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in stars"
                                     :key="index"
@@ -60,7 +71,10 @@
                     </section>
                     <section class="baseInput">
                         <span>物业类型</span>
-                        <el-select class="input-box" v-model="base.propType" placeholder="请选择">
+                        <el-select class="input-box"
+                                    v-model="base.type"
+                                    name="type"
+                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.propertys"
                                     :key="index"
@@ -71,7 +85,10 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>楼盘等级</span>
-                        <el-select class="input-box" v-model="base.level" placeholder="请选择">
+                        <el-select class="input-box"
+                                    v-model="base.level"
+                                    name="level"
+                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.level"
                                     :key="index"
@@ -140,7 +157,10 @@
                     </section>
                     <section class="baseInput">
                         <span>地板类型</span>
-                        <el-select class="input-box" v-model="base.floor" placeholder="请选择">
+                        <el-select class="input-box"
+                                    v-model="base.floor"
+                                    name="floor"
+                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.floors"
                                     :key="index"
@@ -151,7 +171,10 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>物业持有</span>
-                        <el-select class="input-box" v-model="base.holding" placeholder="请选择">
+                        <el-select class="input-box"
+                                    v-model="base.holding"
+                                    name="holding"
+                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.hold"
                                     :key="index"
@@ -176,6 +199,7 @@
                                     multiple
                                     filterable
                                     allow-create
+                                    name="benchmark"
                                     :multiple-limit="3"
                                     placeholder="请选择文章标签">
                                 <el-option
@@ -325,12 +349,12 @@
                     },
                     city: '',
                     mall: '',
-                    propType: '',
+                    type: '',
                     level: '',
                     massif: '',
                     year: 0,
                     ratio: 1,
-                    star: 1,
+                    star: 0,
                     owner: '',
                     property: '',
                     rent: '',
@@ -344,7 +368,6 @@
                     traffic: '',
                     investor: ''
                 },
-                mallName: '',
                 changes: [
                     {
                         date: '',
@@ -422,6 +445,7 @@
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
+            document.title = '楼盘维护'
         },
         methods: {
             getAllData () {
@@ -438,9 +462,9 @@
                     clearInterval(this.timer)
                 }
 
-                this.timer = setInterval(() => {
-                    this.saveAll()
-                }, 180000)
+                // this.timer = setInterval(() => {
+                //     this.saveAll()
+                // }, 180000)
                 
             },
             getBase () {
@@ -451,9 +475,10 @@
                         id: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.base = res.result.result.base
+                    this.base = Object.assign(this.base, res.result.result.base)
                     setTimeout(() => {
                         this.drawMap()
+                        this.getMalls()
                     }, 0)
                 })
             },
@@ -599,9 +624,9 @@
                 this.houseCity = data.houseCity
                 this.base.city = data.houseCity
                 this.base.mall = data.houseMall
-                this.mallName = data.houseMName
                 this.isAdd.value = true
                 setTimeout(() => {
+                    this.getMalls()
                     this.houseData = {
                         name: '',
                         pointer: {}
@@ -624,7 +649,11 @@
                     data: formData
                 }).then(res => {
                     localStorage.setItem("id", res.result.result.id)
-                    this.$refs.editForm.saveArticle()
+                    var obj = {
+                        id: '',
+                        html5CatalogCode: res.result.result.id
+                    }
+                    this.$refs.editForm.saveArticle(obj)
                     this.isAdd.value = false
                     this.$parent.$refs.listBox.reloadList(res.result.result.id)
                 })
@@ -726,6 +755,11 @@
                     return false
                 }
                 this.rents.splice(index, 1)
+            }
+        },
+        destroyed() {
+            if (this.timer) {
+                clearInterval(this.timer)
             }
         },
         components: {

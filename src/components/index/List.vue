@@ -108,10 +108,10 @@
     methods: {
   		//获取时间		
   		getTime(data){		
-  			this.timer = data?data:'';		
-  			this.list = [];		
-  			this.pageNumber = 1;		
-  			this.loadList();		
+  			this.timer = data?data:''
+  			this.list = []
+  			this.pageNumber = 1
+  			this.loadList()
   		},
       loadList(){
         var formData = {}
@@ -121,7 +121,7 @@
           data: formData
         }).then(res => {
           this.treeData = this.filterData(res.result.result)
-          if (this.treeData[0].children.length && this.isfirst) {
+          if (this.treeData[0].children.length && this.treeData[0].children[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode
 
@@ -160,20 +160,19 @@
 
           this.addData = ''
 
-          console.log(tree, 'tree')
-          console.log(this.treeData)
           var arrData = this.treeData[tree.index1].children[tree.index2]
 
           this.openeds = [String(tree.index1), tree.index1 + '-' + tree.index2]
           for(var i = 0, len = arrData.children.length; i < len; i++) {
             if (arrData.children[i].nodeCode == newId) {
-              this.activeName = tree.index1 + '-' + tree.index2 + '-' + i
+              setTimeout(() => {
+                this.activeName = tree.index1 + '-' + tree.index2 + '-' + i
+              }, 0)
               break
             }
           }
 
-          console.log(this.activeName, 'activeName')
-
+          console.log(tree, this.activeName)
 
           let formData = {
             id: newId
@@ -190,15 +189,6 @@
           return item1.children && item1.children.length
         })
 
-        opDatas.forEach((item1, index1) => {
-          item1.children.filter((item2, index2) => {
-            return item2.children && item2.children.length
-          })
-        })
-
-        opDatas = opDatas.filter((item1, index1) => {
-          return item1.children && item1.children.length
-        })
         return opDatas
       },
       setData (item1, item2, index1, index2) {
@@ -210,7 +200,7 @@
         }
         var data = {
           houseCity: item1.label,
-          houseMall: item2.label,
+          houseMall: item2.nodeCode,
           houseMName: item2.label
         }
 

@@ -119,7 +119,7 @@ export default {
   },
   created () {
     this.getUserInfo()
-    this.getNotice()
+    // this.getNotice()
   },
   beforeRouteUpdate (to, from, next) {
     this.keyValue = ''

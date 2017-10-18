@@ -66,18 +66,34 @@
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="推荐文章" name="3">
             <el-button class="add-b" type="primary" size="small" icon="plus" @click="addReport">增加</el-button>
-            <div v-for="(item, index) in reportSelect" class="report-box">
+            <div v-for="(item, index) in reportSelect"
+                v-if="reportSelect.length"
+                :key="index"
+                class="report-box">
                 <img class="report-i" :src="item.imgUrl">
                 <div class="content-b">
                   <p class="title">{{item.title}}</p>
                   <p class="des">{{item.des}}</p>
                 </div>
-                <el-button class="delete-b" type="danger" :plain="true" size="small" icon="delete"
-                    @click="deleteReport(index)">删除</el-button>
+                <el-button class="delete-b"
+                            type="danger"
+                            :plain="true"
+                            size="small"
+                            icon="delete"
+                            @click="deleteReport(index)">删除</el-button>
+            </div>
+            <div v-if="!reportSelect.length"
+                  class="null-box">
+              还没有推荐文章，请点击增加按钮添加！
             </div>
             <div class="clear"></div>
-            <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                @click="saveData('articles')">保存</el-button>
+            <el-button class="save-btn"
+                        v-if="reportSelect.length"
+                        type="info"
+                        :plain="true"
+                        size="small"
+                        icon="document"
+                        @click="saveData('articles')">保存</el-button>
             <div class="clear"></div>
           </el-collapse-item>
         </el-collapse>
@@ -156,6 +172,7 @@ export default {
         }
 
         this.getAllData()
+        document.title = '报告维护'
     },
     watch: {
       abstract () {
@@ -177,9 +194,9 @@ export default {
               clearInterval(this.timer)
           }
 
-          this.timer = setInterval(() => {
-              this.saveAll()
-          }, 180000)
+          // this.timer = setInterval(() => {
+          //     this.saveAll()
+          // }, 180000)
         },
         getArticle () {
           util.request({
@@ -244,7 +261,9 @@ export default {
             title: this.title,
             investor: this.investor,
             pageImg: this.coverImg,
-            id: this.articleId
+            id: this.articleId,
+            html5CatalogCode: localStorage.getItem('dirCode'),
+            html5PageCode: localStorage.getItem('id')
           }
 
           this.$refs.articleForm.saveArticle(obj)
@@ -262,7 +281,8 @@ export default {
           this.title = data.title
           var obj = {
             title: this.title,
-            id: this.articleId
+            id: '',
+            html5CatalogCode: localStorage.getItem('houseMall')
           }
           this.$refs.articleForm.saveArticle(obj)
           this.isAdd.value = false
@@ -347,7 +367,6 @@ export default {
           this.dialogVisible = true
         },
         closeSelect () {
-          console.log(this.selListInit, 'close')
           this.reportList.forEach((item, index) => {
             item.isSelected = this.selListInit[index]
           })
@@ -375,11 +394,15 @@ export default {
           })
           this.articles = selects.join(',')
           this.dialogVisible = false
-          this.saveData()
         },
         changePage (size) {
           this.pageNum = size
           this.getReportList()
+        }
+    },
+    destroyed() {
+        if (this.timer) {
+            clearInterval(this.timer)
         }
     },
     components: {
@@ -405,6 +428,13 @@ export default {
     position: relative;
     width: 640px;
     margin: 0 auto;
+
+    .null-box {
+      font-size: 20px;
+      color: #333333;
+      line-height: 200px;
+      text-align: center;
+    }
 
     .baseInput {
         float: left;
