@@ -145,7 +145,6 @@
           data: {}
         }).then(res => {
           this.treeData = this.filterData(res.result.result)
-          console.log(newId, 'newId')
           var tree = {}
           if (!this.addData) {
             var arrs = this.activeName.split('-')
@@ -156,7 +155,7 @@
           } else {
             tree = {
               index1: this.addData.index1,
-              index2: this.addData.index2 
+              index2: this.addData.index2
             }
           }
 

@@ -267,9 +267,8 @@ export default {
                 this.html5PageCode = resData.html5PageCode
                 this.articleId = resData.id
 
-                if (data.state) {
-                    this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
-                }
+                
+                this.$parent.$parent.$parent.$parent.$refs.listBox.reloadList(this.html5PageCode)
             })
         },
         saveData (type, index) {

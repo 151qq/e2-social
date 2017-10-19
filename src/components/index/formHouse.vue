@@ -226,34 +226,33 @@
                     <div class="clear"></div>
                 </div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveData('base')">保存</el-button>
+                           @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业交易历史" name="2">
-                <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addChange">增加</el-button>
                 <router-link class="link-btn" target="_blank" :to="{name: 'changes'}">明细</router-link>
-                <div v-for="(item, index) in changes" :key="index" class="over-box">
+                <div class="over-box">
                     <section class="baseInput">
                         <span>交易日期</span>
                         <el-date-picker
                                 class="input-box"
-                                v-model="item.date"
+                                v-model="changes.date"
                                 type="date"
                                 placeholder="选择日期"
                                 :picker-options="pickerPre">
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
-                        <span>交易价格</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="item.price"></el-input-number>
+                        <span>价格(万)</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="changes.price"></el-input-number>
                     </section>
                     <section class="baseInput">
                         <span>交易甲方</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="item.changeA">
+                                v-model="changes.changeA">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -261,31 +260,23 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="item.changeB">
+                                v-model="changes.changeB">
                         </el-input>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveData('changes', item.id, index)">保存</el-button>
-                    <el-button v-if="!item.id"
-                            class="delete-btn"
-                            type="danger"
-                            :plain="true"
-                            size="small"
-                            icon="delete"
-                            @click="deleteChange(index)">删除</el-button>
+                               @click="saveChanges(true)">保存</el-button>
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业租金历史" name="3">
-                <el-button class="add-btn" type="primary" size="small" icon="plus" @click="addRent">增加</el-button>
                 <router-link class="link-btn" target="_blank" :to="{name: 'rents'}">明细</router-link>
-                <div v-for="(item, index) in rents" :key="index" class="over-box">
+                <div class="over-box">
                     <section class="baseInput">
                         <span>交易日期</span>
                         <el-date-picker
                                 class="input-box"
-                                v-model="item.date"
+                                v-model="rents.date"
                                 type="date"
                                 placeholder="选择日期"
                                 :picker-options="pickerPre">
@@ -293,28 +284,21 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>高区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="item.priceT"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceT"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>中区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="item.priceM"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceM"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>低区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="item.priceB"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceB"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveData('rents', item.id, index)">保存</el-button>
-                    <el-button v-if="!item.id"
-                                class="delete-btn"
-                                type="danger"
-                                :plain="true"
-                                size="small"
-                                icon="delete"
-                                @click="deleteRent(index)">删除</el-button>
+                               @click="saveRents(true)">保存</el-button>
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
@@ -323,7 +307,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
-                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg()"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('appearance')">保存</el-button>
@@ -396,22 +380,20 @@
                     investor: '',
                     housesImg: ''
                 },
-                changes: [
-                    {
-                        date: '',
-                        price: '',
-                        changeA: '',
-                        changeB: ''
-                    }
-                ],
-                rents: [
-                    {
-                        date: '',
-                        priceT: '',
-                        priceM: '',
-                        priceB: ''
-                    }
-                ],
+                changes: {
+                    id: '',
+                    date: '',
+                    price: '',
+                    changeA: '',
+                    changeB: ''
+                },
+                rents: {
+                    id: '',
+                    date: '',
+                    priceT: '',
+                    priceM: '',
+                    priceB: ''
+                },
                 addBase: {},
                 malls: [],
                 investors: [],
@@ -480,8 +462,6 @@
         methods: {
             getAllData () {
                 this.getBase()
-                this.getChanges()
-                this.getRents()
                 this.getArticle()
                 this.getAppearance()
                 this.getPublic()
@@ -506,7 +486,14 @@
                         id: localStorage.getItem("id")
                     }
                 }).then(res => {
-                    this.base = Object.assign(this.base, res.result.result.base)
+                    var base = res.result.result.base
+
+                    if (!base.benchmark) {
+                        base.benchmark = []
+                    }
+
+                    this.base = Object.assign(this.base, base)
+
                     setTimeout(() => {
                         this.drawMap()
                         this.getMalls()
@@ -576,28 +563,6 @@
                     }
                 })
             },
-            getChanges () {
-                util.request({
-                    method: 'get',
-                    interface: 'changes',
-                    data: {
-                        id: localStorage.getItem("id")
-                    }
-                }).then(res => {
-                    this.changes = res.result.result.changes
-                })
-            },
-            getRents () {
-                util.request({
-                    method: 'get',
-                    interface: 'rent',
-                    data: {
-                        id: localStorage.getItem("id")
-                    }
-                }).then(res => {
-                    this.rents = res.result.result.rents
-                })
-            },
             showImg (index) {
                 this.index = index
                 this.isShow.value = true
@@ -608,22 +573,14 @@
             changeImg (data) {
                 this.base.housesImg = data.url
             },
-            saveData (type, itemId, index) {
+            saveBase () {
                 var formData = {
                     id: localStorage.getItem("id"),
-                    type: type,
-                    data: this[type],
+                    type: 'base',
+                    data: this.base
                 }
 
-                if (itemId !== undefined) {
-                    formData.itemId = itemId
-                }
-
-                if (index !== undefined) {
-                    formData.data = this[type][index]
-                }
-
-                if (type === 'base' && this.base.benchmark.length != 3) {
+                if (this.base.benchmark.length > 3) {
                     this.$message({
                         message: '请务必选择3个对标物业！',
                         type: 'warning'
@@ -636,29 +593,149 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    if (type === 'base') {
-                        localStorage.setItem("id", res.result.result.id)
+                    this.$parent.$refs.listBox.reloadList(res.result.result.id)
+                })
+            },
+            saveChanges (isShow) {
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: 'changes',
+                    data: this.changes
+                }
+
+                if (this.changes.date == '') {
+                    this.$message({
+                        message: '请务填写交易日期！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.changes.price == '') {
+                    this.$message({
+                        message: '请务填写交易价格！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.changes.changeA == '') {
+                    this.$message({
+                        message: '请务填写交易甲方！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.changes.changeB == '') {
+                    this.$message({
+                        message: '请务填写交易乙方！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'houseInfo',
+                    data: formData
+                }).then(res => {
+                    if (res.result.success) {
+                        this.changes = {
+                            id: '',
+                            date: '',
+                            price: '',
+                            changeA: '',
+                            changeB: ''
+                        }
+
+                        if (isShow) {
+                            this.$message({
+                                message: '恭喜，已存入相关明细',
+                                type: 'success'
+                            })
+                        }
                     }
                 })
             },
+            saveRents (isShow) {
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: 'rents',
+                    data: this.rents
+                }
+
+                if (this.rents.date == '') {
+                    this.$message({
+                        message: '请务填写交易日期！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.rents.priceT == '') {
+                    this.$message({
+                        message: '请务填写高区租金！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.rents.priceM == '') {
+                    this.$message({
+                        message: '请务填写中区租金！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.rents.priceB == '') {
+                    this.$message({
+                        message: '请务填写低区租金！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'houseInfo',
+                    data: formData
+                }).then(res => {
+                    if (res.result.success) {
+                        this.rents = {
+                            date: '',
+                            priceT: '',
+                            priceM: '',
+                            priceB: ''
+                        }
+
+                        if (isShow) {
+                            this.$message({
+                                message: '恭喜，已存入相关明细',
+                                type: 'success'
+                            })
+                        }
+                    }
+                })
+            },
+            saveData (type) {
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: type,
+                    data: this[type]
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'houseInfo',
+                    data: formData
+                }).then(res => {
+                    console.log(res)
+                })
+            },
             saveAll () {
-                this.saveData('base')
-                this.saveAllChanges()
-                this.saveAllRents()
+                this.saveBase()
+                this.saveChanges()
+                this.saveRents()
                 this.$refs.articleForm.saveAll()
                 this.saveData('appearance')
                 this.saveData('public')
                 this.saveData('surround')
-            },
-            saveAllChanges () {
-                this.changes.forEach((item, index) => {
-                    this.saveData('changes', item.id, index)
-                })
-            },
-            saveAllRents () {
-                this.rents.forEach((item, index) => {
-                    this.saveData('rents', item.id, index)
-                })
             },
             showAdd (data) {
                 this.houseCity = data.houseCity
@@ -756,45 +833,6 @@
                 }).then(res => {
                     this.investors = res.result.result
                 })
-            },
-            addChange () {
-                var data = {
-                    date: '',
-                    price: '',
-                    changeA: '',
-                    changeB: '',
-                    block: ''
-                }
-                this.changes.push(data)
-            },
-            deleteChange (index) {
-                if (this.changes.length === 1) {
-                    this.$message({
-                        message: '至少要保留一条交易记录',
-                        type: 'warning'
-                    })
-                    return false
-                }
-                this.changes.splice(index, 1)
-            },
-            addRent () {
-                var data = {
-                    date: '',
-                    priceT: '',
-                    priceM: '',
-                    priceB: ''
-                }
-                this.rents.push(data)
-            },
-            deleteRent (index) {
-                if (this.rents.length === 1) {
-                    this.$message({
-                        message: '至少要保留一条租金记录',
-                        type: 'warning'
-                    })
-                    return false
-                }
-                this.rents.splice(index, 1)
             }
         },
         destroyed() {
@@ -824,7 +862,7 @@
 
         .link-btn {
             position: absolute;
-            right: 70px;
+            right: 0;
             top: 7px;
             width: 60px;
             height: 28px;
