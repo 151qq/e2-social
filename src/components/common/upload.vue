@@ -7,7 +7,8 @@
           src="../../assets/images/page-img.jpg" @click="showSelect">
       <img v-else class="img-big" :src="curPath" @click="showSelect">
       <section v-if="isBtn">
-        <el-button class="op-btn"
+        <el-button v-if="!noSave"
+            class="op-btn"
             type="info"
             :plain="true"
             size="small"
@@ -47,7 +48,7 @@ import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
 
 export default {
-    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath'],
+    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave'],
     data() {
       return {
         isShow: false,
@@ -167,6 +168,7 @@ export default {
 
   p {
     position: relative;
+    margin: 0;
     float: left;
     width: 120px;
     height: 30px;

@@ -15,18 +15,17 @@
             return {
                 config: {
                     initialFrameWidth: null,
-                    initialFrameHeight: null,
+                    autoHeightEnabled: true,
                     zIndex: 0,
                     toolbars: [[
                         'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
                         'lineheight', '|',
                         'fontfamily', 'fontsize', '|',
-                        'emotion', 'map', 'pagebreak',
+                        'emotion', 'map',
                         'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 
                         'horizontal', '|',
                         'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
                         'undo', 'redo'
-
                     ]]
                 },
                 editor: null

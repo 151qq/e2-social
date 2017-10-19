@@ -52,7 +52,7 @@ export default {
         })
       },
       showImg (e) {
-        let index = $('body .img-big').index($(e.target))
+        let index = $('body .img-box .img-big').index($(e.target))
         this.$emit('showimg', index)
       }
     }
@@ -100,6 +100,7 @@ export default {
           float: right;
           width: 16px;
           height: 16px;
+          margin: 0;
           margin-right: 13px;
           position: relative;
           overflow: hidden;

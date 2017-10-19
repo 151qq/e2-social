@@ -41,8 +41,10 @@ export default {
             map.centerAndZoom(point, 15)
         },
         drawMap (mapInfo) {
+            console.log(mapInfo, 'mapInfo')
             this.houseDatas.point = mapInfo.point.lat + ',' + mapInfo.point.lng
             this.houseDatas.name = mapInfo.title
+            this.houseDatas.address = mapInfo.address
             var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
             this.map.clearOverlays()
             this.map.panTo(point)

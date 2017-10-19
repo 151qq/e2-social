@@ -55,19 +55,14 @@
                             </el-option>
                         </el-select>
                     </section>
-                    <section class="baseInput rightF">
+                    <section class="baseInput switch-box rightF">
                         <span>星标</span>
-                        <el-select class="input-box"
-                                    v-model="base.star"
-                                    name="star"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in stars"
-                                    :key="index"
-                                    :label="item.text"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-switch
+                            v-model="base.star"
+                            @change="starHandle"
+                            on-value="1"
+                            off-value="0">
+                        </el-switch>
                     </section>
                     <section class="baseInput">
                         <span>物业类型</span>
@@ -96,6 +91,14 @@
                                     :value="item.id">
                             </el-option>
                         </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>楼盘地址</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.address">
+                        </el-input>
                     </section>
                     <section class="baseInput bigB">
                         <span>所属地块</span>
@@ -277,9 +280,8 @@
                         <el-date-picker
                                 class="input-box"
                                 v-model="rents.date"
-                                type="date"
-                                placeholder="选择日期"
-                                :picker-options="pickerPre">
+                                type="daterange"
+                                placeholder="选择日期范围">
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
@@ -307,7 +309,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="5">
-                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg()"></upload-list>
+                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('appearance')">保存</el-button>
@@ -360,6 +362,7 @@
                     },
                     city: '',
                     mall: '',
+                    address: '',
                     logisticsType: '',
                     level: '',
                     massif: '',
@@ -405,21 +408,11 @@
                     hold: [],
                     measure: []
                 },
-                stars: [
-                    {
-                        value: '0',
-                        text: '否'
-                    },
-                    {
-                        value: '1',
-                        text: '是'
-                    }
-                ],
                 benchList: [],
                 activeNames: ['1'],
                 pickerPre: {
                     disabledDate(time) {
-                        return time.getTime() > Date.now() - 8.64e7;
+                        return time.getTime() >= Date.now()
                     }
                 },
                 isShow: {
@@ -562,6 +555,9 @@
                         this.$refs.editForm.editInte(data)
                     }
                 })
+            },
+            starHandle () {
+                alert('确定星标')
             },
             showImg (index) {
                 this.index = index
@@ -754,6 +750,7 @@
             addHouse (data) {
                 this.addBase.name = data.name
                 this.addBase.point = data.point
+                this.addBase.address = data.address
 
                 var formData = {
                     type: 'base',
@@ -931,6 +928,10 @@
         width: 640px;
         height: 180px;
         margin: 0 0 15px;
+    }
+
+    .switch-box {
+        width: 300px;
     }
 
     .baseInput {

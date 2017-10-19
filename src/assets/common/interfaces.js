@@ -8,7 +8,6 @@ export default {
     interfaces: {
         "authentication": platform + "authentication.json",     //登录
         "uploadArticleAreaImage": platform + "siteEdit/uploadArticleAreaImage.json",   //图片上传接口
-        "deleteDraftFile": platform + "html5SiteInfo/deleteDraftFile.json",                       //文章删除接口,参数 html5PageCode,id
         "mediaList": platform + "html5SiteInfo/mediaList.json",
         "getUserInfo": platform + "getUserInfo.json",
         "changePassword": platform + "changePassword.json",         //修改密码

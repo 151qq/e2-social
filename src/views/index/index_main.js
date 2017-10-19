@@ -8,7 +8,7 @@ import '../../assets/scss/common.scss'
 import './scss/index.scss';
 
 import '../../../static/plugin/ueditor/ueditor.config'
-import '../../../static/plugin/ueditor/ueditor.all.min'
+import '../../../static/plugin/ueditor/ueditor.all'
 import '../../../static/plugin/ueditor/ueditor.parse'
 import '../../../static/plugin/ueditor/lang/zh-cn/zh-cn'
 

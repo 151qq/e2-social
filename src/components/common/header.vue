@@ -17,10 +17,16 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <div @click="editPassword">修改密码</div>
+            <div @click="editPassword">
+              <img src="../../assets/images/change-password.png">
+              修改密码
+            </div>
           </el-dropdown-item>
           <el-dropdown-item>
-            <div @click="loginOut">退出登录</div>
+            <div @click="loginOut">
+              <img src="../../assets/images/logout.png">
+              退出登录
+            </div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -209,6 +215,18 @@ export default {
 <style lang="scss">
   .el-dropdown-menu__item {
     font-size: 14px;
+
+    img {
+      float: left;
+      width: 16px;
+      height: 16px;
+      margin: 10px 10px 0 2px;
+    }
+
+    div {
+      line-height: 36px;
+      overflow: hidden;
+    }
   }
 
   .el-dropdown-menu {
@@ -246,6 +264,7 @@ export default {
     color: #fff;
     padding: 0 20px;
     z-index: 99999;
+    box-sizing: border-box;
 
     .logo-box {
       float: left;

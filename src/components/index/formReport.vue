@@ -3,7 +3,7 @@
         <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="基础信息" name="0">
             <section class="baseInput bigB">
-                <span>标题</span>
+                <span>报告标题</span>
                 <el-input
                         :maxlength="25"
                         class="input-box"
@@ -103,10 +103,7 @@
               :class="item.isSelected ? 'active' : ''">
             <img class="report-i" :src="item.html5PageindexImg">
             <div class="content-b">
-              <p class="title">{{item.html5PageTitle}}</p>
-              <p>
-                
-              </p>
+              <div class="title">{{item.html5PageTitle}}</div>
             </div>
           </div>
           <el-pagination
@@ -169,7 +166,6 @@ export default {
             }
         }
 
-        this.getAllData()
         document.title = '报告维护'
     },
     watch: {

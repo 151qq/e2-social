@@ -26,10 +26,10 @@
                     <span class="title">{{item3.label}}</span>
                     <div>
                       <img v-if="!item3.status && $route.name === 'report'"
-                          @click.stop="submitItem(item3.nodeCode, item3.nodeCode, index1, index2, index3)"
+                          @click.stop="submitItem(item3.nodeCode, index1, index2, index3)"
                           src="../../assets/images/yfb.png">
                       <img v-if="!item3.status && $route.name === 'report'"
-                          @click.stop="delItem(item3.nodeCode, item3.nodeCode, index1, index2, index3)"
+                          @click.stop="delItem(item3.nodeCode, index1, index2, index3)"
                           src="../../assets/images/delete-icon.png">
                     </div>
                   </div>
@@ -71,7 +71,7 @@
           this.openeds = opens
           return false
         }
-        if (!this.treeData[0].children.length) {
+        if (!this.treeData[0].children || !this.treeData[0].children.length) {
           return false
         }
         this.treeData.forEach((item1, index1) => {
@@ -80,7 +80,7 @@
             opens.push(String(index1))
           }
 
-          if (!item1.children.length) {
+          if (!item1.children || !item1.children.length) {
             return false
           }
           // 外层没有，内层有，也要打开外层
@@ -90,12 +90,12 @@
               opens.push(String(index1 + '-' + index2))
             }
 
-            if (!item2.children.length) {
+            if (!item2.children || !item2.children.length) {
               return false
             }
 
             item2.children.forEach((item3, index3) => {
-              if (item3.title.indexOf(value)> -1) {
+              if (item3.label.indexOf(value)> -1) {
                 opens.push(String(index1))
                 opens.push(String(index1 + '-' + index2))
               }
@@ -209,13 +209,13 @@
         this.$parent.$refs.editBox.showAdd(data)
         
       },
-      delItem (id, nodeCode) {
+      delItem (id) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.deleteArticleById(id, nodeCode, index1, index2, index3)
+          this.deleteArticleById(id)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -223,13 +223,13 @@
           })       
         })
       },
-      submitItem (id, nodeCode, index1, index2, index3) {
+      submitItem (id, index1, index2, index3) {
         this.$confirm('此操作将发布该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.submitById(id, nodeCode, index1, index2, index3)
+          this.submitById(id, index1, index2, index3)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -254,27 +254,27 @@
 
         this.$emit('getInfo', data)
       },
-      deleteArticleById (id, nodeCode) {
+      deleteArticleById (id) {
         util.request({
           method: 'post',
           interface: 'deleteDraftFile',
           data: {
-            html5PageCode: nodeCode
+            html5PageCode: id
           }
         }).then(res => {
-          this.loadList()
+          // this.loadList()
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
         })
       },
-      submitById (id, nodeCode, index1, index2, index3) {
+      submitById (id, index1, index2, index3) {
         util.request({
           method: 'post',
           interface: 'publishArticle',
           data: {
-            html5PageCode: nodeCode
+            html5PageCode: id
           }
         }).then(res => {
           this.treeData[index1].children[index2].children[index3].status = 1
@@ -295,6 +295,7 @@
     .search-title {
       margin: 10px 0;
       padding: 0 10px;
+      box-sizing: border-box;
     }
 
     .el-submenu {

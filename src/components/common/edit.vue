@@ -1,8 +1,8 @@
 <template>
     <section class="edit-box">
         <section class='bodyMain'>
-            <ul id="articleArea" name="content" class="list-group">
-                <li class="list-group-item"
+            <div id="articleArea" name="content" class="list-group">
+                <div class="list-group-item"
                         v-for="(item, index) in articleList"
                         :data-id="index"> 
                     <div class="show-box" v-if="item.type === 'upload'">
@@ -11,9 +11,10 @@
                                 :path="item.imgUrl"
                                 :num="index" 
                                 :idx="item.id"
+                                :no-save="true"
                                 :is-btn.sync="disabled"
                                 @delImg="delImg"
-                                @changeImg="changeImg" 
+                                @changeImg="changeImg"
                                 @saveImg="saveData('upload', index)"></upload>
                         </div>
                         <img @click.prevent="preHandl"
@@ -31,22 +32,18 @@
                                 :editor-id="'editor' + index"
                                 :index="index"
                                 :content="item.content"
-                                @setContent="setContent"
-                                vef="editorForm"></ueditor>
+                                @setContent="setContent"></ueditor>
                         <div v-show="!disabled && item.content"
                                 v-html="item.content"></div>
                         <div v-show="!disabled && !item.content">编辑中的文本样式</div>
                         <div class="btn-hover" v-if="disabled">
-                            <el-button class="delete-btn" type="primary"
-                                    :plain="true" size="small" icon="document"
-                                    @click="saveData('text', index)">保存</el-button>
                             <el-button class="delete-btn" type="danger"
                                     :plain="true" size="small" icon="delete"
                                     @click="deleteArticleArea(item.id, index)">删除</el-button>
                         </div>
                     </div>
 
-                    <div class="show-box btn-show" v-if="item.type === 'title'">
+                    <div class="show-box btn-show overflow-box" v-if="item.type === 'title'">
                         <input v-if="disabled && item.style"
                                 type="text"
                                 v-model="item.title"
@@ -62,9 +59,6 @@
                                 @click.prevent="setStyle(index, item.style)"
                                 src="../../assets/images/title-default.jpg">
                         <div class="btn-hover" v-if="disabled">
-                            <el-button class="delete-btn" type="primary"
-                                    :plain="true" size="small" icon="document"
-                                    @click="saveData('title', index)">保存</el-button>
                             <el-button class="delete-btn" type="danger"
                                     :plain="true" size="small" icon="delete"
                                     @click="deleteArticleArea(item.id, index)">删除</el-button>
@@ -73,8 +67,8 @@
                                     @click="setStyle(index, item.style)">配置</el-button>
                         </div>
                     </div>
-                </li> 
-            </ul>
+                </div>
+            </div>
         </section>
         <div class="edit-btn">
             <div @click="addTem('upload')">
@@ -468,7 +462,6 @@ export default {
     .show-box {
         cursor: pointer;
         margin-bottom: 10px;
-        overflow: hidden;
 
         .img-default {
             display: block;
@@ -477,11 +470,15 @@ export default {
         }
     }
 
+    .overflow-box {
+        overflow: hidden;
+    }
+
     .btn-show {
         .btn-hover {
             display: block;
-            overflow: hidden;
             margin-top: 10px;
+            overflow: hidden;
         }
 
         .btns {
