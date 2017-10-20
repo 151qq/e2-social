@@ -38,6 +38,21 @@
         </el-submenu>
       </el-submenu>
     </el-menu>
+    <el-dialog v-if="$route.name == 'report'" title="收货地址" :visible.sync="dialogFormVisible">
+      <section class="checkBox">
+        <!-- <el-checkbox :indeterminate="true" v-model="checkAll">全选</el-checkbox>
+        <div style="margin: 15px 0;"></div> -->
+        <el-checkbox-group v-model="checkedRoles">
+          <el-checkbox v-for="(role, index) in roleList"
+                        :label="role.enterpriseCode"
+                        :key="index">{{role.enterpriseCname}}</el-checkbox>
+        </el-checkbox-group>
+      </section>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmSub">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -56,7 +71,12 @@
         },
         activeName: '0-0-0',
         openeds: ['0', '0-0'],
-        addData: ''
+        addData: '',
+        roleList: [],
+        checkedRoles: [],
+        checkAll: true,
+        dialogFormVisible: false,
+        currentData: {}
       }
     },
     mounted(){
@@ -107,13 +127,14 @@
     },
     methods: {
   		//获取时间		
-  		getTime(data){		
-  			this.timer = data?data:''
-  			this.list = []
-  			this.pageNumber = 1
-  			this.loadList()
-  		},
+  		// getTime(data){		
+  		// 	this.timer = data?data:''
+  		// 	this.list = []
+  		// 	this.pageNumber = 1
+  		// 	this.loadList()
+  		// },
       loadList(){
+        console.log('loadList')
         var formData = {}
           util.request({
           method: 'get',
@@ -139,6 +160,7 @@
         })
       },
       reloadList(newId){
+        console.log('reloadList', newId)
         util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
@@ -223,18 +245,42 @@
           })
         })
       },
-      submitItem (id, index1, index2, index3) {
-        this.$confirm('此操作将发布该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.submitById(id, index1, index2, index3)
-        }).catch(() => {
+      confirmSub () {
+        console.log(this.checkAll, this.checkedRoles)
+        util.request({
+          method: 'post',
+          interface: 'sendSubscriberArticle',
+          data: {
+            articleCode: this.currentData.id,
+            subscriber: this.checkedRoles.join(',')
+          }
+        }).then(res => {
+          this.treeData[index1].children[index2].children[index3].status = res.result.result
           this.$message({
-            type: 'info',
-            message: '已取消发布'
-          })       
+            type: 'success',
+            message: '发布成功!'
+          })
+        })
+      },
+      submitItem (id, index1, index2, index3) {
+        this.checkedRoles = []
+        this.currentData = {
+          id: id,
+          index1: index1,
+          index2: index2,
+          index3: index3
+        }
+        
+        util.request({
+          method: 'get',
+          interface: 'enterpriseList',
+          data: {
+            key: 'value'
+          }
+        }).then(res => {
+          console.log(res)
+          this.roleList = res.result.result
+          this.dialogFormVisible = true
         })
       },
       getInfo (id, cityCode, index1, index2, index3, dirCode) {
@@ -266,21 +312,6 @@
           this.$message({
             type: 'success',
             message: '删除成功!'
-          })
-        })
-      },
-      submitById (id, index1, index2, index3) {
-        util.request({
-          method: 'post',
-          interface: 'publishArticle',
-          data: {
-            html5PageCode: id
-          }
-        }).then(res => {
-          this.treeData[index1].children[index2].children[index3].status = 1
-          this.$message({
-            type: 'success',
-            message: '发布成功!'
           })
         })
       }

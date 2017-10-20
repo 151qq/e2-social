@@ -35,6 +35,7 @@
         </p>
 
         <button class="su-btn" @click="showFile">素材库</button>
+        <!-- <search-message @selectHouse="showFile"></search-message> -->
       </div>
     </el-dialog>
 
@@ -46,6 +47,7 @@ import $ from 'Jquery'
 import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 import fileLists from '../../components/common/fileLists'
+import searchMessage from '../../components/common/search-message'
 
 export default {
     props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave'],
@@ -119,7 +121,8 @@ export default {
       }
     },
     components: {
-      fileLists
+      fileLists,
+      searchMessage
     }
 }
 </script>
@@ -166,24 +169,39 @@ export default {
   overflow: hidden;
   margin-bottom: 10px;
 
+  .su-btn {
+    display: block;
+    width: 100%;
+    height: 36px;
+    background: #20A0FF;
+    font-size: 12px;
+    color: #ffffff;
+    line-height: 36px;
+    text-align: center;
+    border: none;
+    padding: 0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
   p {
     position: relative;
     margin: 0;
     float: left;
-    width: 120px;
-    height: 30px;
+    width: 100%;
+    height: 36px;
     overflow: hidden;
-    margin-left: 20px;
     cursor: pointer;
+    margin-bottom: 15px;
 
     .ben-btn {
       display: block;
-      width: 120px;
-      height: 30px;
+      width: 100%;
+      height: 36px;
       background: #20A0FF;
       font-size: 12px;
       color: #ffffff;
-      line-height: 30px;
+      line-height: 36px;
       text-align: center;
       border: none;
       padding: 0;
@@ -195,27 +213,10 @@ export default {
       position: absolute;
       left: 0;
       top: 0;
-      width: 120px;
-      height: 30px;
+      width: 100%;
+      height: 36px;
       opacity: 0.01;
     }
-  }
-
-  .su-btn {
-    float: right;
-    width: 120px;
-    height: 30px;
-    background: #20A0FF;
-    font-size: 12px;
-    color: #ffffff;
-    line-height: 30px;
-    text-align: center;
-    border: none;
-    padding: 0;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-right: 20px;
-    cursor: pointer;
   }
 }
 </style>

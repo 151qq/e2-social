@@ -232,7 +232,10 @@ export default {
         */
         benchList: platform + 'houses/findHousesByCityCode.json',
 
-        setArticles: platform + 'siteEdit/setRecommendArticle.json'
+        setArticles: platform + 'siteEdit/setRecommendArticle.json',
+
+        sendSubscriberArticle: platform + 'html5SiteInfo/sendSubscriberArticle.json',
+        enterpriseList: platform + 'enterprise/list.json'
 
     }
 }

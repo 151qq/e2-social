@@ -333,8 +333,8 @@ export default {
                 interface: 'findRecommendArticleByCode',
                 data: {}
             }).then(res => {
-                this.total = Number(res.result.total)
                 this.reportAllList = res.result.result
+                this.total = this.reportAllList.length
                 this.resetReport()
                 this.getPageReport()
             })

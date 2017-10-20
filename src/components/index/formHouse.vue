@@ -757,6 +757,7 @@
                 this.addBase.name = data.name
                 this.addBase.point = data.point
                 this.addBase.address = data.address
+                console.log('addBase')
 
                 var formData = {
                     type: 'base',
@@ -771,7 +772,8 @@
                     localStorage.setItem("id", res.result.result.id)
                     var obj = {
                         id: '',
-                        html5CatalogCode: res.result.result.id
+                        html5CatalogCode: res.result.result.id,
+                        isHouse: true
                     }
                     this.$refs.editForm.saveArticle(obj)
                     this.isAdd.value = false
