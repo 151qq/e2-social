@@ -162,7 +162,12 @@
                     interface: 'authentication',
                     data: data
                 }).then((res) => {
-                    window.location.href = 'index.html#/';
+                    if (res.result.success != '0') {
+                        window.location.href = 'index.html#/';
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                    
                 });
             },
             regBtn(){
