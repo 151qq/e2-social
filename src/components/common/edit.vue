@@ -120,7 +120,7 @@ export default {
     data () {
         return {
             articleList: [],
-            disabled: true,
+            disabled: false,
             backgroundImg: '#f0f0f0;',
             templateAdd: [],
             imgStyle: 'display: block; max-width: 100%; margin: 10px 0;',

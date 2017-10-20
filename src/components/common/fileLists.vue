@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="素材库" :visible.sync="seData.isShow">
+    <el-dialog title="素材库" :visible.sync="selectData.isShow">
       <div class="picBox">
         <div class="piclist">
             <div class="iBox" v-for="(item, index) in lists" :class="curIndex === index ? 'active' : ''">
@@ -30,7 +30,6 @@ export default{
         }
     },
     mounted (){
-      this.seData = this.selectData
       this.getList()
     },
     methods: {
@@ -40,10 +39,10 @@ export default{
         },
         confirmH () {
           this.seData = {
-              isShow: false,
               url: this.curPath
           },
           this.$emit('suSelect', this.seData)
+          this.selectData.isShow = false
         },
         tplNextPage(){
             this.pageNumber++

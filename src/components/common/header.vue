@@ -23,7 +23,7 @@
             </div>
           </el-dropdown-item>
           <el-dropdown-item>
-            <div @click="loginOut">
+            <div @click="logout">
               <img src="../../assets/images/logout.png">
               退出登录
             </div>
@@ -162,12 +162,16 @@ export default {
         this.userInfo = res.result.result
       })
     },
-    loginOut () {
-      alert('退出登录')
-      var exp = new Date()
-      exp.setTime(exp.getTime() - 1)
-      document.cookie= 'e2_enterprise_staff' + "=" + '' + ";expires=" + exp.toGMTString()
-      window.location.reload()
+    logout () {
+      util.request({
+        method: 'post',
+        interface: 'logout',
+        data: {}
+      }).then(res => {
+        if (res.result.success == '1') {
+          window.location.href = 'login.html'
+        }
+      })
     },
     // getNotice () {
     //   var formData = {

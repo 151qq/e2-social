@@ -495,8 +495,8 @@
             },
             getAppearance () {
                 util.request({
-                    method: 'get',
-                    interface: 'appearance',
+                    method: 'post',
+                    interface: 'houseImages',
                     data: {
                         fileCode: localStorage.getItem("id"),
                         catalogCode: 'appearance'
@@ -508,8 +508,8 @@
             },
             getPublic () {
                 util.request({
-                    method: 'get',
-                    interface: 'public',
+                    method: 'post',
+                    interface: 'houseImages',
                     data: {
                         fileCode: localStorage.getItem("id"),
                         catalogCode: 'public'
@@ -523,8 +523,8 @@
             },
             getSurround () {
                 util.request({
-                    method: 'get',
-                    interface: 'surround',
+                    method: 'post',
+                    interface: 'houseImages',
                     data: {
                         fileCode: localStorage.getItem("id"),
                         catalogCode: 'surround'
@@ -652,12 +652,6 @@
                 })
             },
             saveRents (isShow) {
-                var formData = {
-                    id: localStorage.getItem("id"),
-                    type: 'rents',
-                    data: this.rents
-                }
-
                 if (this.rents.date == '') {
                     this.$message({
                         message: '请务填写交易日期！',
@@ -685,6 +679,18 @@
                         type: 'warning'
                     })
                     return false
+                }
+
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: 'rents',
+                    data: {
+                        tenantStartDate: this.rents.date[0],
+                        tenantOverDate: this.rents.date[1],
+                        priceT: this.rents.priceT,
+                        priceM: this.rents.priceM,
+                        priceB: this.rents.priceB
+                    }
                 }
 
                 util.request({

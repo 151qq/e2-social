@@ -33,7 +33,7 @@ export default {
     methods: {
       postImg (e, index) {
         var opotion = {
-          url: 'uploadArticleAreaImage',
+          url: 'imageUpload',
           event: e,
           data: {
             fileCode: localStorage.getItem("id"),
@@ -42,7 +42,7 @@ export default {
         }
 
         util.uploadFile(opotion).then(res => {
-          let imgUrl = res.result.result[0];
+          let imgUrl = res.result.result.headImg;
           var imgObject = {link:imgUrl};
           if (index !== undefined) {
             this.imgLists.splice(index, 1, imgObject)

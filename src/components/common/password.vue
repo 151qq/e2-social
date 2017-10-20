@@ -2,10 +2,10 @@
 	<el-dialog title="修改密码" v-model="dialogFormVisible.visibleP" size="tiny">
 	  	<el-form>
 		    <el-form-item label="最新密码" :label-width="formLabelWidth">
-		      <el-input v-model="password" auto-complete="off" @blur="checkPassword"></el-input>
+		      <el-input v-model="password" type="password" auto-complete="off" @blur="checkPassword"></el-input>
 		    </el-form-item>
 		    <el-form-item label="确认密码" :label-width="formLabelWidth">
-				<el-input v-model="enterPassword" auto-complete="off" @blur="checkEnter"></el-input>
+				<el-input v-model="enterPassword" type="password" auto-complete="off" @blur="checkEnter"></el-input>
 		    </el-form-item>
 		  </el-form>
 	  	<div slot="footer" class="dialog-footer">
@@ -48,11 +48,19 @@ export default {
         interface: 'changePassword',
         data: formData
       }).then(res => {
-        this.$message({
-          showClose: true,
-          message: '恭喜你，修改成功'
-        })
         this.dialogFormVisible.visibleP = false
+        this.logout()
+      })
+    },
+    logout () {
+      util.request({
+        method: 'post',
+        interface: 'logout',
+        data: {}
+      }).then(res => {
+        if (res.result.success == '1') {
+          window.location.href = 'login.html'
+        }
       })
     },
     closeWindow () {

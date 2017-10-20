@@ -5,7 +5,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="date"
+                    prop="dateString"
                     label="交易日期"
                     width="180">
             </el-table-column>
@@ -108,6 +108,9 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
+                res.result.result.changes.forEach((item) => {
+                    item.dateString = item.date.split(' ')[0]
+                })
                 this.changes = res.result.result.changes
                 this.total = this.total ? Number(this.total) : 0
             })
@@ -120,9 +123,18 @@ export default {
             this.$alert('您考虑好了吗？确定要删除记录!', '删除', {
                 confirmButtonText: '确定',
                 callback: action => {
-                    this.$message({
-                        type: 'info',
-                        message: `action: ${ action }`
+                    util.request({
+                        method: 'post',
+                        interface: 'deleteTradeHistory',
+                        data: {
+                            id: row.id
+                        }
+                    }).then(res => {
+                        this.getChanges()
+                        this.$message({
+                            type: 'info',
+                            message: '删除成功'
+                        })
                     })
                 }
             })

@@ -138,7 +138,7 @@ export default {
             investor: '',
             abstract: '',
             createTime: '',
-            articles: '',
+            articles: [],
             pageSize: 2,
             pageNumber: 1,
             total: 0,
@@ -154,7 +154,8 @@ export default {
               value: false
             },
             abstractNum: 70,
-            titleNum: 25
+            titleNum: 25,
+            reportAllList: []
         }
     },
     mounted () {
@@ -208,6 +209,7 @@ export default {
               this.investor = resData.editorCode
               this.coverImg = resData.html5PageindexImg
               this.createTime = res.result.responsetime.split(' ')[0]
+              this.abstract = resData.html5Summary
 
               var data = {
                 article: this.articleinfo,
@@ -254,7 +256,7 @@ export default {
         setArticles () {
           var formData = {
             articleCode: localStorage.getItem("id"),
-            recommend: this.articles
+            recommend: this.articles.join(',')
           }
 
           util.request({
@@ -320,48 +322,42 @@ export default {
           }).then(res => {
               this.reportSelect = res.result.result
 
-              var dataArrs = []
               this.reportSelect.forEach((item) => {
-                dataArrs.push(item.html5PageCode)
+                this.articles.push(item.html5PageCode)
               })
-
-              this.articles = dataArrs.join(',')
           })
         },
         getReportList () {
-            var formData = {
-              pageSize: this.pageSize,
-              pageNumber: this.pageNumber
-            }
-
             util.request({
                 method: 'get',
                 interface: 'findRecommendArticleByCode',
-                data: formData
+                data: {}
             }).then(res => {
                 this.total = Number(res.result.total)
-                this.reportList = res.result.result
+                this.reportAllList = res.result.result
                 this.resetReport()
+                this.getPageReport()
             })
         },
+        getPageReport () {
+          var startL = this.pageSize * (this.pageNumber - 1)
+          var stopL = this.pageSize * this.pageNumber
+          this.reportList = this.reportAllList.slice(startL, stopL)
+        },
         deleteReport (index) {
-          if (!this.articles) {
+          if (!this.articles.length) {
             return false
           }
-          var selects = this.articles.split(',')
-          selects.splice(index, 1)
+          this.articles.splice(index, 1)
           this.reportSelect.splice(index, 1)
-          this.articles = selects.join(',')
           this.resetReport()
-          this.setArticles()
         },
         resetReport () {
           // 存储选择状态
           this.selListInit = []
 
-          var selects = this.articles.split(',')
-          this.reportList.forEach((item) => {
-            var index = selects.indexOf(String(item.id))
+          this.reportAllList.forEach((item) => {
+            var index = this.articles.indexOf(String(item.html5PageCode))
             // 存储选择状态
             this.selListInit.push(index > -1)
 
@@ -371,7 +367,7 @@ export default {
               item.isSelected = false
             }
           })
-          this.reportList = this.reportList.concat([])
+          this.reportAllList = this.reportAllList.concat([])
         },
         changeReport (index) {
           let item = this.reportList[index]
@@ -382,17 +378,17 @@ export default {
           this.dialogVisible = true
         },
         closeSelect () {
-          this.reportList.forEach((item, index) => {
+          this.reportAllList.forEach((item, index) => {
             item.isSelected = this.selListInit[index]
           })
           this.dialogVisible = false
-          this.reportList = this.reportList.concat([])
+          this.reportAllList = this.reportAllList.concat([])
         },
         confirmSelect () {
           // 存储选择状态
           this.selListInit = []
-          var selects = this.articles.split(',')
-          this.reportList.forEach((item, num) => {
+          var selects = this.articles.concat([])
+          this.reportAllList.forEach((item, num) => {
             var index = selects.indexOf(item.html5PageCode)
             // 存储选择状态
             this.selListInit.push(item.isSelected)
@@ -407,12 +403,12 @@ export default {
               this.reportSelect.push(item)
             }
           })
-          this.articles = selects.join(',')
+          this.articles = selects.concat([])
           this.dialogVisible = false
         },
         changePage (size) {
           this.pageNumber = size
-          this.getReportList()
+          this.getPageReport()
         }
     },
     destroyed() {

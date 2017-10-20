@@ -5,14 +5,13 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="date"
+                    prop="dateString"
                     label="交易日期"
-                    width="180">
+                    width="360">
             </el-table-column>
             <el-table-column
                     prop="priceT"
-                    label="高区租金"
-                    width="180">
+                    label="高区租金">
             </el-table-column>
             <el-table-column
                     prop="priceM"
@@ -101,7 +100,12 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
+                res.result.result.rents.forEach((item) => {
+                    item.date = [item.tenantStartDate, item.tenantOverDate]
+                    item.dateString = item.tenantStartDate.split(' ')[0] + ' - ' + item.tenantOverDate.split(' ')[0]
+                })
                 this.rents = res.result.result.rents
+                console.log(this.rents)
                 this.total = this.total ? Number(this.total) : 0
             })
         },
@@ -113,9 +117,18 @@ export default {
             this.$alert('您考虑好了吗？确定要删除记录!', '删除', {
                 confirmButtonText: '确定',
                 callback: action => {
-                    this.$message({
-                        type: 'info',
-                        message: `action: ${ action }`
+                    util.request({
+                        method: 'post',
+                        interface: 'deleteRentHistory',
+                        data: {
+                            id: row.id
+                        }
+                    }).then(res => {
+                        this.getRents()
+                        this.$message({
+                            type: 'info',
+                            message: '删除成功'
+                        })
                     })
                 }
             })
@@ -125,39 +138,46 @@ export default {
             this.curentData = Object.assign({}, row)
         },
         confirmEdit () {
-            var formData = {
-                id: localStorage.getItem("id"),
-                type: 'rents',
-                data: this.curentData
-            }
-
-            if (this.rents.date == '') {
+            if (this.curentData.date == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
                 })
                 return false
             }
-            if (this.rents.priceT == '') {
+            if (this.curentData.priceT == '') {
                 this.$message({
                     message: '请务填写高区租金！',
                     type: 'warning'
                 })
                 return false
             }
-            if (this.rents.priceM == '') {
+            if (this.curentData.priceM == '') {
                 this.$message({
                     message: '请务填写中区租金！',
                     type: 'warning'
                 })
                 return false
             }
-            if (this.rents.priceB == '') {
+            if (this.curentData.priceB == '') {
                 this.$message({
                     message: '请务填写低区租金！',
                     type: 'warning'
                 })
                 return false
+            }
+
+            var formData = {
+                id: localStorage.getItem("id"),
+                type: 'rents',
+                data: {
+                    id: this.curentData.id,
+                    tenantStartDate: this.curentData.date[0],
+                    tenantOverDate: this.curentData.date[1],
+                    priceT: this.curentData.priceT,
+                    priceM: this.curentData.priceM,
+                    priceB: this.curentData.priceB
+                }
             }
 
             util.request({
@@ -182,6 +202,14 @@ export default {
 .mid-box {
     width: 1000px;
     margin: 30px auto;
+
+    .el-dialog--small {
+        width: 460px;
+
+        .input-box {
+            width: 340px;
+        }
+    }
 
     .page-box {
         margin-top: 15px;

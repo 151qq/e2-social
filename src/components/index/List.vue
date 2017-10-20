@@ -220,7 +220,7 @@
           this.$message({
             type: 'info',
             message: '已取消删除'
-          })       
+          })
         })
       },
       submitItem (id, index1, index2, index3) {
@@ -262,7 +262,7 @@
             html5PageCode: id
           }
         }).then(res => {
-          // this.loadList()
+          this.loadList()
           this.$message({
             type: 'success',
             message: '删除成功!'

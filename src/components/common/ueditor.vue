@@ -14,9 +14,6 @@
         data () {
             return {
                 config: {
-                    initialFrameWidth: null,
-                    autoHeightEnabled: true,
-                    zIndex: 0,
                     toolbars: [[
                         'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
                         'lineheight', '|',
@@ -28,30 +25,33 @@
                         'undo', 'redo'
                     ]]
                 },
-                editor: null
+                editor: null,
+                isfirst: true
             }
         },
         mounted() {
             const _this = this;
-            this.editor = UE.getEditor(this.editorId, this.config)
+            this.editor = window.UE.getEditor(this.editorId, this.config)
             this.editor.addListener("ready", function () {
-                _this.editor.setContent(_this.content!=null?_this.content:"")
+                _this.editor.setContent(_this.content ? _this.content : '')
             })
             this.editor.addListener("blur", function () {
                 var data = {
                     content: _this.editor.getContent(),
                     index: _this.index
                 }
-                _this.$emit('setContent', data!=null?data:"")
+                this.isfirst = false
+                _this.$emit('setContent', data)
             })
         },
-        watch: {
-            content () {
-                if (this.editor) {
-                    this.editor.setContent(this.content)
-                }
-            }
-        },
+        // watch: {
+        //     content () {
+        //         if (this.editor && this.isfirst) {
+        //             this.editor.setContent(this.content)
+        //             this.isfirst = false
+        //         }
+        //     }
+        // },
         destroyed() {
             this.editor.destroy();
         }

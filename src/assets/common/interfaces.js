@@ -7,11 +7,13 @@ const platform = "/esocial/";
 export default {
     interfaces: {
         "authentication": platform + "authentication.json",     //登录
+        "logout": platform + 'logout.json',
         "uploadArticleAreaImage": platform + "siteEdit/uploadArticleAreaImage.json",   //图片上传接口
         "mediaList": platform + "html5SiteInfo/mediaList.json",
         "getUserInfo": platform + "getUserInfo.json",
         "changePassword": platform + "changePassword.json",         //修改密码
         "resetPassword": platform + "resetPassword.json",  // 重置密码
+        "imageUpload": platform + 'houses/image/upload.json',
 
         /**
         * 上传头像 post                                
@@ -134,6 +136,9 @@ export default {
          * '/static/api/property/changes.json'
         */
         changes: platform +'houses/findHousesTrade.json',
+        deleteTradeHistory: platform + 'houses/deleteTradeHistory.json',
+
+        deleteRentHistory: platform + 'houses/deleteRentHistory.json',
         /**
         * 物业租金历史 get
         * id 楼盘序列标识
@@ -149,7 +154,7 @@ export default {
         * 物业公共区域图片 get
         * id 楼盘序列标识
         */
-        public: platform +'houses/image/public.json',
+        houseImages: platform +'houses/image/list.json',
         /**
         * 物业外观图片 get
         * id 楼盘序列标识
