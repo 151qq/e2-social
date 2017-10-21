@@ -38,16 +38,20 @@
         </el-submenu>
       </el-submenu>
     </el-menu>
-    <el-dialog v-if="$route.name == 'report'" title="收货地址" :visible.sync="dialogFormVisible">
+    <el-dialog v-if="$route.name == 'report'" title="订阅客户" :visible.sync="dialogFormVisible">
       <section class="checkBox">
-        <!-- <el-checkbox :indeterminate="true" v-model="checkAll">全选</el-checkbox>
-        <div style="margin: 15px 0;"></div> -->
         <el-checkbox-group v-model="checkedRoles">
           <el-checkbox v-for="(role, index) in roleList"
                         :label="role.enterpriseCode"
                         :key="index">{{role.enterpriseCname}}</el-checkbox>
         </el-checkbox-group>
       </section>
+      <el-pagination
+            layout="prev, pager, next"
+            :page-size="pageSize"
+            @current-change="changePage"
+            :total="total">
+      </el-pagination>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmSub">确 定</el-button>
@@ -58,7 +62,8 @@
 </template>
 <script>
   import util from '../../assets/common/util'
-  import interfaces from '../../assets/common/interfaces';
+  import interfaces from '../../assets/common/interfaces'
+  import $ from 'Jquery'
   export default{
     data(){
       return {
@@ -74,9 +79,11 @@
         addData: '',
         roleList: [],
         checkedRoles: [],
-        checkAll: true,
         dialogFormVisible: false,
-        currentData: {}
+        currentData: {},
+        pageSize: 21,
+        pageNumber: 1,
+        total: 0
       }
     },
     mounted(){
@@ -246,7 +253,6 @@
         })
       },
       confirmSub () {
-        console.log(this.checkAll, this.checkedRoles)
         util.request({
           method: 'post',
           interface: 'sendSubscriberArticle',
@@ -255,12 +261,16 @@
             subscriber: this.checkedRoles.join(',')
           }
         }).then(res => {
-          this.treeData[index1].children[index2].children[index3].status = res.result.result
+          this.treeData[this.currentData.index1].children[this.currentData.index2].children[this.currentData.index3].status = res.result.result
           this.$message({
             type: 'success',
             message: '发布成功!'
           })
+          this.dialogFormVisible = false
         })
+      },
+      changePage (size) {
+        $('.allBox .el-dialog__body .el-checkbox-group').scrollTop(252 * (size - 1))
       },
       submitItem (id, index1, index2, index3) {
         this.checkedRoles = []
@@ -278,10 +288,20 @@
             key: 'value'
           }
         }).then(res => {
-          console.log(res)
           this.roleList = res.result.result
+          this.total = this.roleList.length
           this.dialogFormVisible = true
         })
+        // var roles = []
+        // for (var i = 0; i < 43; i++) {
+        //   roles.push({
+        //     enterpriseCode: i,
+        //     enterpriseCname: '企业公司' + i
+        //   })
+        // }
+        // this.roleList = roles
+        // this.total = this.roleList.length
+        // this.dialogFormVisible = true
       },
       getInfo (id, cityCode, index1, index2, index3, dirCode) {
         
@@ -322,6 +342,32 @@
   .allBox {
     width: 400px;
     background: #F9F9F9;
+
+    .el-dialog__body {
+
+      .el-pagination {
+        padding: 0;
+      }
+
+      .el-checkbox-group {
+        max-height: 252px;
+        overflow: hidden;
+
+        .el-checkbox {
+          width: 190px;
+          float: left;
+          margin: 0;
+          box-sizing: border-box;
+          margin-bottom: 15px;
+          margin-right: 10px;
+          overflow: hidden;
+        }
+      }
+    }
+
+    .el-dialog--small {
+      width: 640px;
+    }
 
     .search-title {
       margin: 10px 0;
