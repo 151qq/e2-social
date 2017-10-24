@@ -547,6 +547,11 @@
                         id: localStorage.getItem("id")
                     }
                 }).then(res => {
+                    if (res.result.success == '0') {
+                        this.$message.error(res.result.message)
+                        return
+                    }
+
                     var base = res.result.result.base
 
                     if (!base.benchmark) {

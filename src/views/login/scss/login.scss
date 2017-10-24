@@ -106,6 +106,12 @@ html, body, #app {
     padding-left: 60px;
     margin-bottom: 15px;
 
+    .el-input-group__append {
+      background-color: #20a0ff;
+      border: 1px solid #20a0ff;
+      color: #f0f0f0;
+    }
+
     &>span {
       position: absolute;
       left: 0;
@@ -122,7 +128,7 @@ html, body, #app {
     }
 
     .clickBox {
-      color: #20a0ff;
+      color: #ffffff;
       cursor: pointer;
     }
   }
