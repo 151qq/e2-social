@@ -56,6 +56,7 @@ export default {
     methods: {
         initData () {
             this.reportDatas.title = ''
+            this.reportDatas.coverImg = ''
         },
         showFile () {
             this.selectData.isShow = true
