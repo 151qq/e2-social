@@ -291,8 +291,10 @@ export default {
         },
         addNewReport (data) {
           this.title = data.title
+          this.coverImg = data.coverImg
           var obj = {
             title: this.title,
+            pageImg: data.coverImg,
             id: '',
             html5CatalogCode: localStorage.getItem('houseMall')
           }

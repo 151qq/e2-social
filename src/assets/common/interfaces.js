@@ -14,6 +14,9 @@ export default {
         "changePassword": platform + "changePassword.json",         //修改密码
         "resetPassword": platform + "resetPassword.json",  // 重置密码
         "imageUpload": platform + 'houses/image/upload.json',
+        "sendSmsCode": platform + 'sendSmsCode.json',
+        "validateHousesStart": platform + 'houses/validateHousesStart.json',
+        "deleteHousesInfo": platform + 'houses/deleteHousesInfo.json',
 
         /**
         * 上传头像 post                                
@@ -139,6 +142,7 @@ export default {
         deleteTradeHistory: platform + 'houses/deleteTradeHistory.json',
 
         deleteRentHistory: platform + 'houses/deleteRentHistory.json',
+        deleteEvalueHistory: platform + 'houses/deleteEvalueHistory.json',
         /**
         * 物业租金历史 get
         * id 楼盘序列标识
@@ -235,7 +239,8 @@ export default {
         setArticles: platform + 'siteEdit/setRecommendArticle.json',
 
         sendSubscriberArticle: platform + 'html5SiteInfo/sendSubscriberArticle.json',
-        enterpriseList: platform + 'enterprise/list.json'
+        enterpriseList: platform + 'enterprise/list.json',
+        publishArticle: platform + 'siteEdit/publishArticle.json'
 
     }
 }

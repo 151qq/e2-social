@@ -59,7 +59,7 @@
                         <span>星标</span>
                         <el-switch
                             v-model="base.star"
-                            @change="starHandle"
+                            :disabled="isStar"
                             on-value="1"
                             off-value="0">
                         </el-switch>
@@ -100,14 +100,6 @@
                                 v-model="base.address">
                         </el-input>
                     </section>
-                    <section class="baseInput bigB">
-                        <span>所属地块</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.massif">
-                        </el-input>
-                    </section>
                     <section class="baseInput">
                         <span>剩余年限</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="base.year"></el-input-number>
@@ -116,7 +108,7 @@
                         <span>容积率(%)</span>
                         <el-input-number class="input-box" size="small" :min="0" :max="100" v-model="base.ratio"></el-input-number>
                     </section>
-                    <section class="baseInput bigB">
+                    <section class="baseInput">
                         <span>业主信息</span>
                         <el-input
                                 class="input-box"
@@ -124,7 +116,7 @@
                                 v-model="base.owner">
                         </el-input>
                     </section>
-                    <section class="baseInput bigB">
+                    <section class="baseInput rightF">
                         <span>物业信息</span>
                         <el-input
                                 class="input-box"
@@ -139,7 +131,24 @@
                                 type="textarea"
                                 autosize
                                 placeholder="请输入内容"
+                                @change="rentChange"
                                 v-model="base.rent">
+                        </el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>租户总数</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.rentCount">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>所属地块</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.massif">
                         </el-input>
                     </section>
                     <section class="baseInput">
@@ -280,8 +289,8 @@
                         <el-date-picker
                                 class="input-box"
                                 v-model="rents.date"
-                                type="daterange"
-                                placeholder="选择日期范围">
+                                type="month"
+                                placeholder="选择月">
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
@@ -303,12 +312,49 @@
                                @click="saveRents(true)">保存</el-button>
                 </div>
             </el-collapse-item>
+            <!-- <div class="line-bold"></div>
+            <el-collapse-item class="formStyle" title="物业估值历史" name="4">
+                <router-link class="link-btn" target="_blank" :to="{name: 'evalues'}">明细</router-link>
+                <div class="over-box">
+                    <section class="baseInput">
+                        <span>交易日期</span>
+                        <el-date-picker
+                                class="input-box"
+                                v-model="evalues.date"
+                                type="year"
+                                placeholder="选择年">
+                        </el-date-picker>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>总租金</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceT"></el-input-number>
+                    </section>
+                    <div class="clear"></div>
+                    <section class="baseInput rightF">
+                        <span>估值</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceE"></el-input-number>
+                    </section>
+                    <div class="clear"></div>
+                    <section class="baseInput rightF">
+                        <span>静总租金</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceS"></el-input-number>
+                    </section>
+                    <div class="clear"></div>
+                    <section class="baseInput rightF">
+                        <span>资本化率</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceP"></el-input-number>
+                    </section>
+                    <div class="clear"></div>
+                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                               @click="saveEvalues(true)">保存</el-button>
+                </div>
+            </el-collapse-item> -->
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle editShow" title="物业评述" name="4">
+            <el-collapse-item class="formStyle editShow" title="物业评述" name="5">
                 <edit-box ref="editForm"></edit-box>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业外观图片" name="5">
+            <el-collapse-item class="formStyle" title="物业外观图片" name="6">
                 <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -316,7 +362,7 @@
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业公共区域图片" name="6">
+            <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
                 <upload-list :img-lists="public" :type="'public'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -324,7 +370,7 @@
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业周围环境图片" name="7">
+            <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
                 <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
@@ -381,6 +427,7 @@
                     holding: '',
                     traffic: '',
                     investor: '',
+                    rentCount: 0,
                     housesImg: ''
                 },
                 changes: {
@@ -396,6 +443,14 @@
                     priceT: '',
                     priceM: '',
                     priceB: ''
+                },
+                evalues: {
+                    id: '',
+                    date: '',
+                    priceT: '',
+                    priceE: '',
+                    priceS: '',
+                    priceP: ''
                 },
                 addBase: {},
                 malls: [],
@@ -432,7 +487,8 @@
                     name: '',
                     pointer: {}
                 },
-                timer: null
+                timer: null,
+                isStar: false
             }
         },
         mounted () {
@@ -471,6 +527,19 @@
                 
                 this.bigImgs = []
             },
+            rentChange () {
+                if (this.base.rent != '') {
+                    this.base.rentCount = 1
+                }
+
+                if (this.base.rent.indexOf(',') > -1) {
+                    this.base.rentCount = this.base.rent.split(',').length
+                } else if (this.base.rent.indexOf('，') > -1) {
+                    this.base.rentCount = this.base.rent.split('，').length
+                } else if (this.base.rent.indexOf('、') > -1) {
+                    this.base.rentCount = this.base.rent.split('、').length
+                }
+            },
             getBase () {
                 util.request({
                     method: 'get',
@@ -487,9 +556,12 @@
 
                     this.base = Object.assign(this.base, base)
 
+                    this.rentChange()
+
                     setTimeout(() => {
                         this.drawMap()
                         this.getMalls()
+                        this.getStar()
                     }, 0)
                 })
             },
@@ -556,8 +628,22 @@
                     }
                 })
             },
-            starHandle () {
-                alert('确定星标')
+            getStar () {
+                util.request({
+                    method: 'post',
+                    interface: 'validateHousesStart',
+                    data: {
+                        cityCode: localStorage.getItem("cityCode")
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        if (res.result.result == 1) {
+                            this.isStar = false
+                        } else if (res.result.result == 0 && this.base.rent == '0') {
+                            this.isStar = true
+                        }
+                    }
+                })
             },
             showImg (index) {
                 this.index = index
@@ -659,23 +745,9 @@
                     })
                     return false
                 }
-                if (this.rents.priceT == '') {
+                if (this.rents.priceT == '' && this.rents.priceM == '' && this.rents.priceB == '') {
                     this.$message({
-                        message: '请务填写高区租金！',
-                        type: 'warning'
-                    })
-                    return false
-                }
-                if (this.rents.priceM == '') {
-                    this.$message({
-                        message: '请务填写中区租金！',
-                        type: 'warning'
-                    })
-                    return false
-                }
-                if (this.rents.priceB == '') {
-                    this.$message({
-                        message: '请务填写低区租金！',
+                        message: '请务填写租金！',
                         type: 'warning'
                     })
                     return false
@@ -685,8 +757,7 @@
                     id: localStorage.getItem("id"),
                     type: 'rents',
                     data: {
-                        tenantStartDate: this.rents.date[0],
-                        tenantOverDate: this.rents.date[1],
+                        date: this.rents.date,
                         priceT: this.rents.priceT,
                         priceM: this.rents.priceM,
                         priceB: this.rents.priceB
@@ -704,6 +775,57 @@
                             priceT: '',
                             priceM: '',
                             priceB: ''
+                        }
+
+                        if (isShow) {
+                            this.$message({
+                                message: '恭喜，已存入相关明细',
+                                type: 'success'
+                            })
+                        }
+                    }
+                })
+            },
+            saveEvalues (isShow) {
+                if (this.evalues.date == '') {
+                    this.$message({
+                        message: '请务填写交易日期！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.evalues.priceT == '' && this.evalues.priceE == '' && this.evalues.priceS == '' && this.evalues.priceP == '') {
+                    this.$message({
+                        message: '请务填写租金！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: 'evalues',
+                    data: {
+                        date: this.evalues.date,
+                        priceT: this.evalues.priceT,
+                        priceE: this.evalues.priceE,
+                        priceS: this.evalues.priceS,
+                        priceP: this.evalues.priceP
+                    }
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'houseInfo',
+                    data: formData
+                }).then(res => {
+                    if (res.result.success) {
+                        this.evalues = {
+                            date: '',
+                            priceT: '',
+                            priceE: '',
+                            priceS: '',
+                            priceP: ''
                         }
 
                         if (isShow) {
@@ -960,6 +1082,16 @@
 
             input {
                 height: 30px;
+            }
+        }
+
+        .numBox {
+            float: right;
+            font-size: 12px;
+            line-height: 20px;
+
+            span {
+                color: #20a0ff;
             }
         }
     }

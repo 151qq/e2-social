@@ -1,6 +1,6 @@
 <template>
     <section class="add-box-house">
-        <el-dialog title="收货地址" :visible.sync="isAdd.value">
+        <el-dialog title="添加楼盘" :visible.sync="isAdd.value">
             <search-box :is-page="true"
                     @mapChange="drawMap"
                     :city="city"

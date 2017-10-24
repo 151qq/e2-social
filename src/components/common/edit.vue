@@ -222,7 +222,7 @@ export default {
             var formData = {
                 type: this.$route.name,
                 areaTxt: '',
-                html5TemplateCode: 'tpl_0003'
+                html5TemplateCode: 'tpl_003'
             }
 
             if (data) {
@@ -285,6 +285,22 @@ export default {
         saveAll () {
             this.articleList.forEach((item, index) => {
                 this.saveData(item.type, index)
+            })
+
+            // if (this.$route.name == 'house') {
+            //     setTimeout(() => {
+            //         this.submitArticle()
+            //     }, 3000)
+            // }
+        },
+        submitArticle () {
+            util.request({
+              method: 'post',
+              interface: 'sendSubscriberArticle',
+              data: {
+                articleCode: localStorage.getItem('htmlHouseCode')
+              }
+            }).then(res => {
             })
         },
         setSortable () {

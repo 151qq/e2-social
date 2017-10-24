@@ -1,6 +1,6 @@
 <template>
     <section class="add-box-report">
-        <el-dialog title="收货地址" :visible.sync="isAdd.value">
+        <el-dialog title="添加报告" :visible.sync="isAdd.value">
             <div class="clear"></div>
             <section class="baseInput bigB">
                 <span>标题</span>
@@ -10,30 +10,64 @@
                         v-model="reportDatas.title">
                 </el-input>
             </section>
+            <section class="baseInput bigB changeImg">
+                <span>封面</span>
+                <div class="input-box">
+                    <img v-if="reportDatas.coverImg" :src="reportDatas.coverImg">
+                    
+                    <div v-if="!reportDatas.coverImg" class="default-img"></div>
+
+                    <p>
+                      <label for="coverImg" class="ben-btn">本地上传图片</label>
+                      <input type="file" id="coverImg" @change="postImg($event)">
+                    </p>
+
+                    <button class="su-btn" @click="showFile">素材库选择图片</button>
+                </div>
+            </section>
             <div class="clear"></div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="isAdd.value = false">取 消</el-button>
                 <el-button type="primary" @click="confirmHandle">确 定</el-button>
             </div>
         </el-dialog>
+
+        <file-lists :select-data="selectData" @suSelect="suSelect"></file-lists>
     </section>
 </template>
 <script>
 import util from '../../assets/common/util'
-import searchBox from '../common/search-box.vue'
+import fileLists from '../../components/common/fileLists'
 
 export default {
     props: ['isAdd'],
     data () {
         return {
             reportDatas: {
-                title: ''
+                title: '',
+                coverImg: ''
+            },
+            selectData: {
+              isShow: false,
+              url: ''
             }
         }
     },
     methods: {
         initData () {
             this.reportDatas.title = ''
+        },
+        showFile () {
+            this.selectData.isShow = true
+        },
+        suSelect (datas) {
+            this.reportDatas.coverImg = datas.url
+        },
+        postImg (e) {
+            util.upFile(e).then(res => {
+              let imgUrl = res.result.result[0]
+              this.reportDatas.coverImg = imgUrl
+            })
         },
         confirmHandle () {
             if (this.reportDatas.title == '') {
@@ -50,18 +84,29 @@ export default {
                 })
                 return false
             }
+
+            if (this.reportDatas.coverImg == '') {
+                this.$message({
+                  message: '请上传封面图片！',
+                  type: 'warning'
+                })
+                return false
+            }
             this.$emit('addReports', this.reportDatas)
+        },
+        changeImg (data) {
+          this.reportDatas.coverImg = data.url
         }
     },
     components: {
-        searchBox
+        fileLists
     }
 }
 </script>
 <style lang="scss">
 .add-box-report {
     .el-dialog {
-        width: 680px;
+        width: 520px;
     }
 
     .baseInput {
@@ -86,9 +131,65 @@ export default {
         }
     }
 
+    .changeImg {
+        margin: 0;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .default-img {
+            width: 100%;
+            height: 150px;
+            background: #f0f0f0;
+        }
+
+        p {
+            width: 190px;
+            float: left;
+            margin: 20px 30px 0 0;
+
+            label {
+                display: block;
+                width: 100%;
+                height: 36px;
+                background: #20A0FF;
+                font-size: 12px;
+                color: #ffffff;
+                line-height: 36px;
+                text-align: center;
+                border: none;
+                padding: 0;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+            input {
+                display: none;
+            }
+        }
+
+        .su-btn {
+            float: right;
+            width: 190px;
+            height: 36px;
+            margin-top: 20px;
+            background: #20A0FF;
+            font-size: 12px;
+            color: #ffffff;
+            line-height: 36px;
+            text-align: center;
+            border: none;
+            padding: 0;
+            border-radius: 3px;
+        }
+    }
+
     .bigB {
         .input-box {
-            width: 575px;
+            width: 415px;
 
             .el-select {
                 width: 575px;

@@ -1,7 +1,7 @@
 <template>
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
-        <section class="leftBox" v-if="$route.params.type === 'edit'">
+        <section class="leftBox">
             <articles @getInfo="getInfo" ref="listBox"></articles>
         </section>
         <!-- 中间文章编辑区域 -->
@@ -12,7 +12,7 @@
     
 </template>
 <script>
-import articles from '../../../components/index/list.vue'
+import articles from '../../../components/index/reportList.vue'
 import formReport from '../../../components/index/formReport'
 import util from '../../../assets/common/util'
 
@@ -25,9 +25,6 @@ export default {
     },
     methods: {
         getInfo (data) {
-            if (this.$route.params.type !== 'edit') {
-                return false
-            }
             // 编辑区域获取初始数据
             this.$refs.editBox.getAllData()
         }

@@ -1,7 +1,7 @@
 <template>
     <section class="mid-box">
         <el-table
-                :data="rents"
+                :data="evalues"
                 border
                 style="width: 100%">
             <el-table-column
@@ -11,20 +11,24 @@
             </el-table-column>
             <el-table-column
                     prop="priceT"
-                    label="高区租金">
+                    label="总租金">
             </el-table-column>
             <el-table-column
-                    prop="priceM"
-                    label="中区租金">
+                    prop="priceE"
+                    label="估值">
             </el-table-column>
             <el-table-column
-                    prop="priceB"
-                    label="低区租金">
+                    prop="priceS"
+                    label="静总租金">
             </el-table-column>
-            <!-- <el-table-column
+            <el-table-column
+                    prop="priceP"
+                    label="资本化率">
+            </el-table-column>
+            <el-table-column
                     prop="author"
                     label="填报人">
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column
                     label="操作"
                     width="100">
@@ -48,18 +52,21 @@
                     <el-date-picker
                             class="input-box"
                             v-model="curentData.date"
-                            type="month"
-                            placeholder="选择月">
+                            type="year"
+                            placeholder="选择年">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="高区租金">
+                <el-form-item label="总租金">
                     <el-input-number class="input-box" :min="0" v-model="curentData.priceT"></el-input-number>
                 </el-form-item>
-                <el-form-item label="中区租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceM"></el-input-number>
+                <el-form-item label="估值">
+                    <el-input-number class="input-box" :min="0" v-model="curentData.priceE"></el-input-number>
                 </el-form-item>
-                <el-form-item label="低区租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceB"></el-input-number>
+                <el-form-item label="静总租金">
+                    <el-input-number class="input-box" :min="0" v-model="curentData.priceS"></el-input-number>
+                </el-form-item>
+                <el-form-item label="资本化率">
+                    <el-input-number class="input-box" :min="0" v-model="curentData.priceP"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -75,7 +82,7 @@ import util from '../../../assets/common/util'
 export default {
     data () {
         return {
-            rents: [],
+            evalues: [],
             total: 0,
             pageSize: 10,
             pageNumber: 1,
@@ -84,28 +91,29 @@ export default {
                 id: '',
                 date: '',
                 priceT: '',
-                priceB: '',
-                priceM: '',
+                priceE: '',
+                priceS: '',
+                priceP: '',
                 author: ''
             }
         }
     },
     mounted () {
         this.getRents()
-        document.title = '租金历史明细'
+        document.title = '估值历史明细'
     },
     methods: {
         getRents () {
             util.request({
                 method: 'get',
-                interface: 'rent',
+                interface: 'evalues',
                 data: {
                     id: localStorage.getItem("id"),
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
-                this.rents = res.result.result.rents
+                this.evalues = res.result.result.evalues
                 this.total = this.total ? Number(this.total) : 0
             })
         },
@@ -119,7 +127,7 @@ export default {
                 callback: action => {
                     util.request({
                         method: 'post',
-                        interface: 'deleteRentHistory',
+                        interface: 'deleteEvalueHistory',
                         data: {
                             id: row.id
                         }
@@ -145,23 +153,24 @@ export default {
                 })
                 return false
             }
-            if (this.curentData.priceT == '' && this.curentData.priceM == '' && this.curentData.priceB == '') {
+            if (this.curentData.priceT == '' && this.curentData.priceE == '' && this.curentData.priceS == '' && this.curentData.priceP == '') {
                 this.$message({
                     message: '请务填写租金！',
                     type: 'warning'
                 })
                 return false
             }
-            
+
             var formData = {
                 id: localStorage.getItem("id"),
-                type: 'rents',
+                type: 'evalues',
                 data: {
                     id: this.curentData.id,
                     date: this.curentData.date,
                     priceT: this.curentData.priceT,
-                    priceM: this.curentData.priceM,
-                    priceB: this.curentData.priceB
+                    priceE: this.curentData.priceE,
+                    priceS: this.curentData.priceS,
+                    priceP: this.curentData.priceP
                 }
             }
 
@@ -170,7 +179,7 @@ export default {
                 interface: 'houseInfo',
                 data: formData
             }).then(res => {
-                if (res.result.success) {
+                if (res.result.success == '1') {
                     this.getRents()
                     this.dialogFormVisible = false
                     this.$message({

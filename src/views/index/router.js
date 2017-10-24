@@ -39,6 +39,15 @@ const routers = [
         resolve(require('./article/changes.vue'))
       })
     }
+  }, {
+    // 估值历史
+    path: '/index/evalues',
+    name: 'evalues',
+    component (resolve) {
+      require.ensure(['./article/evalues.vue'], () => {
+        resolve(require('./article/evalues.vue'))
+      })
+    }
   }
   // ,
   // {

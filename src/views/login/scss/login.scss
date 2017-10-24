@@ -114,6 +114,16 @@ html, body, #app {
       height: 40px;
       line-height: 36px;
     }
+
+    .secondBox {
+      i {
+        color: #20a0ff;
+      }
+    }
+
+    .codeBox {
+      cursor: pointer;
+    }
   }
 
   .code-b {
