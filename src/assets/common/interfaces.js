@@ -240,7 +240,8 @@ export default {
 
         sendSubscriberArticle: platform + 'html5SiteInfo/sendSubscriberArticle.json',
         enterpriseList: platform + 'enterprise/list.json',
-        publishArticle: platform + 'siteEdit/publishArticle.json'
+        publishArticle: platform + 'siteEdit/publishArticle.json',
+        validateHousesGps: platform + 'houses/validateHousesGps.json'
 
     }
 }

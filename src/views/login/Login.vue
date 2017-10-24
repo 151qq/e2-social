@@ -55,7 +55,7 @@
             <div class="form-b">
                 <section>
                     <span>手机</span>
-                    <el-input placeholder="请输入内容" v-model="forgetData.tel"></el-input>
+                    <el-input placeholder="请输入内容" v-model="forgetData.tel" @input="checkTel"></el-input>
                 </section>
                 <section>
                     <span>验证码</span>
@@ -64,7 +64,7 @@
                             <span class="secondBox">剩余<i>{{seconds}}</i>秒</span>
                         </template>
                         <template v-else slot="append">
-                            <span class="codeBox" @click="getCode">获取验证码</span>
+                            <span class="codeBox" :class="{clickBox: isClick}" @click="getCode">获取验证码</span>
                         </template>
                     </el-input>
                 </section>
@@ -131,7 +131,8 @@
                 codeInput: '',
                 timer: null,
                 seconds: 90,
-                enterPassword: ''
+                enterPassword: '',
+                isClick: false
             }
         },
         mounted() {
@@ -144,9 +145,15 @@
             }, 150)
         },
         methods: {
+            checkTel () {
+                if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{8}$/).test(this.forgetData.tel.trim())) {
+                    this.isClick = false
+                } else {
+                    this.isClick = true
+                }
+            },
             getCode () {
-                if (this.forgetData.tel == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.forgetData.tel.trim())) {
-                    this.$message.error('请输入11位注册手机号')
+                if (!this.isClick) {
                     return
                 }
 

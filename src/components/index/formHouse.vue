@@ -515,7 +515,6 @@
                 this.getAppearance()
                 this.getPublic()
                 this.getSurround()
-                this.getBenchList()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -562,6 +561,7 @@
                         this.drawMap()
                         this.getMalls()
                         this.getStar()
+                        this.getBenchList()
                     }, 0)
                 })
             },
@@ -916,7 +916,8 @@
                     method: 'get',
                     interface: 'benchList',
                     data: {
-                        cityCode: localStorage.getItem("cityCode")
+                        cityCode: localStorage.getItem("cityCode"),
+                        gps: this.base.point
                     }
                 }).then(res => {
                     this.benchList = res.result.result

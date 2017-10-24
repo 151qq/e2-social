@@ -141,9 +141,8 @@
         //  this.loadList()
         // },
       loadList(){
-        console.log('loadList')
         var formData = {}
-          util.request({
+        util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
           data: formData
@@ -167,7 +166,6 @@
         })
       },
       reloadList(newId){
-        console.log('reloadList', newId)
         util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
@@ -201,8 +199,6 @@
               break
             }
           }
-
-          console.log(tree, this.activeName)
 
           let formData = {
             id: newId

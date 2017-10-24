@@ -23,7 +23,7 @@ export default {
         return {
             houseDatas: {
                 name: '',
-                point: {}
+                point: ''
             }
         }
     },
@@ -41,7 +41,6 @@ export default {
             map.centerAndZoom(point, 15)
         },
         drawMap (mapInfo) {
-            console.log(mapInfo, 'mapInfo')
             this.houseDatas.point = mapInfo.point.lat + ',' + mapInfo.point.lng
             this.houseDatas.name = mapInfo.title
             this.houseDatas.address = mapInfo.address
@@ -66,7 +65,27 @@ export default {
                 })
                 return false
             }
-            this.$emit('addHouse', this.houseDatas)
+
+            util.request({
+              method: 'post',
+              interface: 'validateHousesGps',
+              data: {
+                gps: this.houseDatas.point
+              }
+            }).then(res => {
+              if (res.result.success == '1') {
+                if (res.result.result) {
+                    this.$emit('addHouse', this.houseDatas)
+                } else {
+                    this.$message({
+                      message: '已存在该楼盘，不能重复添加！',
+                      type: 'warning'
+                    })
+                }
+              } else {
+                this.$message.error(res.result.message)
+              }
+            })
         }
     },
     components: {

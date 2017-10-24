@@ -180,8 +180,6 @@ export default {
     methods: {
         getAllData () {
           this.getArticle()
-          this.getSelectList()
-          this.getReportList()
           this.getInvestors()
 
           this.pageNumber = 1
@@ -210,6 +208,9 @@ export default {
               this.coverImg = resData.html5PageindexImg
               this.createTime = res.result.responsetime.split(' ')[0]
               this.abstract = resData.html5Summary
+
+              this.getSelectList()
+              this.getReportList()
 
               var data = {
                 article: this.articleinfo,
@@ -333,7 +334,9 @@ export default {
             util.request({
                 method: 'get',
                 interface: 'findRecommendArticleByCode',
-                data: {}
+                data: {
+                  self: this.articleId
+                }
             }).then(res => {
                 this.reportAllList = res.result.result
                 this.total = this.reportAllList.length
