@@ -44,3 +44,8 @@
   left: 0;
   top: 0;
 }
+
+.el-message {
+  top: 60px;
+  z-index: 1000000 !important;
+}
