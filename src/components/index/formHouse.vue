@@ -105,7 +105,7 @@
                         <el-input-number class="input-box" size="small" :min="0" v-model="base.year"></el-input-number>
                     </section>
                     <section class="baseInput rightF">
-                        <span>容积率(%)</span>
+                        <span>容积率</span>
                         <el-input-number class="input-box" size="small" :min="0" :max="100" v-model="base.ratio"></el-input-number>
                     </section>
                     <section class="baseInput">
