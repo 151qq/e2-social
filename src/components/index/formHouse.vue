@@ -312,7 +312,7 @@
                                @click="saveRents(true)">保存</el-button>
                 </div>
             </el-collapse-item>
-            <!-- <div class="line-bold"></div>
+            <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业估值历史" name="4">
                 <router-link class="link-btn" target="_blank" :to="{name: 'evalues'}">明细</router-link>
                 <div class="over-box">
@@ -320,35 +320,35 @@
                         <span>交易日期</span>
                         <el-date-picker
                                 class="input-box"
-                                v-model="evalues.date"
+                                v-model="evalues.createDate"
                                 type="year"
                                 placeholder="选择年">
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
                         <span>总租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceT"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.rentValue"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>估值</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceE"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.valuation"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>静总租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceS"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.netRentValue"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>资本化率</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.priceP"></el-input-number>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.capRate"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                @click="saveEvalues(true)">保存</el-button>
                 </div>
-            </el-collapse-item> -->
+            </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle editShow" title="物业评述" name="5">
                 <edit-box ref="editForm"></edit-box>
@@ -446,11 +446,11 @@
                 },
                 evalues: {
                     id: '',
-                    date: '',
-                    priceT: '',
-                    priceE: '',
-                    priceS: '',
-                    priceP: ''
+                    createDate: '',
+                    valuation: '',
+                    rentValue: '',
+                    netRentValue: '',
+                    capRate: ''
                 },
                 addBase: {},
                 malls: [],
@@ -762,7 +762,7 @@
                     id: localStorage.getItem("id"),
                     type: 'rents',
                     data: {
-                        date: this.rents.date,
+                        createDate: this.rents.date,
                         priceT: this.rents.priceT,
                         priceM: this.rents.priceM,
                         priceB: this.rents.priceB
@@ -792,14 +792,14 @@
                 })
             },
             saveEvalues (isShow) {
-                if (this.evalues.date == '') {
+                if (this.evalues.createDate == '') {
                     this.$message({
                         message: '请务填写交易日期！',
                         type: 'warning'
                     })
                     return false
                 }
-                if (this.evalues.priceT == '' && this.evalues.priceE == '' && this.evalues.priceS == '' && this.evalues.priceP == '') {
+                if (this.evalues.valuation == '' && this.evalues.rentValue == '' && this.evalues.netRentValue == '' && this.evalues.capRate == '') {
                     this.$message({
                         message: '请务填写租金！',
                         type: 'warning'
@@ -809,13 +809,14 @@
 
                 var formData = {
                     id: localStorage.getItem("id"),
-                    type: 'evalues',
+                    type: 'valuation',
                     data: {
-                        date: this.evalues.date,
-                        priceT: this.evalues.priceT,
-                        priceE: this.evalues.priceE,
-                        priceS: this.evalues.priceS,
-                        priceP: this.evalues.priceP
+                        housesGps: this.base.point,
+                        createDate: this.evalues.createDate,
+                        rentValue: this.evalues.rentValue,
+                        netRentValue: this.evalues.netRentValue,
+                        valuation: this.evalues.valuation,
+                        capRate: this.evalues.capRate
                     }
                 }
 
@@ -826,11 +827,11 @@
                 }).then(res => {
                     if (res.result.success) {
                         this.evalues = {
-                            date: '',
-                            priceT: '',
-                            priceE: '',
-                            priceS: '',
-                            priceP: ''
+                            createDate: '',
+                            rentValue: '',
+                            netRentValue: '',
+                            valuation: '',
+                            capRate: ''
                         }
 
                         if (isShow) {

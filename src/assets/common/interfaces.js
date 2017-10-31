@@ -142,7 +142,9 @@ export default {
         deleteTradeHistory: platform + 'houses/deleteTradeHistory.json',
 
         deleteRentHistory: platform + 'houses/deleteRentHistory.json',
-        deleteEvalueHistory: platform + 'houses/deleteEvalueHistory.json',
+        evalues: platform +'houses/findValuationHistory.json',
+
+        deleteEvalueHistory: platform + 'houses/deleteValuationHistory.json',
         /**
         * 物业租金历史 get
         * id 楼盘序列标识
@@ -242,6 +244,5 @@ export default {
         enterpriseList: platform + 'enterprise/list.json',
         publishArticle: platform + 'siteEdit/publishArticle.json',
         validateHousesGps: platform + 'houses/validateHousesGps.json'
-
     }
 }

@@ -5,24 +5,24 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="date"
+                    prop="createDate"
                     label="交易日期"
                     width="360">
             </el-table-column>
             <el-table-column
-                    prop="priceT"
+                    prop="rentValue"
                     label="总租金">
             </el-table-column>
             <el-table-column
-                    prop="priceE"
+                    prop="valuation"
                     label="估值">
             </el-table-column>
             <el-table-column
-                    prop="priceS"
+                    prop="netRentValue"
                     label="静总租金">
             </el-table-column>
             <el-table-column
-                    prop="priceP"
+                    prop="capRate"
                     label="资本化率">
             </el-table-column>
             <el-table-column
@@ -51,22 +51,22 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.date"
+                            v-model="curentData.createDate"
                             type="year"
                             placeholder="选择年">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="总租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceT"></el-input-number>
+                    <el-input-number class="input-box" :min="0" v-model="curentData.rentValue"></el-input-number>
                 </el-form-item>
                 <el-form-item label="估值">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceE"></el-input-number>
+                    <el-input-number class="input-box" :min="0" v-model="curentData.valuation"></el-input-number>
                 </el-form-item>
                 <el-form-item label="静总租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceS"></el-input-number>
+                    <el-input-number class="input-box" :min="0" v-model="curentData.netRentValue"></el-input-number>
                 </el-form-item>
                 <el-form-item label="资本化率">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceP"></el-input-number>
+                    <el-input-number class="input-box" :min="0" v-model="curentData.capRate"></el-input-number>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -89,11 +89,11 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                date: '',
-                priceT: '',
-                priceE: '',
-                priceS: '',
-                priceP: '',
+                createDate: '',
+                rentValue: '',
+                valuation: '',
+                netRentValue: '',
+                capRate: '',
                 author: ''
             }
         }
@@ -113,7 +113,7 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
-                this.evalues = res.result.result.evalues
+                this.evalues = res.result.result.valuation
                 this.total = this.total ? Number(this.total) : 0
             })
         },
@@ -146,14 +146,14 @@ export default {
             this.curentData = Object.assign({}, row)
         },
         confirmEdit () {
-            if (this.curentData.date == '') {
+            if (this.curentData.createDate == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
                 })
                 return false
             }
-            if (this.curentData.priceT == '' && this.curentData.priceE == '' && this.curentData.priceS == '' && this.curentData.priceP == '') {
+            if (this.curentData.rentValue == '' && this.curentData.valuation == '' && this.curentData.netRentValue == '' && this.curentData.capRate == '') {
                 this.$message({
                     message: '请务填写租金！',
                     type: 'warning'
@@ -166,11 +166,11 @@ export default {
                 type: 'evalues',
                 data: {
                     id: this.curentData.id,
-                    date: this.curentData.date,
-                    priceT: this.curentData.priceT,
-                    priceE: this.curentData.priceE,
-                    priceS: this.curentData.priceS,
-                    priceP: this.curentData.priceP
+                    createDate: this.curentData.createDate,
+                    rentValue: this.curentData.rentValue,
+                    valuation: this.curentData.valuation,
+                    netRentValue: this.curentData.netRentValue,
+                    capRate: this.curentData.capRate
                 }
             }
 

@@ -5,7 +5,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="date"
+                    prop="createDate"
                     label="交易日期"
                     width="360">
             </el-table-column>
@@ -21,10 +21,10 @@
                     prop="priceB"
                     label="低区租金">
             </el-table-column>
-            <!-- <el-table-column
+            <el-table-column
                     prop="author"
                     label="填报人">
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column
                     label="操作"
                     width="100">
@@ -47,7 +47,7 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.date"
+                            v-model="curentData.createDate"
                             type="month"
                             placeholder="选择月">
                     </el-date-picker>
@@ -82,7 +82,7 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                date: '',
+                createDate: '',
                 priceT: '',
                 priceB: '',
                 priceM: '',
@@ -138,7 +138,7 @@ export default {
             this.curentData = Object.assign({}, row)
         },
         confirmEdit () {
-            if (this.curentData.date == '') {
+            if (this.curentData.createDate == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
@@ -158,7 +158,7 @@ export default {
                 type: 'rents',
                 data: {
                     id: this.curentData.id,
-                    date: this.curentData.date,
+                    createDate: this.curentData.createDate,
                     priceT: this.curentData.priceT,
                     priceM: this.curentData.priceM,
                     priceB: this.curentData.priceB
