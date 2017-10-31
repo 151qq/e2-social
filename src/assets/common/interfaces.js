@@ -17,6 +17,7 @@ export default {
         "sendSmsCode": platform + 'sendSmsCode.json',
         "validateHousesStart": platform + 'houses/validateHousesStart.json',
         "deleteHousesInfo": platform + 'houses/deleteHousesInfo.json',
+        publishArticle: platform + 'siteEdit/publishArticle.json',
 
         /**
         * 上传头像 post                                

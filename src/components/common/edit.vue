@@ -287,18 +287,18 @@ export default {
                 this.saveData(item.type, index)
             })
 
-            // if (this.$route.name == 'house') {
-            //     setTimeout(() => {
-            //         this.submitArticle()
-            //     }, 3000)
-            // }
+            if (this.$route.name == 'house') {
+                setTimeout(() => {
+                    this.submitArticle()
+                }, 3000)
+            }
         },
         submitArticle () {
             util.request({
               method: 'post',
-              interface: 'sendSubscriberArticle',
+              interface: 'publishArticle',
               data: {
-                articleCode: localStorage.getItem('htmlHouseCode')
+                html5PageCode: localStorage.getItem('htmlHouseCode')
               }
             }).then(res => {
             })
