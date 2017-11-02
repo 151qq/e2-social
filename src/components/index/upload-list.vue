@@ -49,6 +49,7 @@ export default {
           } else {
             this.imgLists.push(imgObject)
           }
+          this.$emit('imgChange', this.type)
         })
       },
       showImg (e) {

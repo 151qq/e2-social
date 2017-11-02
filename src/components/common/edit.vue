@@ -222,7 +222,7 @@ export default {
             var formData = {
                 type: this.$route.name,
                 areaTxt: '',
-                html5TemplateCode: 'tpl_003'
+                html5TemplateCode: this.$route.name == 'house' ? 'tpl_001' : 'tpl_002'
             }
 
             if (data) {

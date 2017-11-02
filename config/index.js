@@ -42,11 +42,11 @@ module.exports = {
 
 
     proxyTable: {
-      '/esocial': {
-        target: 'http://192.168.2.103:8080',
+      '/e2-platform-api': {
+        target: 'http://192.168.2.105:8080',
         changeOrigin: true,
         pathRewrite: {
-          '^/esocial': ''
+          '^/e2-platform-api': ''
         }
       }
     },

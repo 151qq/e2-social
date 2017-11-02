@@ -46,7 +46,6 @@ export default {
   watch: {
     index () {
       this.$refs.mySwiper.swiper.slideTo(this.index)
-      console.log(this.index, 'index')
     }
   },
   components: {

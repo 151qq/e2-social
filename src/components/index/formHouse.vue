@@ -355,7 +355,8 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="6">
-                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"
+                                @imgChange="imgListChange"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('appearance')">保存</el-button>
@@ -363,7 +364,8 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
-                <upload-list :img-lists="public" :type="'public'" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="public" :type="'public'" @showimg="showImg"
+                            @imgChange="imgListChange"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('public')">保存</el-button>
@@ -371,7 +373,8 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
-                <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"></upload-list>
+                <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"
+                            @imgChange="imgListChange"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveData('surround')">保存</el-button>
@@ -580,7 +583,7 @@
                     }
                 }).then(res => {
                     this.appearance = res.result.result
-                    this.bigImgs = this.bigImgs.concat(this.appearance)
+                    this.setImgs()
                 })
             },
             getPublic () {
@@ -593,9 +596,7 @@
                     }
                 }).then(res => {
                     this.public = res.result.result
-                    setTimeout (() => {
-                        this.bigImgs = this.bigImgs.concat(this.public)
-                    }, 150)
+                    this.setImgs()
                 })
             },
             getSurround () {
@@ -608,10 +609,19 @@
                     }
                 }).then(res => {
                     this.surround = res.result.result
-                    setTimeout (() => {
-                        this.bigImgs = this.bigImgs.concat(this.surround)
-                    }, 300)
+                    this.setImgs()
                 })
+            },
+            imgListChange (type) {
+                this.bigImgs = []
+                this.bigImgs = this.bigImgs.concat(this.appearance, this.public, this.surround)
+                console.log(this.bigImgs, 'bigImgs', 'chang')
+            },
+            setImgs () {
+                if (this.appearance.length && this.public.length && this.surround.length && !this.bigImgs.length) {
+                    this.bigImgs = this.bigImgs.concat(this.appearance, this.public, this.surround)
+                    console.log(this.bigImgs, 'bigImgs')
+                }
             },
             getArticle () {
                 util.request({
@@ -900,6 +910,7 @@
                     localStorage.setItem("id", res.result.result.id)
                     var obj = {
                         id: '',
+                        title: this.base.name,
                         html5CatalogCode: res.result.result.id,
                         isHouse: true
                     }

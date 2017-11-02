@@ -147,7 +147,7 @@
           interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
-          this.treeData = this.filterData(res.result.result)
+          this.treeData = res.result.result
           if (this.treeData[0].children.length && this.treeData[0].children[0].children.length && this.isfirst) {
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode

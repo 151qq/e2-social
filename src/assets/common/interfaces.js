@@ -3,7 +3,7 @@
  */
 let wc = window.location;
 //const platform =wc.protocol+'//'+wc.host+'/';
-const platform = "/esocial/";
+const platform = "/e2-platform-api/";
 export default {
     interfaces: {
         "authentication": platform + "authentication.json",     //登录
@@ -59,10 +59,6 @@ export default {
         * unitcode: html5PageCode
         */
         "templateList": platform + "siteTpl/templateList.json",
-        /**
-        * 发布 post
-        */
-        "publishArticle": platform + "siteEdit/publishArticle.json",
         /**
         * 删除文章 post
         */
