@@ -368,7 +368,7 @@
                             @imgChange="imgListChange"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveData('public')">保存</el-button>
+                           @click="saveData('publics')">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
@@ -592,7 +592,7 @@
                     interface: 'houseImages',
                     data: {
                         fileCode: localStorage.getItem("id"),
-                        catalogCode: 'public'
+                        catalogCode: 'publics'
                     }
                 }).then(res => {
                     this.public = res.result.result
