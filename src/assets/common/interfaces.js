@@ -109,6 +109,8 @@ export default {
          * '/static/api/property/houseTree.json'
         */
         houseTree: platform +'houses/houseTree.json',
+        saveHousesTrade: platform + 'houses/saveHousesTrade.json',
+        deleteHousesTrade: platform + 'houses/deleteHousesTrade.json',
 
         /**
          * 楼盘基本信息 post

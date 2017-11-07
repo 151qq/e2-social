@@ -7,14 +7,23 @@
     </el-input>
 
     <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
-      <el-submenu v-for="(item1, index1) in treeData" :index="index1 + ''">
-        <template slot="title">{{item1.label}}</template>
+      <el-submenu class="one-box" v-for="(item1, index1) in treeData" :index="index1 + ''">
+        <template slot="title">
+          {{item1.label}}
+          <span @click.stop="setDir(item1, index1)" class="add-box">
+            +
+          </span>
+        </template>
         <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
           <template slot="title">
             {{item2.label}}
+
             <span @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
+            <span @click.stop="deleteDir(item1, item2)"
+                  class="delete-box el-icon-delete2"
+                  v-if="!item2.children.length || !item2.children"></span>
           </template>
           <el-menu-item v-for="(item3, index3) in item2.children"
               :index="index1 + '-' + index2 + '-' + index3">
@@ -35,12 +44,13 @@
         </el-submenu>
       </el-submenu>
     </el-menu>
-
+    <add-dir :is-add="isAdd" @addDirs="saveDir"></add-dir>
   </div>
 </template>
 <script>
   import util from '../../assets/common/util'
   import interfaces from '../../assets/common/interfaces'
+  import addDir from '../common/addDir.vue'
   import $ from 'Jquery'
   export default{
     data(){
@@ -54,8 +64,15 @@
         },
         activeName: '0-0-0',
         openeds: ['0', '0-0'],
-        addData: ''
+        addData: '',
+        isAdd: {
+          value: false
+        },
+        clickDir: {}
       }
+    },
+    components: {
+      addDir
     },
     mounted(){
       this.loadList()
@@ -114,7 +131,7 @@
       loadList(){
         console.log('loadList')
         var formData = {}
-          util.request({
+        util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
           data: formData
@@ -206,6 +223,62 @@
 
         this.$parent.$refs.editBox.showAdd(data)
         
+      },
+      setDir (item1, index1) {
+        this.clickDir = item1
+        this.isAdd.value = true
+      },
+      saveDir (data) {
+        var formData = {
+          cityCode: this.clickDir.nodeCode,
+          name: data.name
+        }
+
+        util.request({
+          method: 'post',
+          interface: 'saveHousesTrade',
+          data: formData
+        }).then(res => {
+          if (res.result.success == '1') {
+            this.reloadList(localStorage.getItem('id'))
+            this.isAdd.value = false
+          } else {
+            this.$message.error(res.result.message)
+          }
+        })
+      },
+      deleteDir (item1, item2) {
+        this.clickDir = item2
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delDir(item2.nodeCode)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      },
+      delDir (id) {
+        var formData = {
+          code: id
+        }
+
+        util.request({
+          method: 'get',
+          interface: 'deleteHousesTrade',
+          data: formData
+        }).then(res => {
+          if (res.result.success == '1') {
+            this.reloadList(localStorage.getItem('id'))
+            this.isAdd.value = false
+          } else {
+            this.$message.error(res.result.message)
+          }
+        })
       },
       delItem (id) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -310,6 +383,17 @@
       }
     }
 
+    .one-box {
+      .add-box {
+        float: right;
+        font-size: 30px;
+        margin-right: 30px;
+        line-height: 56px;
+        margin-top: -4px;
+        color: #000000;
+      }
+    }
+
     .two-box {
       background: #F9F9F9;
 
@@ -319,6 +403,14 @@
         margin-right: 30px;
         line-height: 56px;
         margin-top: -4px;
+        color: #000000;
+      }
+
+      .delete-box {
+        float: right;
+        font-size: 18px;
+        margin-right: 10px;
+        line-height: 52px;
         color: #000000;
       }
   
