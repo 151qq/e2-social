@@ -20,7 +20,7 @@
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode)">
+                    @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode, item3.status)">
                   <img class="img-box" :src="item3.imgUrl">
                   <div class="p-box">
                     <span class="title">{{item3.label}}</span>
@@ -152,6 +152,7 @@
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode
             let cityCode = this.treeData[0].nodeCode
+            let status = this.treeData[0].children[0].children[0].nodeCode
 
             let data = {
               id: id
@@ -160,6 +161,7 @@
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
             localStorage.setItem("cityCode", cityCode)
+            localStorage.setItem("reportStatus", status)
             this.$emit('getInfo', data)
             this.isfirst = false
           }
@@ -318,7 +320,7 @@
         // this.total = this.roleList.length
         // this.dialogFormVisible = true
       },
-      getInfo (id, cityCode, index1, index2, index3, dirCode) {
+      getInfo (id, cityCode, index1, index2, index3, dirCode, status) {
         
         var curIndex = index1 + '-' + index2 + '-' + index3
         if (this.activeName === curIndex) {
@@ -332,6 +334,7 @@
         localStorage.setItem("id", id)
         localStorage.setItem("dirCode", dirCode)
         localStorage.setItem("cityCode", cityCode)
+        localStorage.setItem("reportStatus", status)
 
         this.$emit('getInfo', data)
       },

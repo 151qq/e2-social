@@ -364,7 +364,7 @@
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
-                <upload-list :img-lists="public" :type="'public'" @showimg="showImg"
+                <upload-list :img-lists="public" :type="'publics'" @showimg="showImg"
                             @imgChange="imgListChange"></upload-list>
                 <div class="clear"></div>
                 <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
