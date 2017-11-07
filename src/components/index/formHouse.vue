@@ -326,12 +326,12 @@
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
-                        <span>总租金</span>
+                        <span>总租金(万)</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.rentValue"></el-input-number>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
-                        <span>估值</span>
+                        <span>估值(万)</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.valuation"></el-input-number>
                     </section>
                     <div class="clear"></div>
@@ -734,7 +734,7 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    if (res.result.success) {
+                    if (res.result.success == '1') {
                         this.changes = {
                             id: '',
                             date: '',
@@ -784,7 +784,7 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    if (res.result.success) {
+                    if (res.result.success == '1') {
                         this.rents = {
                             date: '',
                             priceT: '',
@@ -835,7 +835,7 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    if (res.result.success) {
+                    if (res.result.success == '1') {
                         this.evalues = {
                             createDate: '',
                             rentValue: '',
@@ -1088,7 +1088,7 @@
 
         &>span {
             float: left;
-            width: 65px;
+            width: 70px;
             font-size: 14px;
             color: #666666;
             line-height: 30px;
