@@ -144,6 +144,8 @@ export default {
         evalues: platform +'houses/findValuationHistory.json',
 
         deleteEvalueHistory: platform + 'houses/deleteValuationHistory.json',
+        deleteRateHistory: platform + 'houses/deleteRateHistory.json',
+        rates: platform +'houses/findRateHistory.json',
         /**
         * 物业租金历史 get
         * id 楼盘序列标识

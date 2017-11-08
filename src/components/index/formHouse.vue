@@ -160,6 +160,14 @@
                         <el-input-number class="input-box" size="small" :min="1" v-model="base.plies"></el-input-number>
                     </section>
                     <section class="baseInput">
+                        <span>层高</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="base.height"></el-input-number>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>车位</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="base.park"></el-input-number>
+                    </section>
+                    <section class="baseInput">
                         <span>电梯数</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="base.elevator"></el-input-number>
                     </section>
@@ -204,6 +212,14 @@
                         </el-input>
                     </section>
                     <section class="baseInput bigB">
+                        <span>网站地址</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.webSite">
+                        </el-input>
+                    </section>
+                    <section class="baseInput bigB">
                         <span>对标物业</span>
                         <div class="input-box">
                             <el-select
@@ -232,6 +248,19 @@
                                     :bg-path="true"
                                     @changeImg="changeImg"></upLoad>
                         </div>
+                    </section>
+
+                    <section class="baseInput bigB">
+                        <span>物业描述</span>
+                        <el-input
+                          type="textarea"
+                          :rows="4"
+                          :maxlength="140"
+                          placeholder="请输入内容"
+                          v-model="base.des"
+                          @change="desChange">
+                        </el-input>
+                        <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
                     </section>
 
                     
@@ -350,8 +379,26 @@
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle editShow" title="物业评述" name="5">
-                <edit-box ref="editForm"></edit-box>
+            <el-collapse-item class="formStyle editShow" title="空置率历史" name="5">
+                <router-link class="link-btn" target="_blank" :to="{name: 'rates'}">明细</router-link>
+                <div class="over-box">
+                    <section class="baseInput">
+                        <span>交易日期</span>
+                        <el-date-picker
+                                class="input-box"
+                                v-model="rates.date"
+                                type="month"
+                                placeholder="选择月">
+                        </el-date-picker>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>空置率</span>
+                        <el-input-number class="input-box" size="small" :min="0" v-model="rates.rate"></el-input-number>
+                    </section>
+                    <div class="clear"></div>
+                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                               @click="saveRates(true)">保存</el-button>
+                </div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业外观图片" name="6">
@@ -431,8 +478,13 @@
                     traffic: '',
                     investor: '',
                     rentCount: 0,
-                    housesImg: ''
+                    housesImg: '',
+                    height: 0,
+                    park: 0,
+                    webSite: '',
+                    des: ''
                 },
+                abstractNum: 140,
                 changes: {
                     id: '',
                     date: '',
@@ -454,6 +506,11 @@
                     rentValue: '',
                     netRentValue: '',
                     capRate: ''
+                },
+                rates: {
+                    id: '',
+                    date: '',
+                    rate: ''
                 },
                 addBase: {},
                 malls: [],
@@ -528,6 +585,9 @@
                 // }, 180000)
                 
                 this.bigImgs = []
+            },
+            desChange () {
+                this.abstractNum = 140 - this.base.des.length
             },
             rentChange () {
                 if (this.base.rent != '') {
@@ -790,6 +850,51 @@
                             priceT: '',
                             priceM: '',
                             priceB: ''
+                        }
+
+                        if (isShow) {
+                            this.$message({
+                                message: '恭喜，已存入相关明细',
+                                type: 'success'
+                            })
+                        }
+                    }
+                })
+            },
+            saveRates (isShow) {
+                if (this.rates.date == '') {
+                    this.$message({
+                        message: '请务填写交易日期！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+                if (this.rates.rate == '') {
+                    this.$message({
+                        message: '请务填写置空率！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                var formData = {
+                    id: localStorage.getItem("id"),
+                    type: 'rates',
+                    data: {
+                        createDate: this.rates.date,
+                        priceT: this.rates.rate
+                    }
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'houseInfo',
+                    data: formData
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.rents = {
+                            date: '',
+                            rate: ''
                         }
 
                         if (isShow) {
@@ -1094,6 +1199,13 @@
             line-height: 30px;
         }
 
+        .abstract-num {
+          float: right;
+          span {
+            color: red;
+          }
+        }
+
         .input-box {
             float: left;
             width: 235px;
@@ -1116,11 +1228,15 @@
 
     .bigB {
         .input-box {
-            width: 575px;
+            width: 570px;
 
             .el-select {
-                width: 575px;
+                width: 570px;
             }
+        }
+
+        .el-textarea {
+          width: 570px;
         }
     }
 

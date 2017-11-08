@@ -48,6 +48,15 @@ const routers = [
         resolve(require('./article/evalues.vue'))
       })
     }
+  }, {
+    // 置空率历史
+    path: '/index/rates',
+    name: 'rates',
+    component (resolve) {
+      require.ensure(['./article/rates.vue'], () => {
+        resolve(require('./article/rates.vue'))
+      })
+    }
   }
   // ,
   // {

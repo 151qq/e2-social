@@ -458,7 +458,7 @@ export default {
 
         &>span {
             float: left;
-            width: 65px;
+            width: 70px;
             font-size: 14px;
             color: #1F2D3D;
             line-height: 30px;
@@ -483,15 +483,15 @@ export default {
 
     .bigB {
         .input-box {
-            width: 575px;
+            width: 570px;
 
             .el-select {
-                width: 575px;
+                width: 570px;
             }
         }
 
         .el-textarea {
-          width: 575px;
+          width: 570px;
         }
     }
 
