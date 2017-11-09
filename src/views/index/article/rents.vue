@@ -5,9 +5,8 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="createDate"
-                    label="交易日期"
-                    width="360">
+                    prop="tenantStartDate"
+                    label="交易日期">
             </el-table-column>
             <el-table-column
                     prop="priceT"
@@ -22,7 +21,7 @@
                     label="低区租金">
             </el-table-column>
             <el-table-column
-                    prop="author"
+                    prop="recordCreater"
                     label="填报人">
             </el-table-column>
             <el-table-column
@@ -105,6 +104,10 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
+                res.result.result.rents.forEach((item) => {
+                    var dateData = item.tenantStartDate.split(' ')[0].split('-')
+                    item.tenantStartDate = dateData[0] + '-' + dateData[1]
+                })
                 this.rents = res.result.result.rents
                 this.total = this.total ? Number(this.total) : 0
             })
@@ -158,10 +161,11 @@ export default {
                 type: 'rents',
                 data: {
                     id: this.curentData.id,
-                    createDate: this.curentData.createDate,
+                    tenantStartDate: this.curentData.createDate,
                     priceT: this.curentData.priceT,
                     priceM: this.curentData.priceM,
-                    priceB: this.curentData.priceB
+                    priceB: this.curentData.priceB,
+                    recordCreater: this.curentData.recordCreater
                 }
             }
 

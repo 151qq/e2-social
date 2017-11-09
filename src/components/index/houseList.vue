@@ -137,7 +137,7 @@
           data: formData
         }).then(res => {
           this.treeData = res.result.result
-          if (this.treeData[0].children.length && this.treeData[0].children[0].children.length && this.isfirst) {
+          if (this.treeData[0].children.length && this.treeData[0].children[0].children.length) {
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode
             let cityCode = this.treeData[0].nodeCode
@@ -150,7 +150,6 @@
             localStorage.setItem("dirCode", dirCode)
             localStorage.setItem("cityCode", cityCode)
             this.$emit('getInfo', data)
-            this.isfirst = false
           }
         })
       },

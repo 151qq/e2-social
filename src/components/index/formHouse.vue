@@ -3,7 +3,7 @@
         <el-collapse v-model="activeNames" @change="collChange">
             <el-collapse-item class="formStyle" title="物业基本信息" name="1">
                 <div id="container"></div>
-                <section v-if="$route.params.type === 'edit'" class="baseInput bigB">
+                <section class="baseInput bigB">
                     <span>楼盘名字</span>
                     <el-input
                             class="input-box"
@@ -12,9 +12,6 @@
                             v-model="base.name">
                     </el-input>
                 </section>
-                <search-box v-if="$route.params.type !== 'edit'" :is-page="true"
-                        @mapChange="drawMap"
-                        :city="houseCity"></search-box>
                 <div class="form-box">
                     <div class="clear"></div>
                     <section class="baseInput">
@@ -203,6 +200,42 @@
                             </el-option>
                         </el-select>
                     </section>
+                    <section class="baseInput">
+                        <span>证券类型</span>
+                        <el-select class="input-box"
+                                    v-model="base.bondType"
+                                    name="floor"
+                                    placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in bonds"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.typeName">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>产品类型</span>
+                        <el-select class="input-box"
+                                    v-model="base.bondCode"
+                                    name="holding"
+                                    :disabled="true"
+                                    placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in types.hold"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+
+                        <div class="message-box">
+                            *如无所需产品，请
+                            <router-link :to="{name:'security'}" target="_blank">
+                                新添类型
+                            </router-link>
+                        </div>
+                    </section>
                     <section class="baseInput bigB">
                         <span>交通状况</span>
                         <el-input
@@ -257,7 +290,7 @@
                           :rows="4"
                           :maxlength="140"
                           placeholder="请输入内容"
-                          v-model="base.des"
+                          v-model="base.housesDesc"
                           @change="desChange">
                         </el-input>
                         <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
@@ -303,6 +336,34 @@
                                 placeholder="请输入内容"
                                 v-model="changes.changeB">
                         </el-input>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>评估机构</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="changes.evalCodes">
+                        </el-input>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>金融工具</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="changes.tenantFinanceTool">
+                        </el-input>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>交易备注</span>
+                        <el-input
+                          type="textarea"
+                          :rows="4"
+                          :maxlength="140"
+                          placeholder="请输入内容"
+                          v-model="changes.tenantDesc"
+                          @change="changeDescChange">
+                        </el-input>
+                        <div class="abstract-num">剩余<span>{{changeAbstractNum}}</span>个字</div>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
@@ -450,6 +511,7 @@
         props: ['listInfo', 'articleInfo'],
         data () {
             return {
+                productType: '',
                 base: {
                     name: '',
                     point: {
@@ -459,6 +521,7 @@
                     city: '',
                     mall: '',
                     address: '',
+                    bondType: '',
                     logisticsType: '',
                     level: '',
                     massif: '',
@@ -482,15 +545,31 @@
                     height: 0,
                     park: 0,
                     webSite: '',
-                    des: ''
+                    housesDesc: '',
+                    bondCode: ''
                 },
                 abstractNum: 140,
+                changeAbstractNum: 140,
+                bonds: [
+                    {
+                        typeName: '无'
+                    },
+                    {
+                        typeName: 'ABS'
+                    },
+                    {
+                        typeName: 'REITs'
+                    }
+                ],
                 changes: {
                     id: '',
                     date: '',
                     price: '',
                     changeA: '',
-                    changeB: ''
+                    changeB: '',
+                    tenantDesc: '',
+                    tenantFinanceTool: '',
+                    evalCodes: ''
                 },
                 rents: {
                     id: '',
@@ -560,12 +639,11 @@
             this.getTypes()
             this.getInvestors()
 
-            this.type = this.$route.params.type
             var houseColl = localStorage.getItem("houseColl")
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            document.title = '楼盘维护'
+            document.title = '物业维护'
             this.addBase = Object.assign({}, this.base)
         },
         methods: {
@@ -588,6 +666,9 @@
             },
             desChange () {
                 this.abstractNum = 140 - this.base.des.length
+            },
+            changeDescChange () {
+                this.changeAbstractNum = 140 - this.changes.tenantDesc
             },
             rentChange () {
                 if (this.base.rent != '') {
@@ -760,6 +841,8 @@
                     data: this.changes
                 }
 
+                formData.data.recordCreater = window.UserInfo.userCnName
+
                 if (this.changes.date == '') {
                     this.$message({
                         message: '请务填写交易日期！',
@@ -800,7 +883,10 @@
                             date: '',
                             price: '',
                             changeA: '',
-                            changeB: ''
+                            changeB: '',
+                            evalCodes: '',
+                            tenantFinanceTool: '',
+                            tenantDesc: ''
                         }
 
                         if (isShow) {
@@ -832,10 +918,11 @@
                     id: localStorage.getItem("id"),
                     type: 'rents',
                     data: {
-                        createDate: this.rents.date,
+                        tenantStartDate: this.rents.date,
                         priceT: this.rents.priceT,
                         priceM: this.rents.priceM,
-                        priceB: this.rents.priceB
+                        priceB: this.rents.priceB,
+                        recordCreater: window.UserInfo.userCnName
                     }
                 }
 
@@ -878,21 +965,19 @@
                 }
 
                 var formData = {
-                    id: localStorage.getItem("id"),
-                    type: 'rates',
-                    data: {
-                        createDate: this.rates.date,
-                        priceT: this.rates.rate
-                    }
+                    housesId: localStorage.getItem("id"),
+                    vacancyRate: this.rates.rate,
+                    date: this.rates.date,
+                    creater: window.UserInfo.userCnName
                 }
 
                 util.request({
                     method: 'post',
-                    interface: 'houseInfo',
+                    interface: 'addRates',
                     data: formData
                 }).then(res => {
                     if (res.result.success == '1') {
-                        this.rents = {
+                        this.rates = {
                             date: '',
                             rate: ''
                         }
@@ -931,7 +1016,8 @@
                         rentValue: this.evalues.rentValue,
                         netRentValue: this.evalues.netRentValue,
                         valuation: this.evalues.valuation,
-                        capRate: this.evalues.capRate
+                        capRate: this.evalues.capRate,
+                        recordCreater: window.UserInfo.userCnName
                     }
                 }
 
@@ -975,9 +1061,6 @@
             },
             saveAll () {
                 this.saveBase()
-                this.saveChanges()
-                this.saveRents()
-                this.$refs.articleForm.saveAll()
                 this.saveData('appearance')
                 this.saveData('public')
                 this.saveData('surround')
@@ -1000,7 +1083,6 @@
                 this.addBase.name = data.name
                 this.addBase.point = data.point
                 this.addBase.address = data.address
-                console.log('addBase')
 
                 var formData = {
                     type: 'base',
@@ -1019,7 +1101,6 @@
                         html5CatalogCode: res.result.result.id,
                         isHouse: true
                     }
-                    this.$refs.editForm.saveArticle(obj)
                     this.isAdd.value = false
                     this.$parent.$refs.listBox.reloadList(res.result.result.id)
                 })
@@ -1109,6 +1190,17 @@
         position: relative;
         width: 640px;
         margin: 0 auto;
+
+        .message-box {
+            text-align: right;
+            font-size: 13px;
+            color: #1f2d3d;
+
+            a {
+                text-decoration: underline;
+                color: red;
+            }
+        }
 
         .link-btn {
             position: absolute;

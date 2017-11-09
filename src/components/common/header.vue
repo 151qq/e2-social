@@ -3,8 +3,10 @@
     <router-link class="logo-box" :to="{name: 'house'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'house', params: { type: 'edit' }}">楼盘维护</router-link>
-      <router-link :to="{ name: 'report', params: { type: 'edit' }}">报告维护</router-link>
+      <router-link :to="{ name: 'house'}">物业维护</router-link>
+      <router-link :to="{ name: 'report'}">报告维护</router-link>
+      <router-link :to="{ name: 'invest'}">投资机构</router-link>
+      <router-link :to="{ name: 'security'}">证券产品</router-link>
     </div>
 
     <div class="member-box">
@@ -160,6 +162,7 @@ export default {
         data: {}
       }).then(res => {
         this.userInfo = res.result.result
+        window.UserInfo = res.result.result
       })
     },
     logout () {
@@ -274,6 +277,12 @@ export default {
       float: left;
       margin-top: 10px;
       margin-right: 26px;
+
+      img {
+        display: block;
+        height: 30px;
+        width: auto;
+      }
     }
 
     .nav-box {

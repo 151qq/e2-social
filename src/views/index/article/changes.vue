@@ -2,17 +2,26 @@
     <section class="mid-box">
         <el-table
                 :data="changes"
-                border
                 style="width: 100%">
+            <el-table-column type="expand">
+              <template scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="交易备注：">
+                    <span>{{ props.row.tenantDesc }}</span>
+                  </el-form-item>
+                  <el-form-item label="评估机构：">
+                    <span>{{ props.row.evalCodes }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
             <el-table-column
                     prop="dateString"
-                    label="交易日期"
-                    width="180">
+                    label="交易日期">
             </el-table-column>
             <el-table-column
                     prop="price"
-                    label="价格(万)"
-                    width="180">
+                    label="价格(万)">
             </el-table-column>
             <el-table-column
                     prop="changeA"
@@ -21,6 +30,14 @@
             <el-table-column
                     prop="changeB"
                     label="交易乙方">
+            </el-table-column>
+            <el-table-column
+                    prop="tenantFinanceTool"
+                    label="金融工具">
+            </el-table-column>
+            <el-table-column
+                    prop="recordCreater"
+                    label="填报人">
             </el-table-column>
             <el-table-column
                     label="操作"
@@ -60,6 +77,22 @@
                 <el-form-item label="交易乙方">
                     <el-input class="input-box" v-model="curentData.changeB"></el-input>
                 </el-form-item>
+                <el-form-item label="评估机构">
+                    <el-input class="input-box" v-model="curentData.evalCodes"></el-input>
+                </el-form-item>
+                <el-form-item label="金融工具">
+                    <el-input class="input-box" v-model="curentData.tenantFinanceTool"></el-input>
+                </el-form-item>
+                <el-form-item label="交易备注">
+                    <el-input
+                          type="textarea"
+                          class="input-box"
+                          :rows="4"
+                          :maxlength="140"
+                          placeholder="请输入内容"
+                          v-model="curentData.tenantDesc">
+                        </el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -84,7 +117,10 @@ export default {
                 date: '',
                 price: '',
                 changeA: '',
-                changeB: ''
+                changeB: '',
+                tenantDesc: '',
+                tenantFinanceTool: '',
+                evalCodes: ''
             },
             pickerPre: {
                 disabledDate(time) {
@@ -150,6 +186,8 @@ export default {
                 data: this.curentData
             }
 
+            formData.data.recordCreater = this.curentData.recordCreater
+
             if (this.curentData.date == '') {
                 this.$message({
                     message: '请务填写交易日期！',
@@ -201,6 +239,25 @@ export default {
 .mid-box {
     width: 1000px;
     margin: 30px auto;
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        float: left;
+        width: 90px;
+        color: #99a9bf;
+    }
+
+    .demo-table-expand .el-form-item__content {
+        width: 340px;
+        float: left;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 
     .el-dialog--small {
         width: 460px;

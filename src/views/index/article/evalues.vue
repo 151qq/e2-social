@@ -6,8 +6,7 @@
                 style="width: 100%">
             <el-table-column
                     prop="createDate"
-                    label="交易日期"
-                    width="360">
+                    label="交易日期">
             </el-table-column>
             <el-table-column
                     prop="rentValue"
@@ -26,7 +25,7 @@
                     label="资本化率">
             </el-table-column>
             <el-table-column
-                    prop="author"
+                    prop="recordCreater"
                     label="填报人">
             </el-table-column>
             <el-table-column
@@ -88,7 +87,7 @@ export default {
             pageNumber: 1,
             dialogFormVisible: false,
             curentData: {
-                id: '',
+                housesGps: '',
                 createDate: '',
                 rentValue: '',
                 valuation: '',
@@ -113,6 +112,10 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
+                res.result.result.valuation.forEach((item) => {
+                    var dateData = item.createDate.split(' ')[0].split('-')
+                    item.createDate = dateData[0]
+                })
                 this.evalues = res.result.result.valuation
                 this.total = this.total ? Number(this.total) : 0
             })
@@ -162,15 +165,17 @@ export default {
             }
 
             var formData = {
-                id: localStorage.getItem("id"),
-                type: 'evalues',
+                housesGps: this.curentData.housesGps,
+                type: 'valuation',
                 data: {
                     id: this.curentData.id,
+                    housesGps: this.curentData.housesGps,
                     createDate: this.curentData.createDate,
                     rentValue: this.curentData.rentValue,
                     valuation: this.curentData.valuation,
                     netRentValue: this.curentData.netRentValue,
-                    capRate: this.curentData.capRate
+                    capRate: this.curentData.capRate,
+                    recordCreater: this.curentData.recordCreater
                 }
             }
 

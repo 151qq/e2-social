@@ -1,20 +1,20 @@
 <template>
     <section class="mid-box">
         <el-table
-                :data="rents"
+                :data="rates"
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="createDate"
+                    prop="date"
                     label="交易日期"
                     width="360">
             </el-table-column>
             <el-table-column
-                    prop="rate"
-                    label="置空率">
+                    prop="vacancyRate"
+                    label="空置率">
             </el-table-column>
             <el-table-column
-                    prop="author"
+                    prop="creater"
                     label="填报人">
             </el-table-column>
             <el-table-column
@@ -83,12 +83,12 @@ export default {
                 method: 'get',
                 interface: 'rates',
                 data: {
-                    id: localStorage.getItem("id"),
+                    houseId: localStorage.getItem("id"),
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
-                this.rates = res.result.result.rates
+                this.rates = res.result.result
                 this.total = this.total ? Number(this.total) : 0
             })
         },
@@ -101,7 +101,7 @@ export default {
                 confirmButtonText: '确定',
                 callback: action => {
                     util.request({
-                        method: 'post',
+                        method: 'get',
                         interface: 'deleteRateHistory',
                         data: {
                             id: row.id
@@ -130,25 +130,23 @@ export default {
             }
             if (this.curentData.rate == '') {
                 this.$message({
-                    message: '请务填写租金！',
+                    message: '请务填写置空率！',
                     type: 'warning'
                 })
                 return false
             }
             
             var formData = {
-                id: localStorage.getItem("id"),
-                type: 'rates',
-                data: {
-                    id: this.curentData.id,
-                    createDate: this.curentData.date,
-                    rate: this.curentData.rate
-                }
+                housesId: localStorage.getItem("id"),
+                id: this.curentData.id,
+                date: this.curentData.date,
+                vacancyRate: this.curentData.rate,
+                creater: this.curentData.creater
             }
 
             util.request({
                 method: 'post',
-                interface: 'houseInfo',
+                interface: 'updateRates',
                 data: formData
             }).then(res => {
                 if (res.result.success) {

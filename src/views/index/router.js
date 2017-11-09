@@ -2,10 +2,10 @@ const routers = [
   {
     path: '/',
     name: 'home',
-    redirect: '/index/house/edit'
+    redirect: '/index/house'
   },
   {
-    path: '/index/house/:type',
+    path: '/index/house',
     name: 'house',
     component (resolve) {
       require.ensure(['./article/house.vue'], () => {
@@ -14,11 +14,29 @@ const routers = [
     }
   }, {
     // 报告维护
-    path: '/index/report/:type',
+    path: '/index/report',
     name: 'report',
     component (resolve) {
       require.ensure(['./article/report.vue'], () => {
         resolve(require('./article/report.vue'))
+      })
+    }
+  }, {
+    // 投资机构
+    path: '/index/invest',
+    name: 'invest',
+    component (resolve) {
+      require.ensure(['./article/invest.vue'], () => {
+        resolve(require('./article/invest.vue'))
+      })
+    }
+  }, {
+    // 证券产品
+    path: '/index/security',
+    name: 'security',
+    component (resolve) {
+      require.ensure(['./article/security.vue'], () => {
+        resolve(require('./article/security.vue'))
       })
     }
   }, {
