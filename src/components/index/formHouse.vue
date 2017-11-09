@@ -256,11 +256,11 @@
                         <span>对标物业</span>
                         <div class="input-box">
                             <el-select
-                                    v-model="base.benchmark"
+                                    v-model="base.benchmarks"
                                     multiple
                                     filterable
                                     allow-create
-                                    name="benchmark"
+                                    name="benchmarks"
                                     :multiple-limit="3"
                                     placeholder="请选择3个物业标签">
                                 <el-option
@@ -375,7 +375,7 @@
                 <router-link class="link-btn" target="_blank" :to="{name: 'rents'}">明细</router-link>
                 <div class="over-box">
                     <section class="baseInput">
-                        <span>交易日期</span>
+                        <span>租赁日期</span>
                         <el-date-picker
                                 class="input-box"
                                 v-model="rents.date"
@@ -407,7 +407,7 @@
                 <router-link class="link-btn" target="_blank" :to="{name: 'evalues'}">明细</router-link>
                 <div class="over-box">
                     <section class="baseInput">
-                        <span>交易日期</span>
+                        <span>估值日期</span>
                         <el-date-picker
                                 class="input-box"
                                 v-model="evalues.createDate"
@@ -415,22 +415,22 @@
                                 placeholder="选择年">
                         </el-date-picker>
                     </section>
-                    <section class="baseInput rightF">
+                    <section class="baseLong baseInput rightF">
                         <span>总租金(万)</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.rentValue"></el-input-number>
                     </section>
                     <div class="clear"></div>
-                    <section class="baseInput rightF">
+                    <section class="baseLong baseInput rightF">
                         <span>估值(万)</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.valuation"></el-input-number>
                     </section>
                     <div class="clear"></div>
-                    <section class="baseInput rightF">
-                        <span>静总租金</span>
+                    <section class="baseLong baseInput rightF">
+                        <span>静总租金(万)</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.netRentValue"></el-input-number>
                     </section>
                     <div class="clear"></div>
-                    <section class="baseInput rightF">
+                    <section class="baseLong baseInput rightF">
                         <span>资本化率</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="evalues.capRate"></el-input-number>
                     </section>
@@ -440,11 +440,11 @@
                 </div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle editShow" title="空置率历史" name="5">
+            <el-collapse-item class="formStyle editShow" title="物业空置率历史" name="5">
                 <router-link class="link-btn" target="_blank" :to="{name: 'rates'}">明细</router-link>
                 <div class="over-box">
                     <section class="baseInput">
-                        <span>交易日期</span>
+                        <span>填报日期</span>
                         <el-date-picker
                                 class="input-box"
                                 v-model="rates.date"
@@ -536,7 +536,7 @@
                     elevator: '',
                     conditioner: '',
                     floor: '',
-                    benchmark: [],
+                    benchmarks: [],
                     holding: '',
                     traffic: '',
                     investor: '',
@@ -665,23 +665,20 @@
                 this.bigImgs = []
             },
             desChange () {
-                this.abstractNum = 140 - this.base.des.length
+                this.abstractNum = 140 - this.base.housesDesc.length
             },
             changeDescChange () {
-                this.changeAbstractNum = 140 - this.changes.tenantDesc
+                this.changeAbstractNum = 140 - this.changes.tenantDesc.length
             },
             rentChange () {
                 if (this.base.rent != '') {
                     this.base.rentCount = 1
                 }
 
-                if (this.base.rent.indexOf(',') > -1) {
-                    this.base.rentCount = this.base.rent.split(',').length
-                } else if (this.base.rent.indexOf('，') > -1) {
-                    this.base.rentCount = this.base.rent.split('，').length
-                } else if (this.base.rent.indexOf('、') > -1) {
-                    this.base.rentCount = this.base.rent.split('、').length
-                }
+                this.base.rent = this.base.rent.replace('，', ',')
+                this.base.rent = this.base.rent.replace('、', ',')
+
+                this.base.rentCount = this.base.rent.split(',').length
             },
             getBase () {
                 util.request({
@@ -692,17 +689,19 @@
                     }
                 }).then(res => {
                     if (res.result.success == '0') {
-                        this.$message.error(res.result.message)
+                        // this.$message.error(res.result.message)
                         return
                     }
 
                     var base = res.result.result.base
 
-                    if (!base.benchmark) {
-                        base.benchmark = []
+                    if (!base.benchmarks) {
+                        base.benchmarks = []
                     }
 
                     this.base = Object.assign(this.base, base)
+
+                    this.abstractNum = 140 - this.base.housesDesc.length
 
                     this.rentChange()
 
@@ -818,7 +817,7 @@
                     data: this.base
                 }
 
-                if (this.base.benchmark.length > 3) {
+                if (this.base.benchmarks.length > 3) {
                     this.$message({
                         message: '请务必选择3个对标物业！',
                         type: 'warning'
@@ -1315,6 +1314,16 @@
             span {
                 color: #20a0ff;
             }
+        }
+    }
+
+    .baseLong {
+        &>span {
+            width: 80px;
+        }
+
+        .input-box {
+            width: 225px;
         }
     }
 

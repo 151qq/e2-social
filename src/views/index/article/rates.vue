@@ -5,8 +5,8 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="date"
-                    label="交易日期"
+                    prop="createDate"
+                    label="填报日期"
                     width="360">
             </el-table-column>
             <el-table-column
@@ -39,7 +39,7 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.date"
+                            v-model="curentData.createDate"
                             type="month"
                             placeholder="选择月">
                     </el-date-picker>
@@ -75,7 +75,7 @@ export default {
     },
     mounted () {
         this.getRents()
-        document.title = '置空率历史明细'
+        document.title = '空置率历史明细'
     },
     methods: {
         getRents () {
@@ -88,6 +88,10 @@ export default {
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
+                res.result.result.forEach((item) => {
+                    var dateData = item.createDate.split(' ')[0].split('-')
+                    item.createDate = dateData[0] + '-' + dateData[1]
+                })
                 this.rates = res.result.result
                 this.total = this.total ? Number(this.total) : 0
             })
@@ -139,7 +143,7 @@ export default {
             var formData = {
                 housesId: localStorage.getItem("id"),
                 id: this.curentData.id,
-                date: this.curentData.date,
+                date: this.curentData.createDate,
                 vacancyRate: this.curentData.rate,
                 creater: this.curentData.creater
             }

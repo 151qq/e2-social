@@ -6,7 +6,7 @@
                 style="width: 100%">
             <el-table-column
                     prop="tenantStartDate"
-                    label="交易日期">
+                    label="租赁日期">
             </el-table-column>
             <el-table-column
                     prop="priceT"

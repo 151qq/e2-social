@@ -260,10 +260,11 @@ export default {
     }
 
     .el-dialog--small {
-        width: 460px;
+        top: 60px !important;
+        width: 600px;
 
         .input-box {
-            width: 340px;
+            width: 480px;
         }
     }
 

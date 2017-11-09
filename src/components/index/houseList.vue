@@ -121,15 +121,7 @@
       }
     },
     methods: {
-        //获取时间      
-        // getTime(data){       
-        //  this.timer = data?data:''
-        //  this.list = []
-        //  this.pageNumber = 1
-        //  this.loadList()
-        // },
       loadList(){
-        console.log('loadList')
         var formData = {}
         util.request({
           method: 'get',
@@ -154,13 +146,12 @@
         })
       },
       reloadList(newId){
-        console.log('reloadList', newId)
         util.request({
           method: 'get',
           interface: this.$route.name + 'Tree',
           data: {}
         }).then(res => {
-          this.treeData = this.filterData(res.result.result)
+          this.treeData = res.result.result
           var tree = {}
           if (!this.addData) {
             var arrs = this.activeName.split('-')

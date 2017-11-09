@@ -6,11 +6,11 @@
                 style="width: 100%">
             <el-table-column
                     prop="createDate"
-                    label="交易日期">
+                    label="估值日期">
             </el-table-column>
             <el-table-column
                     prop="rentValue"
-                    label="总租金">
+                    label="总租金(万)">
             </el-table-column>
             <el-table-column
                     prop="valuation"
@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column
                     prop="netRentValue"
-                    label="静总租金">
+                    label="静总租金(万)">
             </el-table-column>
             <el-table-column
                     prop="capRate"
@@ -46,7 +46,7 @@
             :total="total">
         </el-pagination>
         <el-dialog title="编辑" :visible.sync="dialogFormVisible">
-            <el-form :label-position="'left'" label-width="80px" :model="curentData">
+            <el-form :label-position="'left'" label-width="110px" :model="curentData">
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
@@ -55,13 +55,13 @@
                             placeholder="选择年">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="总租金">
+                <el-form-item label="总租金(万)">
                     <el-input-number class="input-box" :min="0" v-model="curentData.rentValue"></el-input-number>
                 </el-form-item>
                 <el-form-item label="估值">
                     <el-input-number class="input-box" :min="0" v-model="curentData.valuation"></el-input-number>
                 </el-form-item>
-                <el-form-item label="静总租金">
+                <el-form-item label="静总租金(万)">
                     <el-input-number class="input-box" :min="0" v-model="curentData.netRentValue"></el-input-number>
                 </el-form-item>
                 <el-form-item label="资本化率">
@@ -206,7 +206,7 @@ export default {
         width: 460px;
 
         .input-box {
-            width: 340px;
+            width: 310px;
         }
     }
 
