@@ -99,11 +99,13 @@
                     </section>
                     <section class="baseInput">
                         <span>剩余年限</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.year"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.year"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>容积率</span>
-                        <el-input-number class="input-box" size="small" :min="0" :max="100" v-model="base.ratio"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.ratio"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>业主信息</span>
@@ -134,11 +136,8 @@
                     </section>
                     <section class="baseInput">
                         <span>租户总数</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.rentCount">
-                        </el-input>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.rentCount"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>所属地块</span>
@@ -150,27 +149,33 @@
                     </section>
                     <section class="baseInput">
                         <span>物业面积</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.area"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.area"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>总层数</span>
-                        <el-input-number class="input-box" size="small" :min="1" v-model="base.plies"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.plies"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>层高</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.height"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.height"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>车位</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.park"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.park"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>电梯数</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.elevator"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.elevator"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>空调数</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.conditioner"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1" v-model="base.conditioner"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>地板类型</span>
@@ -248,6 +253,7 @@
                         <span>网站地址</span>
                         <el-input
                                 class="input-box"
+                                @change="checkWebSite"
                                 placeholder="请输入内容"
                                 v-model="base.webSite">
                         </el-input>
@@ -385,17 +391,20 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>高区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceT"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="rents.priceT"></el-input>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>中区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceM"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="rents.priceM"></el-input>
                     </section>
                     <div class="clear"></div>
                     <section class="baseInput rightF">
                         <span>低区租金</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="rents.priceB"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="rents.priceB"></el-input>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
@@ -417,22 +426,26 @@
                     </section>
                     <section class="baseLong baseInput rightF">
                         <span>总租金(万)</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.rentValue"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="evalues.rentValue"></el-input>
                     </section>
                     <div class="clear"></div>
                     <section class="baseLong baseInput rightF">
                         <span>估值(万)</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.valuation"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="evalues.valuation"></el-input>
                     </section>
                     <div class="clear"></div>
                     <section class="baseLong baseInput rightF">
                         <span>静总租金(万)</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.netRentValue"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="evalues.netRentValue"></el-input>
                     </section>
                     <div class="clear"></div>
                     <section class="baseLong baseInput rightF">
                         <span>资本化率</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="evalues.capRate"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="evalues.capRate"></el-input>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
@@ -454,7 +467,8 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>空置率</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="rates.rate"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="rates.rate"></el-input>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
@@ -664,6 +678,10 @@
                 
                 this.bigImgs = []
             },
+            checkWebSite () {
+                var webSite = this.base.webSite
+                this.base.webSite = webSite.replace(/[\u4e00-\u9fa5]/g,'')
+            },
             desChange () {
                 this.abstractNum = 140 - this.base.housesDesc.length
             },
@@ -675,8 +693,9 @@
                     this.base.rentCount = 1
                 }
 
-                this.base.rent = this.base.rent.replace('，', ',')
-                this.base.rent = this.base.rent.replace('、', ',')
+                var rent  = this.base.rent
+
+                this.base.rent = rent.replace(/[，、]/g, ',')
 
                 this.base.rentCount = this.base.rent.split(',').length
             },

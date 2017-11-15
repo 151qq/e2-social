@@ -62,14 +62,15 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.date"
+                            v-model="curentData.dateString"
                             type="date"
                             placeholder="选择日期"
                             :picker-options="pickerPre">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="价格(万)">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.price"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.price"></el-input>
                 </el-form-item>
                 <el-form-item label="交易甲方">
                     <el-input class="input-box" v-model="curentData.changeA"></el-input>
@@ -114,7 +115,7 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                date: '',
+                dateString: '',
                 price: '',
                 changeA: '',
                 changeB: '',
@@ -188,7 +189,7 @@ export default {
 
             formData.data.recordCreater = this.curentData.recordCreater
 
-            if (this.curentData.date == '') {
+            if (this.curentData.dateString == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'

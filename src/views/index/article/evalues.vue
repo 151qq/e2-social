@@ -56,16 +56,20 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="总租金(万)">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.rentValue"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.rentValue"></el-input>
                 </el-form-item>
                 <el-form-item label="估值">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.valuation"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.valuation"></el-input>
                 </el-form-item>
                 <el-form-item label="静总租金(万)">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.netRentValue"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.netRentValue"></el-input>
                 </el-form-item>
                 <el-form-item label="资本化率">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.capRate"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.capRate"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

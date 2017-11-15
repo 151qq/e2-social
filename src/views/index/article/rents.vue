@@ -46,19 +46,22 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.createDate"
+                            v-model="curentData.tenantStartDate"
                             type="month"
                             placeholder="选择月">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="高区租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceT"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.priceT"></el-input>
                 </el-form-item>
                 <el-form-item label="中区租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceM"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.priceM"></el-input>
                 </el-form-item>
                 <el-form-item label="低区租金">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.priceB"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.priceB"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -81,7 +84,7 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                createDate: '',
+                tenantStartDate: '',
                 priceT: '',
                 priceB: '',
                 priceM: '',
@@ -141,7 +144,7 @@ export default {
             this.curentData = Object.assign({}, row)
         },
         confirmEdit () {
-            if (this.curentData.createDate == '') {
+            if (this.curentData.tenantStartDate == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
@@ -161,7 +164,7 @@ export default {
                 type: 'rents',
                 data: {
                     id: this.curentData.id,
-                    tenantStartDate: this.curentData.createDate,
+                    tenantStartDate: this.curentData.tenantStartDate,
                     priceT: this.curentData.priceT,
                     priceM: this.curentData.priceM,
                     priceB: this.curentData.priceB,

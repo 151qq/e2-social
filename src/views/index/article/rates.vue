@@ -45,7 +45,8 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="置空率">
-                    <el-input-number class="input-box" :min="0" v-model="curentData.rate"></el-input-number>
+                    <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="curentData.rate"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -68,7 +69,7 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                date: '',
+                createDate: '',
                 rate: ''
             }
         }
@@ -125,7 +126,7 @@ export default {
             this.curentData = Object.assign({}, row)
         },
         confirmEdit () {
-            if (this.curentData.date == '') {
+            if (this.curentData.createDate == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
