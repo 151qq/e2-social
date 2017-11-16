@@ -83,10 +83,10 @@
                     <section class="baseInput bigB">
                         <span>公司图片</span>
                         <div class="input-box">
-                            <upLoad :path="base.investImg"
+                            <upload :path="base.investImg"
                                     :no-del="true"
                                     :bg-path="true"
-                                    @changeImg="changeImg"></upLoad>
+                                    @changeImg="changeImg"></upload>
                         </div>
                     </section>
 
@@ -473,7 +473,7 @@
 </template>
 <script>
     import util from '../../assets/common/util'
-    import upLoad from '../../components/common/upLoad'
+    import upload from '../../components/common/upload'
     import ewmUpload from '../../components/common/ewm-upload'
 
     export default {
@@ -631,7 +631,7 @@
             }
         },
         components: {
-            upLoad,
+            upload,
             ewmUpload
         }
     }

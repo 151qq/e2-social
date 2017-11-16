@@ -287,10 +287,10 @@
                     <section class="baseInput bigB">
                         <span>标志图片</span>
                         <div class="input-box">
-                            <upLoad :path="base.housesImg"
+                            <upload :path="base.housesImg"
                                     :no-del="true"
                                     :bg-path="true"
-                                    @changeImg="changeImg"></upLoad>
+                                    @changeImg="changeImg"></upload>
                         </div>
                     </section>
 
@@ -521,7 +521,7 @@
 <script>
     import searchBox from '../common/search-box.vue'
     import util from '../../assets/common/util'
-    import upLoad from '../../components/common/upLoad'
+    import upload from '../../components/common/upload'
     import uploadList from '../../components/index/upload-list'
     import swiperImg from '../../components/common/swiper-img.vue'
     import editBox from '../../components/common/edit'
@@ -1213,7 +1213,7 @@
         },
         components: {
             searchBox,
-            upLoad,
+            upload,
             uploadList,
             swiperImg,
             editBox,

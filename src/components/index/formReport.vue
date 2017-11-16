@@ -52,12 +52,12 @@
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="报告封面" name="1">
-            <upLoad :path="coverImg"
+            <upload :path="coverImg"
                 :no-del="true"
                 :bg-path="true"
                 :is-btn="true"
                 @changeImg="changeImg"
-                @saveImg="saveForm"></upLoad>
+                @saveImg="saveForm"></upload>
           </el-collapse-item>
           <div class="line-bold"></div>
           <el-collapse-item class="formStyleR" title="报告详情" name="2">
@@ -126,7 +126,7 @@
 <script>
 import util from '../../assets/common/util'
 import editBox from '../../components/common/edit'
-import upLoad from '../../components/common/upLoad'
+import upload from '../../components/common/upload'
 import addReport from './addReport'
 import $ from 'Jquery'
 
@@ -423,7 +423,7 @@ export default {
     },
     components: {
       editBox,
-      upLoad,
+      upload,
       addReport
     }
 }
