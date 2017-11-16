@@ -46,7 +46,7 @@
                 </el-form-item>
                 <el-form-item label="置空率">
                     <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="curentData.rate"></el-input>
+                                    :min="0" :step="0.01" v-model="curentData.vacancyRate"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -70,7 +70,7 @@ export default {
             curentData: {
                 id: '',
                 createDate: '',
-                rate: ''
+                vacancyRate: ''
             }
         }
     },
@@ -125,6 +125,15 @@ export default {
             this.dialogFormVisible = true
             this.curentData = Object.assign({}, row)
         },
+        formDataDate (str) {
+            var dateStr = new Date(str)
+            var year = dateStr.getFullYear()
+            var monthStr = dateStr.getMonth() + 1
+            var dayStr = dateStr.getDate()
+            var month = monthStr < 10 ? '0' + monthStr : monthStr
+            var day = dayStr < 10 ? '0' + dayStr : dayStr
+            return year + '-' + month + '-' + day
+        },
         confirmEdit () {
             if (this.curentData.createDate == '') {
                 this.$message({
@@ -144,8 +153,8 @@ export default {
             var formData = {
                 housesId: localStorage.getItem("id"),
                 id: this.curentData.id,
-                date: this.curentData.createDate,
-                vacancyRate: this.curentData.rate,
+                createDate: this.formDataDate(this.curentData.createDate),
+                vacancyRate: this.curentData.vacancyRate,
                 creater: this.curentData.creater
             }
 

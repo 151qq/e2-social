@@ -10,15 +10,15 @@
             </el-table-column>
             <el-table-column
                     prop="priceT"
-                    label="高区租金">
+                    label="高区租金(元 ㎡/天)">
             </el-table-column>
             <el-table-column
                     prop="priceM"
-                    label="中区租金">
+                    label="中区租金(元 ㎡/天)">
             </el-table-column>
             <el-table-column
                     prop="priceB"
-                    label="低区租金">
+                    label="低区租金(元 ㎡/天)">
             </el-table-column>
             <el-table-column
                     prop="recordCreater"
@@ -143,6 +143,15 @@ export default {
             this.dialogFormVisible = true
             this.curentData = Object.assign({}, row)
         },
+        formDataDate (str) {
+            var dateStr = new Date(str)
+            var year = dateStr.getFullYear()
+            var monthStr = dateStr.getMonth() + 1
+            var dayStr = dateStr.getDate()
+            var month = monthStr < 10 ? '0' + monthStr : monthStr
+            var day = dayStr < 10 ? '0' + dayStr : dayStr
+            return year + '-' + month + '-' + day
+        },
         confirmEdit () {
             if (this.curentData.tenantStartDate == '') {
                 this.$message({
@@ -164,7 +173,7 @@ export default {
                 type: 'rents',
                 data: {
                     id: this.curentData.id,
-                    tenantStartDate: this.curentData.tenantStartDate,
+                    tenantStartDate: this.formDataDate(this.curentData.tenantStartDate),
                     priceT: this.curentData.priceT,
                     priceM: this.curentData.priceM,
                     priceB: this.curentData.priceB,

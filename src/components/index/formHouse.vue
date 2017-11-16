@@ -66,6 +66,7 @@
                         <el-select class="input-box"
                                     v-model="base.logisticsType"
                                     name="type"
+                                    :disabled="true"
                                     placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.propertys"
@@ -148,7 +149,7 @@
                         </el-input>
                     </section>
                     <section class="baseInput">
-                        <span>物业面积</span>
+                        <span>面积(m²)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.area"></el-input>
                     </section>
@@ -158,7 +159,7 @@
                                     :min="0" :step="1" v-model="base.plies"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>层高</span>
+                        <span>层高(m)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.height"></el-input>
                     </section>
@@ -244,10 +245,14 @@
                     <section class="baseInput bigB">
                         <span>交通状况</span>
                         <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.traffic">
+                          type="textarea"
+                          :rows="4"
+                          :maxlength="500"
+                          placeholder="请输入内容"
+                          v-model="base.traffic"
+                          @change="trafficChange">
                         </el-input>
+                        <div class="abstract-num">剩余<span>{{trafficNum}}</span>个字</div>
                     </section>
                     <section class="baseInput bigB">
                         <span>网站地址</span>
@@ -294,7 +299,7 @@
                         <el-input
                           type="textarea"
                           :rows="4"
-                          :maxlength="140"
+                          :maxlength="1000"
                           placeholder="请输入内容"
                           v-model="base.housesDesc"
                           @change="desChange">
@@ -325,7 +330,8 @@
                     </section>
                     <section class="baseInput rightF">
                         <span>价格(万)</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="changes.price"></el-input-number>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="changes.price"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>交易甲方</span>
@@ -364,7 +370,7 @@
                         <el-input
                           type="textarea"
                           :rows="4"
-                          :maxlength="140"
+                          :maxlength="1000"
                           placeholder="请输入内容"
                           v-model="changes.tenantDesc"
                           @change="changeDescChange">
@@ -389,20 +395,20 @@
                                 placeholder="选择月">
                         </el-date-picker>
                     </section>
-                    <section class="baseInput rightF">
-                        <span>高区租金</span>
+                    <section class="baseBigLong baseInput rightF">
+                        <span>高区租金(元 ㎡/天)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="rents.priceT"></el-input>
                     </section>
                     <div class="clear"></div>
-                    <section class="baseInput rightF">
-                        <span>中区租金</span>
+                    <section class="baseBigLong baseInput rightF">
+                        <span>中区租金(元 ㎡/天)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="rents.priceM"></el-input>
                     </section>
                     <div class="clear"></div>
-                    <section class="baseInput rightF">
-                        <span>低区租金</span>
+                    <section class="baseBigLong baseInput rightF">
+                        <span>低区租金(元 ㎡/天)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="rents.priceB"></el-input>
                     </section>
@@ -562,8 +568,9 @@
                     housesDesc: '',
                     bondCode: ''
                 },
-                abstractNum: 140,
-                changeAbstractNum: 140,
+                abstractNum: 1000,
+                changeAbstractNum: 1000,
+                trafficNum: 500,
                 bonds: [
                     {
                         typeName: '无'
@@ -683,10 +690,13 @@
                 this.base.webSite = webSite.replace(/[\u4e00-\u9fa5]/g,'')
             },
             desChange () {
-                this.abstractNum = 140 - this.base.housesDesc.length
+                this.abstractNum = 1000 - this.base.housesDesc.length
+            },
+            trafficChange () {
+                this.trafficNum = 500 - this.base.traffic.length
             },
             changeDescChange () {
-                this.changeAbstractNum = 140 - this.changes.tenantDesc.length
+                this.changeAbstractNum = 1000 - this.changes.tenantDesc.length
             },
             rentChange () {
                 if (this.base.rent != '') {
@@ -852,6 +862,15 @@
                     this.$parent.$refs.listBox.reloadList(res.result.result.id)
                 })
             },
+            formDataDate (str) {
+                var dateStr = new Date(str)
+                var year = dateStr.getFullYear()
+                var monthStr = dateStr.getMonth() + 1
+                var dayStr = dateStr.getDate()
+                var month = monthStr < 10 ? '0' + monthStr : monthStr
+                var day = dayStr < 10 ? '0' + dayStr : dayStr
+                return year + '-' + month + '-' + day
+            },
             saveChanges (isShow) {
                 var formData = {
                     id: localStorage.getItem("id"),
@@ -868,6 +887,9 @@
                     })
                     return false
                 }
+
+                formData.data.date = this.formDataDate(formData.data.date)
+
                 if (this.changes.price == '') {
                     this.$message({
                         message: '请务填写交易价格！',
@@ -936,14 +958,13 @@
                     id: localStorage.getItem("id"),
                     type: 'rents',
                     data: {
-                        tenantStartDate: this.rents.date,
+                        tenantStartDate: this.formDataDate(this.rents.date),
                         priceT: this.rents.priceT,
                         priceM: this.rents.priceM,
                         priceB: this.rents.priceB,
                         recordCreater: window.UserInfo.userCnName
                     }
                 }
-
                 util.request({
                     method: 'post',
                     interface: 'houseInfo',
@@ -985,7 +1006,7 @@
                 var formData = {
                     housesId: localStorage.getItem("id"),
                     vacancyRate: this.rates.rate,
-                    date: this.rates.date,
+                    date: this.formDataDate(this.rates.date),
                     creater: window.UserInfo.userCnName
                 }
 
@@ -1030,7 +1051,7 @@
                     type: 'valuation',
                     data: {
                         housesGps: this.base.point,
-                        createDate: this.evalues.createDate,
+                        createDate: this.formDataDate(this.evalues.createDate),
                         rentValue: this.evalues.rentValue,
                         netRentValue: this.evalues.netRentValue,
                         valuation: this.evalues.valuation,
@@ -1087,6 +1108,7 @@
                 this.houseCity = data.houseCity
                 this.addBase.city = data.houseCity
                 this.addBase.mall = data.houseMall
+                this.logisticsType = 'house_type1'
                 this.isAdd.value = true
                 setTimeout(() => {
                     this.getMalls()
@@ -1338,11 +1360,21 @@
 
     .baseLong {
         &>span {
-            width: 80px;
+            width: 90px;
         }
 
         .input-box {
             width: 225px;
+        }
+    }
+
+    .baseBigLong {
+        &>span {
+            width: 130px;
+        }
+
+        .input-box {
+            width: 185px;
         }
     }
 

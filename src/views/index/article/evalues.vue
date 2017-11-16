@@ -152,6 +152,15 @@ export default {
             this.dialogFormVisible = true
             this.curentData = Object.assign({}, row)
         },
+        formDataDate (str) {
+            var dateStr = new Date(str)
+            var year = dateStr.getFullYear()
+            var monthStr = dateStr.getMonth() + 1
+            var dayStr = dateStr.getDate()
+            var month = monthStr < 10 ? '0' + monthStr : monthStr
+            var day = dayStr < 10 ? '0' + dayStr : dayStr
+            return year + '-' + month + '-' + day
+        },
         confirmEdit () {
             if (this.curentData.createDate == '') {
                 this.$message({
@@ -174,7 +183,7 @@ export default {
                 data: {
                     id: this.curentData.id,
                     housesGps: this.curentData.housesGps,
-                    createDate: this.curentData.createDate,
+                    createDate: this.formDataDate(this.curentData.createDate),
                     rentValue: this.curentData.rentValue,
                     valuation: this.curentData.valuation,
                     netRentValue: this.curentData.netRentValue,

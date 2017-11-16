@@ -89,7 +89,7 @@
                           type="textarea"
                           class="input-box"
                           :rows="4"
-                          :maxlength="140"
+                          :maxlength="1000"
                           placeholder="请输入内容"
                           v-model="curentData.tenantDesc">
                         </el-input>
@@ -180,6 +180,15 @@ export default {
             this.dialogFormVisible = true
             this.curentData = Object.assign({}, row)
         },
+        formDataDate (str) {
+            var dateStr = new Date(str)
+            var year = dateStr.getFullYear()
+            var monthStr = dateStr.getMonth() + 1
+            var dayStr = dateStr.getDate()
+            var month = monthStr < 10 ? '0' + monthStr : monthStr
+            var day = dayStr < 10 ? '0' + dayStr : dayStr
+            return year + '-' + month + '-' + day
+        },
         confirmEdit () {
             var formData = {
                 id: localStorage.getItem("id"),
@@ -196,6 +205,9 @@ export default {
                 })
                 return false
             }
+
+            formData.data.date = this.formDataDate(formData.data.dateString)
+
             if (this.curentData.price == '') {
                 this.$message({
                     message: '请务填写交易价格！',
