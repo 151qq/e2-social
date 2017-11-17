@@ -3,7 +3,10 @@
     <router-link class="logo-box" :to="{name: 'house'}"><img src="../../assets/images/logo.png"></router-link>
 
     <div class="nav-box">
-      <router-link :to="{ name: 'house'}">物业维护</router-link>
+      <router-link :to="{ name: 'house'}">写字楼</router-link>
+      <router-link :to="{ name: 'mall'}">购物中心</router-link>
+      <router-link :to="{ name: 'apartment'}">租赁公寓</router-link>
+      <router-link :to="{ name: 'park'}">大型园区</router-link>
       <router-link :to="{ name: 'report'}">报告维护</router-link>
       <router-link :to="{ name: 'invest'}">投资机构</router-link>
       <router-link :to="{ name: 'security'}">证券产品</router-link>

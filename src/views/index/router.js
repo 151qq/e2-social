@@ -13,6 +13,30 @@ const routers = [
       })
     }
   }, {
+    path: '/index/mall',
+    name: 'mall',
+    component (resolve) {
+      require.ensure(['./article/mall.vue'], () => {
+        resolve(require('./article/mall.vue'))
+      })
+    }
+  }, {
+    path: '/index/apartment',
+    name: 'apartment',
+    component (resolve) {
+      require.ensure(['./article/apartment.vue'], () => {
+        resolve(require('./article/apartment.vue'))
+      })
+    }
+  }, {
+    path: '/index/park',
+    name: 'park',
+    component (resolve) {
+      require.ensure(['./article/park.vue'], () => {
+        resolve(require('./article/park.vue'))
+      })
+    }
+  }, {
     // 报告维护
     path: '/index/report',
     name: 'report',

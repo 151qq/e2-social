@@ -665,7 +665,7 @@
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            document.title = '物业维护'
+            document.title = '写字楼'
             this.addBase = Object.assign({}, this.base)
         },
         methods: {
