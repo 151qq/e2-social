@@ -13,16 +13,11 @@
             <section class="baseInput bigB changeImg">
                 <span>封面</span>
                 <div class="input-box">
-                    <img v-if="reportDatas.coverImg" :src="reportDatas.coverImg">
-                    
-                    <div v-if="!reportDatas.coverImg" class="default-img"></div>
-
-                    <p>
-                      <label for="coverImg" class="ben-btn">本地上传图片</label>
-                      <input type="file" id="coverImg" @change="postImg($event)">
-                    </p>
-
-                    <button class="su-btn" @click="showFile">素材库选择图片</button>
+                    <upload :path="reportDatas.coverImg"
+                            :no-del="true"
+                            :bg-path="true"
+                            :id-name="'report-cover-img'"
+                            @changeImg="changeImg"></upload>
                 </div>
             </section>
             <div class="clear"></div>
@@ -31,13 +26,11 @@
                 <el-button type="primary" @click="confirmHandle">确 定</el-button>
             </div>
         </el-dialog>
-
-        <file-lists :select-data="selectData" @suSelect="suSelect"></file-lists>
     </section>
 </template>
 <script>
 import util from '../../assets/common/util'
-import fileLists from '../../components/common/fileLists'
+import upload from '../common/upload'
 
 export default {
     props: ['isAdd'],
@@ -46,10 +39,6 @@ export default {
             reportDatas: {
                 title: '',
                 coverImg: ''
-            },
-            selectData: {
-              isShow: false,
-              url: ''
             }
         }
     },
@@ -57,18 +46,6 @@ export default {
         initData () {
             this.reportDatas.title = ''
             this.reportDatas.coverImg = ''
-        },
-        showFile () {
-            this.selectData.isShow = true
-        },
-        suSelect (datas) {
-            this.reportDatas.coverImg = datas.url
-        },
-        postImg (e) {
-            util.upFile(e).then(res => {
-              let imgUrl = res.result.result[0]
-              this.reportDatas.coverImg = imgUrl
-            })
         },
         confirmHandle () {
             if (this.reportDatas.title == '') {
@@ -100,7 +77,7 @@ export default {
         }
     },
     components: {
-        fileLists
+        upload
     }
 }
 </script>

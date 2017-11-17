@@ -56,6 +56,7 @@
                 :no-del="true"
                 :bg-path="true"
                 :is-btn="true"
+                :id-name="'report-big-img'"
                 @changeImg="changeImg"
                 @saveImg="saveForm"></upload>
           </el-collapse-item>

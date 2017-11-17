@@ -290,6 +290,7 @@
                             <upload :path="base.housesImg"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :id-name="'house-big-img'"
                                     @changeImg="changeImg"></upload>
                         </div>
                     </section>
@@ -542,7 +543,7 @@
                     mall: '',
                     address: '',
                     bondType: '',
-                    logisticsType: '',
+                    logisticsType: 'house_type1',
                     level: '',
                     massif: '',
                     year: 0,
@@ -730,7 +731,8 @@
 
                     this.base = Object.assign(this.base, base)
 
-                    this.abstractNum = 140 - this.base.housesDesc.length
+                    this.abstractNum = 1000 - this.base.housesDesc.length
+                    this.trafficNum = 500 - this.base.traffic.length
 
                     this.rentChange()
 
@@ -1108,7 +1110,6 @@
                 this.houseCity = data.houseCity
                 this.addBase.city = data.houseCity
                 this.addBase.mall = data.houseMall
-                this.logisticsType = 'house_type1'
                 this.isAdd.value = true
                 setTimeout(() => {
                     this.getMalls()
@@ -1123,6 +1124,7 @@
                 this.addBase.name = data.name
                 this.addBase.point = data.point
                 this.addBase.address = data.address
+                this.addBase.logisticsType = 'house_type1'
 
                 var formData = {
                     type: 'base',

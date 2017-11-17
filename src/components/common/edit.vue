@@ -11,6 +11,7 @@
                                 :path="item.imgUrl"
                                 :num="index" 
                                 :idx="item.id"
+                                :id-name="'edit-img' + index"
                                 :no-save="true"
                                 :is-btn.sync="disabled"
                                 @delImg="delImg"
