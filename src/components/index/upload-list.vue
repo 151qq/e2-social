@@ -3,7 +3,7 @@
     <section class="img-box" v-for="(item, index) in imgLists">
       <img class="img-big" :src="item.link" @click="showImg">
       <div>
-        <img class="del-btn" src="../../assets/images/del-icon.png">
+        <img class="del-btn" @click="deleteImg(index)" src="../../assets/images/del-icon.png">
         <p>
           <img src="../../assets/images/pen-icon.png">
           <input type="file" name="file" class="pen-input" @change="postImg($event, index)">
@@ -51,6 +51,9 @@ export default {
           }
           this.$emit('imgChange', this.type)
         })
+      },
+      deleteImg (index) {
+        this.imgLists.splice(index, 1)
       },
       showImg (e) {
         let index = $('body .img-box .img-big').index($(e.target))
