@@ -300,7 +300,8 @@
                         <span>物业描述</span>
                         <div class="input-box">
                             <ueditor
-                                :editor-id="'housesDesc'"
+                                v-if="isBase"
+                                :editor-id="'housesDesc' + base.id"
                                 :editor-type="'text'"
                                 :content="base.housesDesc"
                                 @setContent="setContent"></ueditor>
@@ -313,7 +314,7 @@
                           v-model="base.housesDesc"
                           @change="desChange">
                         </el-input> -->
-                        <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
+                        <!-- <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div> -->
                     </section>
 
                     
@@ -567,6 +568,7 @@
                     housesDesc: '',
                     bondCode: ''
                 },
+                isBase: false,
                 abstractNum: 1000,
                 changeAbstractNum: 1000,
                 trafficNum: 500,
@@ -668,6 +670,7 @@
         },
         methods: {
             getAllData () {
+                this.isBase = false
                 this.getBase()
                 this.getArticle()
                 this.getAppearance()
@@ -721,6 +724,8 @@
                         return
                     }
 
+                    res.result.result.base.id = localStorage.getItem('id')
+
                     var base = res.result.result.base
 
                     if (!base.benchmarks) {
@@ -735,6 +740,7 @@
                     this.rentChange()
 
                     setTimeout(() => {
+                        this.isBase = true
                         this.drawMap()
                         this.getMalls()
                         this.getStar()
@@ -784,7 +790,6 @@
             imgListChange (type) {
                 this.bigImgs = []
                 this.bigImgs = this.bigImgs.concat(this.appearance, this.public, this.surround)
-                console.log(this.bigImgs, 'bigImgs', 'chang')
             },
             setImgs () {
                 if (this.appearance.length && this.public.length && this.surround.length && !this.bigImgs.length) {

@@ -45,6 +45,7 @@
             const _this = this;
             this.editor = window.UE.getEditor(this.editorId, this.config)
             this.editor.addListener("ready", function () {
+                // console.log(_this.content, 'contentR')
                 _this.editor.setContent(_this.content ? _this.content : '')
             })
             this.editor.addListener("blur", function () {
