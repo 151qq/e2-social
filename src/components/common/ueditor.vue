@@ -9,7 +9,8 @@
         props: {
             content: {type: String},
             editorId: {type: String},
-            index: {type: Number}
+            index: {type: Number},
+            editorType: {type: String}
         },
         data () {
             return {
@@ -30,6 +31,17 @@
             }
         },
         mounted() {
+            if (this.editorType == 'table') {
+                this.config.toolbars = [[
+                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 
+                        'inserttable', 'deletetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols'
+                ]]
+            } else {
+                this.config.toolbars = [[
+                    'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist'
+                ]]
+            }
+
             const _this = this;
             this.editor = window.UE.getEditor(this.editorId, this.config)
             this.editor.addListener("ready", function () {

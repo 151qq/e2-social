@@ -14,6 +14,7 @@ export default {
         "changePassword": platform + "changePassword.json",         //修改密码
         "resetPassword": platform + "resetPassword.json",  // 重置密码
         "imageUpload": platform + 'houses/image/upload.json',
+        "imageDelete": platform + 'houses/image/delete.json',
         "sendSmsCode": platform + 'sendSmsCode.json',
         "validateHousesStart": platform + 'houses/validateHousesStart.json',
         "deleteHousesInfo": platform + 'houses/deleteHousesInfo.json',

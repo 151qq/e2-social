@@ -55,10 +55,10 @@ export default {
           // 更新调用记录
           _self.count++
           _self.messDate = results.vr
-        },
-        autoViewport: true
+        }
       }
-      var local = new window.BMap.LocalSearch(this.city, options)
+      
+      var local = new window.BMap.LocalSearch(this.city ? this.city : '北京', options)
       local.search(this.keyValue)
     },
     showModel () {
@@ -72,7 +72,11 @@ export default {
       this.isShow = false
       this.$emit('mapChange', item)
     },
-    resetKey () {
+    resetKey (key) {
+      if (key) {
+        this.keyValue = key
+        return
+      }
       this.keyValue = ''
     }
   }

@@ -33,7 +33,7 @@ import $ from 'Jquery'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave', 'idName'],
+    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave', 'idName', 'isHouseId'],
     data() {
       return {
         isShow: false,
@@ -62,7 +62,17 @@ export default {
         this.$emit('delImg', data)
       },
       postImg (e) {
-        util.upFile(e).then(res => {
+        var opotion = {
+          url: 'uploadArticleAreaImage',
+          event: e
+        }
+
+        if (this.isHouseId) {
+          opotion.data = {}
+          opotion.data.fileCode = localStorage.getItem('id')
+        }
+
+        util.uploadFile(opotion).then(res => {
           let imgUrl = res.result.result[0]
           this.curPath = imgUrl
           var data = {

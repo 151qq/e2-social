@@ -4,10 +4,10 @@
       <img class="img-big" :src="item.link" @click="showImg">
       <div>
         <img class="del-btn" @click="deleteImg(index)" src="../../assets/images/del-icon.png">
-        <p>
+        <!-- <p>
           <img src="../../assets/images/pen-icon.png">
           <input type="file" name="file" class="pen-input" @change="postImg($event, index)">
-        </p>
+        </p> -->
       </div>
     </section>
     <section class="img-btn">
@@ -31,7 +31,7 @@ export default {
     mounted () {
     },
     methods: {
-      postImg (e, index) {
+      postImg (e) {
         var opotion = {
           url: 'imageUpload',
           event: e,
@@ -42,22 +42,35 @@ export default {
         }
 
         util.uploadFile(opotion).then(res => {
-          let imgUrl = res.result.result.headImg;
-          var imgObject = {link:imgUrl};
-          if (index !== undefined) {
-            this.imgLists.splice(index, 1, imgObject)
-          } else {
-            this.imgLists.push(imgObject)
+          let imgUrl = res.result.result.headImg
+          var imgObject = {
+            link: imgUrl
           }
+          this.imgLists.push(imgObject)
           this.$emit('imgChange', this.type)
         })
       },
       deleteImg (index) {
-        this.imgLists.splice(index, 1)
+        util.request({
+            method: 'post',
+            interface: 'imageDelete',
+            data: {
+                fileCode: localStorage.getItem("id"),
+                url: this.imgLists[index].link
+            }
+        }).then(res => {
+            if (res.result.success == '1') {
+              this.imgLists.splice(index, 1)
+            } else {
+              this.$message.error(res.result.message)
+            }
+        })
       },
       showImg (e) {
-        let index = $('body .img-box .img-big').index($(e.target))
-        this.$emit('showimg', index)
+        setTimeout(() => {
+          let index = $('body .img-box .img-big').index($(e.target))
+          this.$emit('showimg', index)
+        }, 0)
       }
     }
 }

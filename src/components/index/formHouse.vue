@@ -290,6 +290,7 @@
                             <upload :path="base.housesImg"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :is-house-id="true"
                                     :id-name="'house-big-img'"
                                     @changeImg="changeImg"></upload>
                         </div>
@@ -297,14 +298,21 @@
 
                     <section class="baseInput bigB">
                         <span>物业描述</span>
-                        <el-input
+                        <div class="input-box">
+                            <ueditor
+                                :editor-id="'housesDesc'"
+                                :editor-type="'text'"
+                                :content="base.housesDesc"
+                                @setContent="setContent"></ueditor>
+                        </div>
+                        <!-- <el-input
                           type="textarea"
                           :rows="4"
                           :maxlength="1000"
                           placeholder="请输入内容"
                           v-model="base.housesDesc"
                           @change="desChange">
-                        </el-input>
+                        </el-input> -->
                         <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
                     </section>
 
@@ -486,28 +494,16 @@
             <el-collapse-item class="formStyle" title="物业外观图片" name="6">
                 <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"
                                 @imgChange="imgListChange"></upload-list>
-                <div class="clear"></div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveData('appearance')">保存</el-button>
-                <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
                 <upload-list :img-lists="public" :type="'publics'" @showimg="showImg"
                             @imgChange="imgListChange"></upload-list>
-                <div class="clear"></div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveData('publics')">保存</el-button>
-                <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
                 <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"
                             @imgChange="imgListChange"></upload-list>
-                <div class="clear"></div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveData('surround')">保存</el-button>
-                <div class="clear"></div>
             </el-collapse-item>
         </el-collapse>
 
@@ -527,6 +523,7 @@
     import swiperImg from '../../components/common/swiper-img.vue'
     import editBox from '../../components/common/edit'
     import addHouse from './addHouse'
+    import ueditor from '../../components/common/ueditor'
 
     export default {
         props: ['listInfo', 'articleInfo'],
@@ -534,6 +531,7 @@
             return {
                 productType: '',
                 base: {
+                    id: '',
                     name: '',
                     point: {
                         lng: '',
@@ -840,6 +838,9 @@
             },
             changeImg (data) {
                 this.base.housesImg = data.url
+            },
+            setContent (data) {
+                this.base.housesDesc = data.content
             },
             saveBase () {
                 var formData = {
@@ -1219,7 +1220,8 @@
             uploadList,
             swiperImg,
             editBox,
-            addHouse
+            addHouse,
+            ueditor
         }
     }
 </script>
@@ -1232,6 +1234,14 @@
         position: relative;
         width: 640px;
         margin: 0 auto;
+
+        .edui-default .edui-editor {
+            border-color: #bfcbd9;
+        }
+
+        .edui-editor-iframeholder {
+            min-height: 150px;
+        }
 
         .message-box {
             text-align: right;
