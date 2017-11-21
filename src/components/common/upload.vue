@@ -24,6 +24,14 @@
             size="small"
             icon="delete"
             @click="deleImg">删除</el-button>
+
+        <el-button v-if="!noDel"
+            class="op-btn"
+            type="danger"
+            :plain="true"
+            size="small"
+            icon="delete"
+            @click="deleImg">移动</el-button>
       </section>
     </section>
   </div>

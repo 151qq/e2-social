@@ -446,6 +446,14 @@ export default {
     width: 640px;
     margin: 0 auto;
 
+    .edui-default .edui-editor {
+        border-color: #bfcbd9;
+    }
+
+    .edui-editor-iframeholder {
+        min-height: 150px;
+    }
+
     .null-box {
       font-size: 20px;
       color: #333333;

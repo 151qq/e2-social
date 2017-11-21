@@ -1,6 +1,6 @@
 <template>
     <section class="add-box-report">
-        <el-dialog title="添加二级目录" :visible.sync="isAdd.value">
+        <el-dialog title="添加商圈" :visible.sync="isAdd.value">
             <div class="clear"></div>
             <section class="baseInput bigB">
                 <span>标题</span>

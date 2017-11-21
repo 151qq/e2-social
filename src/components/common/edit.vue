@@ -1,7 +1,7 @@
 <template>
     <section class="edit-box">
         <section class='bodyMain'>
-            <div id="articleArea" name="content" class="list-group">
+            <div name="content" class="list-group">
                 <div class="list-group-item"
                         v-for="(item, index) in articleList"
                         :data-id="index"> 
@@ -12,54 +12,32 @@
                             :idx="item.id"
                             :id-name="'edit-img' + index"
                             :no-save="true"
-                            :is-btn.sync="disabled"
                             @delImg="delImg"
                             @changeImg="changeImg"
                             @saveImg="saveData('upload', index)"></upload>
                     </div>
 
-                    <div class="show-box btn-show" v-if="item.type === 'text'">
-                        <ueditor :editor-id="'editor' + index"
+                    <div class="show-box" v-if="item.type === 'text'">
+                        <ueditor :editor-id="'editorText' + index"
                                     :editor-type="'text'"
                                     :index="index"
                                     :content="item.content"
                                     @setContent="setContent"></ueditor>
-
-                        <div class="btn-hover">
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
-                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
-                        </div>
                     </div>
 
                     <div class="show-box btn-show" v-if="item.type === 'table'">
-                        <ueditor :editor-id="'editor' + index"
+                        <ueditor :editor-id="'editorTable' + index"
                                     :editor-type="'table'"
                                     :index="index"
                                     :content="item.content"
                                     @setContent="setContent"></ueditor>
-
-                        <div class="btn-hover">
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
-                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
-                        </div>
                     </div>
 
-                    <div class="show-box btn-show" v-if="item.type === 'map'">
+                    <div class="show-box" v-if="item.type === 'map'">
                         <div v-html="item.content"></div>
-
-                        <div class="btn-hover">
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
-                                    @click="deleteArticleArea(item.id, index)">删除</el-button>
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="setting"
-                                    @click="changeMap(index)">更改</el-button>
-                        </div>
                     </div>
 
-                    <div class="show-box btn-show overflow-box" v-if="item.type === 'title'">
+                    <div class="show-box overflow-box" v-if="item.type === 'title'">
                         <input v-if="item.style"
                                 type="text"
                                 v-model="item.title"
@@ -70,15 +48,48 @@
                                 class="img-default"
                                 @click.prevent="setStyle(index, item.style)"
                                 src="../../assets/images/title-default.jpg">
+                    </div>
+
+                    <section class="btn-show">
                         <div class="btn-hover">
                             <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="delete"
+                                    :plain="true" size="small"
+                                    :icon="btnShowIndex === index ? 'caret-left' : 'caret-right'"
+                                    @click="showHiddenBtn(index)">操作</el-button>
+
+                            <template v-if="btnShowIndex === index">
+                                <el-button class="delete-btn" type="danger"
+                                    :plain="true" size="small"icon="delete"
                                     @click="deleteArticleArea(item.id, index)">删除</el-button>
-                            <el-button class="delete-btn" type="danger"
-                                    :plain="true" size="small" icon="setting"
-                                    @click="setStyle(index, item.style)">配置</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        v-if="item.type == 'title'"
+                                        :plain="true" size="small" icon="setting"
+                                        @click="setStyle(index, item.style)">配置</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        v-if="item.type == 'map'"
+                                        :plain="true" size="small" icon="setting"
+                                        @click="changeMap(index)">更改</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        :plain="true" size="small" icon="caret-bottom"
+                                        @click="downMove(index)">下移</el-button>
+                                <el-button class="delete-btn" type="danger"
+                                        :plain="true" size="small" icon="caret-top"
+                                        @click="upMove(index)">上移</el-button>
+                                <div class="sort-box">
+                                    编号：{{index}} &nbsp;&nbsp;
+                                    移动至
+                                    <el-input
+                                        class="sortInput"
+                                        size="small"
+                                        min="0"
+                                        placeholder="编号"
+                                        v-model="sortNum">
+                                        <el-button slot="append" @click="moveArea(index)">go</el-button>
+                                    </el-input>
+                                </div>
+                            </template>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </section>
@@ -124,6 +135,14 @@
                 <el-button type="primary" @click="confirmSelect">确 定</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog title="选择内标题样式" :visible.sync="isLook">
+            <div class=""
+                    v-for="(item, index) in articleList"
+                    v-html="item.content">
+            </div>
+        </el-dialog>
+
         <search-map :is-add="isMapBox" :map-data="mapData" ref="searchMap" @setMap="setMap"></search-map>
     </section>
 </template>
@@ -175,7 +194,10 @@ export default {
                 address: '',
                 point: '',
                 content: ''
-            }
+            },
+            sortNum: '',
+            btnShowIndex: '',
+            isLook: false
         }
     },
     methods:{
@@ -242,7 +264,6 @@ export default {
             this.articleList = arrData
             this.backgroundImg = data.bgImg ? 'url(' + data.bgImg + ') center top no-repeat' : '#f0f0f0'
             setTimeout(() => {
-                this.setSortable()
                 $('.bodyMain').css('background', this.backgroundImg)
             }, 0)
         },
@@ -254,6 +275,61 @@ export default {
                 address: queryArr[len - 1].split('=')[1],
                 point: queryArr[len - 2].split('=')[1]
             }
+        },
+        showHiddenBtn (index) {
+            if (this.btnShowIndex === index) {
+                this.sortNum = ''
+                this.btnShowIndex = ''
+                return false
+            }
+            this.btnShowIndex = index
+        },
+        upMove (index) {
+            this.moveTo(index, index - 1)
+        },
+        downMove (index) {
+            this.moveTo(index, index + 1)
+        },
+        moveArea (index) {
+            if (this.sortNum === '') {
+                return
+            }
+            this.moveTo(index, Math.floor(this.sortNum))
+        },
+        moveTo (oldIndex, newIndex) {
+            var toIndex = ''
+            if (newIndex < 0) {
+                toIndex = 0
+            } else if (newIndex > this.articleList.length - 1) {
+                toIndex = this.articleList.length - 1
+            } else {
+                toIndex = newIndex
+            }
+
+            var obj = this.articleList[oldIndex]
+            
+            if (oldIndex > toIndex) {
+                // 上移 先移除，后添加
+                this.articleList.splice(oldIndex, 1)
+                this.articleList.splice(toIndex, 0, obj)
+            } else if (oldIndex < toIndex) {
+                // 下移 先添加，后移除
+                this.articleList.splice(toIndex, 0, obj)
+                this.articleList.splice(oldIndex, 1)
+            }
+
+            this.btnShowIndex = toIndex
+            this.sortNum = ''
+
+            if (oldIndex === toIndex) {
+                return
+            }
+
+            var data = this.articleList.concat([])
+            this.articleList = []
+            setTimeout(() => {
+                this.articleList = data.concat([])
+            }, 0)
         },
         saveArticle (data) {
             var formData = {
@@ -340,24 +416,24 @@ export default {
             }).then(res => {
             })
         },
-        setSortable () {
-            var _this = this
+        // setSortable () {
+        //     var _this = this
 
-            var articleArea = document.getElementById('articleArea')
-            this.sortable = sortable.create(articleArea, {
-                handle: ".list-group-item",
-                animation: 100,
-                group: {name: "articleArea", pull: false, put: false},
-                filter: '.filter',
-                sort: true,
-                disabled: true,
-                onUpdate ({oldIndex, newIndex}) {
-                    let preData = _this.articleList[newIndex]
-                    _this.articleList[newIndex] = _this.articleList[oldIndex]
-                    _this.articleList[oldIndex] = preData
-                }
-            })
-        },
+        //     var articleArea = document.getElementById('articleArea')
+        //     this.sortable = sortable.create(articleArea, {
+        //         handle: ".list-group-item",
+        //         animation: 100,
+        //         group: {name: "articleArea", pull: false, put: false},
+        //         filter: '.filter',
+        //         sort: true,
+        //         disabled: true,
+        //         onUpdate ({oldIndex, newIndex}) {
+        //             let preData = _this.articleList[newIndex]
+        //             _this.articleList[newIndex] = _this.articleList[oldIndex]
+        //             _this.articleList[oldIndex] = preData
+        //         }
+        //     })
+        // },
         addTem (type) {
             switch (type) {
                 case 'upload':
@@ -405,14 +481,7 @@ export default {
                     this.selectStyle(0)
                     break
                 case 'look':
-                    
-                    if (this.sortable.option('disabled')) {
-                        this.articleSave = this.articleList.concat([])
-                        this.articleList = []
-                        setTimeout(() => {
-                            this.articleList = this.articleSave
-                        }, 0)
-                    }
+                    this.isLook = true
                     break
             }
         },
@@ -515,8 +584,7 @@ export default {
         titleBlur (item, index) {
             this.articleList[index].content = '<div style="' + item.style + '">' + item.title + '</div>'
             this.articleList[index].style = item.style            
-        },
-        preHandl () {}
+        }
     },
     components: {
         draggable,
@@ -566,10 +634,29 @@ export default {
     }
 
     .btn-show {
+        margin-bottom: 10px;
+
         .btn-hover {
             display: block;
             margin-top: 10px;
             overflow: hidden;
+
+            .sort-box {
+                float: left;
+
+                .sortInput {
+                    width: 80px;
+                    height: 28px;
+
+                    .el-input__inner {
+                        height: 28px;
+                    }
+
+                    .el-input-group__append {
+                        padding: 0;
+                    }
+                }
+            }
         }
 
         .btns {
