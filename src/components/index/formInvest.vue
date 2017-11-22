@@ -9,7 +9,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.name">
+                                v-model="base.enterpriseCname">
                         </el-input>
                     </section>
                     <section class="baseInput">
@@ -17,7 +17,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.holder">
+                                v-model="base.enterpriseLegalPerson">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -25,65 +25,106 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.companyCode">
+                                v-model="base.enterpriseCode">
                         </el-input>
                     </section>
                     <section class="baseInput">
                         <span>成立时间</span>
-                        <el-input
+                        <el-date-picker
                                 class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.createTime">
-                        </el-input>
+                                v-model="base.enterpriseRegDate"
+                                placeholder="选择日期">
+                        </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
-                        <span>股票代码</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.sharesCode">
-                        </el-input>
+                        <span>企业类型</span>
+                        <el-select class="input-box"
+                                   v-model="base.enterpriseType"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in types.finance_org_type"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput bigB">
                         <span>注册地址</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.address">
+                                v-model="base.enterpriseRegPlace">
                         </el-input>
                     </section>
-                    <section class="baseInput rightF">
-                        <span>物业类型</span>
+                    <section class="baseInput">
+                        <span>办公地点</span>
                         <el-select class="input-box"
-                                   v-model="base.propertyType"
+                                   v-model="base.enterpriseLogisticCity"
                                    name="investor"
+                                   @change="cityChange"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in propertyTypes"
+                                    v-for="(item, index) in cityList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.nodeCode">
+                                    :label="item.name"
+                                    :value="item.areacode">
                             </el-option>
                         </el-select>
                     </section>
+                    <section class="baseInput rightF">
+                        <span>邮编</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                :disabled="true"
+                                v-model="base.enterpriseLogisticZipcode">
+                        </el-input>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>详细地址</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.enterpriseLogisticAddr">
+                        </el-input>
+                    </section>
                     <section class="baseInput">
-                        <span>上市地点</span>
+                        <span>上市机构</span>
                         <el-select class="input-box"
-                                   v-model="base.city"
+                                   v-model="base.enterpriseStockSite"
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in citys"
+                                    v-for="(item, index) in types.finance_market"
                                     :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
+                                    :label="item.typeName"
+                                    :value="item.id">
                             </el-option>
                         </el-select>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>股票代码</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.enterpriseStockCode">
+                        </el-input>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>公司官网</span>
+                        <el-input
+                                class="input-box"
+                                @change="checkWebSite"
+                                placeholder="请输入内容"
+                                v-model="base.enterpriseWebLink">
+                        </el-input>
                     </section>
                     <section class="baseInput bigB">
                         <span>公司图片</span>
                         <div class="input-box">
-                            <upload :path="base.investImg"
+                            <upload :path="base.enterpriseLogoUrl"
                                     :no-del="true"
                                     :bg-path="true"
                                     @changeImg="changeImg"></upload>
@@ -92,15 +133,14 @@
 
                     <section class="baseInput bigB">
                         <span>公司简介</span>
-                        <el-input
-                          type="textarea"
-                          :rows="4"
-                          :maxlength="140"
-                          placeholder="请输入内容"
-                          v-model="base.des"
-                          @change="desChange">
-                        </el-input>
-                        <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
+                        <div class="input-box">
+                            <ueditor
+                                v-if="isBase"
+                                :editor-id="'investDesc' + base.id"
+                                :editor-type="'text'"
+                                :content="base.enterpriseDesc"
+                                @setContent="setContent"></ueditor>
+                        </div>
                     </section>
                     <div class="clear"></div>
                 </div>
@@ -111,19 +151,19 @@
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="公共账号" name="2">
                 <section class="upload-list-box">
-                    <ewm-upload :path="wxPulic.imgUrl"
+                    <ewm-upload :path="wxPulic.enterpriseEntprisewechatQrcode"
                                 :title-name="wxPulic.titleName"
                                 :width="'160px'"></ewm-upload>
 
-                    <ewm-upload :path="twitter.imgUrl"
+                    <ewm-upload :path="twitter.enterpriseTwitterQrcode"
                                 :title-name="twitter.titleName"
                                 :width="'160px'"></ewm-upload>
 
-                    <ewm-upload :path="facebook.imgUrl"
+                    <ewm-upload :path="facebook.enterpriseFacebookQrcode"
                                 :title-name="facebook.titleName"
                                 :width="'160px'"></ewm-upload>
 
-                    <ewm-upload :path="wbPulic.imgUrl"
+                    <ewm-upload :path="wbPulic.enterpriseSinamicroblogQrcode"
                                 :title-name="wbPulic.titleName"
                                 :width="'160px'"></ewm-upload>
                 </section>
@@ -237,7 +277,7 @@
                     <el-select class="input-box"
                                v-model="base.city"
                                name="investor"
-                               placeholder="请选择商圈">
+                               placeholder="请选择">
                         <el-option
                                 v-for="(item, index) in citys"
                                 :key="index"
@@ -475,48 +515,59 @@
     import util from '../../assets/common/util'
     import upload from '../../components/common/upload'
     import ewmUpload from '../../components/common/ewm-upload'
+    import ueditor from '../../components/common/ueditor'
 
     export default {
         props: ['listInfo', 'articleInfo'],
         data () {
             return {
                 base: {
-                    name: '',
-                    holder: '',
-                    createTime: '',
-                    address: '',
-                    propertyType: '',
-                    city: '',
-                    companyCode: '',
-                    sharesCode: '',
-                    investImg: '',
-                    des: ''
+                    id: '',
+                    enterpriseCname: '',
+                    enterpriseCode: '',
+                    enterpriseCode: '',
+                    enterpriseRegDate: '',
+                    enterpriseType: '',
+                    enterpriseLevel: '',
+                    enterpriseRegPlace: '',
+                    enterpriseLogisticCity: '',
+                    enterpriseLogisticZipcode: '',
+                    enterpriseLogisticAddr: '',
+                    enterpriseStockSite: '',
+                    enterpriseStockCode: '',
+                    enterpriseWebLink: '',
+                    enterpriseLogoUrl: '',
+                    enterpriseDesc: '',
                 },
-                abstractNum: 140,
+                isBase: false,
                 activeNames: ['1'],
                 pickerPre: {
                     disabledDate(time) {
                         return time.getTime() >= Date.now()
                     }
                 },
+                cityList: [],
                 citys: [],
-                propertyTypes: [],
+                types: {
+                    finance_org_type: [],
+                    finance_market: []
+                },
                 timer: null,
                 wxPulic: {
                     titleName: '微信公众号',
-                    imgUrl: ''
+                    enterpriseEntprisewechatQrcode: ''
                 },
                 twitter: {
                     titleName: 'twitter账号',
-                    imgUrl: ''
+                    enterpriseTwitterQrcode: ''
                 },
                 facebook: {
                     titleName: 'facebook账号',
-                    imgUrl: ''
+                    enterpriseFacebookQrcode: ''
                 },
                 wbPulic: {
                     titleName: '微博账号',
-                    imgUrl: ''
+                    enterpriseSinamicroblogQrcode: ''
                 }
             }
         },
@@ -529,7 +580,9 @@
         },
         methods: {
             getAllData () {
-                // this.getBase()
+                this.getBase()
+                this.getTypes()
+                this.getCitys()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -541,15 +594,12 @@
                 
                 this.bigImgs = []
             },
-            desChange () {
-                this.abstractNum = 140 - this.base.des.length
-            },
             getBase () {
                 util.request({
                     method: 'get',
-                    interface: 'base',
+                    interface: 'getInvestBase',
                     data: {
-                        id: localStorage.getItem("id")
+                        enterpriseCode: localStorage.getItem('id')
                     }
                 }).then(res => {
                     if (res.result.success == '0') {
@@ -557,72 +607,86 @@
                         return
                     }
 
-                    var base = res.result.result.base
-
-                    if (!base.benchmark) {
-                        base.benchmark = []
-                    }
+                    var base = res.result.result
 
                     this.base = Object.assign(this.base, base)
 
-                    this.rentChange()
-
                     setTimeout(() => {
-                        
+                        this.isBase = true
                     }, 0)
                 })
+            },
+            getTypes () {
+                util.request({
+                    method: 'get',
+                    interface: 'investTypes',
+                    data: {}
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.types = res.result.result
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            getCitys () {
+                util.request({
+                    method: 'get',
+                    interface: 'getCitys',
+                    data: {}
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.cityList = res.result.result.filter((item) => {
+                            return item.parentid == '0'
+                        })
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            cityChange () {
+                for (var i = 0, len = this.cityList.length; i < len; i++) {
+                    if (this.cityList[i].areacode == this.base.enterpriseLogisticCity) {
+                        this.base.enterpriseLogisticZipcode = this.cityList[i].zipcode
+                        break
+                    }
+                }
+            },
+            checkWebSite () {
+                var webSite = this.base.enterpriseWebLink
+                this.base.enterpriseWebLink = webSite.replace(/[\u4e00-\u9fa5]/g,'')
+            },
+            setContent (data) {
+                this.base.enterpriseDesc = data.content
             },
             collChange () {
                 localStorage.setItem("houseColl", this.activeNames)
             },
             changeImg (data) {
-                this.base.housesImg = data.url
+                this.base.enterpriseLogoUrl = data.url
+            },
+            formDataDate (str) {
+                var dateStr = new Date(str)
+                var year = dateStr.getFullYear()
+                var monthStr = dateStr.getMonth() + 1
+                var dayStr = dateStr.getDate()
+                var month = monthStr < 10 ? '0' + monthStr : monthStr
+                var day = dayStr < 10 ? '0' + dayStr : dayStr
+                return year + '-' + month + '-' + day
             },
             saveBase () {
-                var formData = {
-                    id: localStorage.getItem("id"),
-                    type: 'base',
-                    data: this.base
-                }
-
-                if (this.base.benchmark.length > 3) {
-                    this.$message({
-                        message: '请务必选择3个对标物业！',
-                        type: 'warning'
-                    })
-                    return false
-                }
+                this.base.enterpriseRegDate = this.formDataDate(this.base.enterpriseRegDate)
 
                 util.request({
                     method: 'post',
-                    interface: 'houseInfo',
-                    data: formData
+                    interface: 'saveInvestBase',
+                    data: this.base
                 }).then(res => {
-                    this.$parent.$refs.listBox.reloadList(res.result.result.id)
+                    this.$parent.$refs.listBox.reloadList(res.result.result.enterpriseCode)
                 })
             },
             saveAll () {
                 // this.saveBase()
-            },
-            getTypes () {
-                util.request({
-                    method: 'get',
-                    interface: 'typeMap',
-                    data: {}
-                }).then(res => {
-                    this.types = res.result.result
-                })
-            },
-            getMalls () {
-                util.request({
-                    method: 'post',
-                    interface: 'malls',
-                    data: {
-                        city: this.base.city
-                    }
-                }).then(res => {
-                    this.malls = res.result.result
-                })
             }
         },
         destroyed() {
@@ -632,7 +696,8 @@
         },
         components: {
             upload,
-            ewmUpload
+            ewmUpload,
+            ueditor
         }
     }
 </script>
@@ -648,6 +713,14 @@
         position: relative;
         width: 640px;
         margin: 0 auto;
+
+        .edui-default .edui-editor {
+            border-color: #bfcbd9;
+        }
+
+        .edui-editor-iframeholder {
+            min-height: 150px;
+        }
 
         .link-btn {
             position: absolute;

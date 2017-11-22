@@ -21,6 +21,9 @@ export default {
         return {
         }
     },
+    mounted () {
+        this.$refs.editBox.getAllData()
+    },
     methods: {
         getInfo (data) {
             // 编辑区域获取初始数据

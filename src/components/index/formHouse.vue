@@ -672,7 +672,6 @@
             getAllData () {
                 this.isBase = false
                 this.getBase()
-                this.getArticle()
                 this.getAppearance()
                 this.getPublic()
                 this.getSurround()
@@ -796,26 +795,6 @@
                     this.bigImgs = this.bigImgs.concat(this.appearance, this.public, this.surround)
                     console.log(this.bigImgs, 'bigImgs')
                 }
-            },
-            getArticle () {
-                util.request({
-                    method: 'get',
-                    interface: 'findArticleByCatalogCode',
-                    data: {
-                        catalogCode: localStorage.getItem("id")
-                    }
-                }).then(res => {
-                    if (res.result.success !== '0' && res.result.result.length) {
-                        var resData = res.result.result[0]
-                        this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
-                        localStorage.setItem("htmlHouseCode", resData.html5PageCode)
-                        var data = {
-                            article: this.articleinfo,
-                            bgImg: resData.backgroundImg
-                        }
-                        this.$refs.editForm.editInte(data)
-                    }
-                })
             },
             getStar () {
                 util.request({
@@ -1055,9 +1034,9 @@
                 }
 
                 var formData = {
-                    id: localStorage.getItem("id"),
                     type: 'valuation',
                     data: {
+                        housesId: localStorage.getItem("id"),
                         housesGps: this.base.point,
                         createDate: this.formDataDate(this.evalues.createDate),
                         rentValue: this.evalues.rentValue,

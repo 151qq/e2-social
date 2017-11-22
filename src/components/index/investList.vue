@@ -1,33 +1,38 @@
 <template>
-  <div class="allBoxA">
-    <section class="head-part">
-        <span class="add-dir" @click="setOneData">添加机构</span>
-    </section>
+  <div class="allBox">
+    <el-input
+      class="search-title"
+      placeholder="输入关键字进行过滤"
+      v-model="filterText">
+    </el-input>
 
-    <el-menu :default-active="activeName" class="el-menu-vertical-demo">
-        <el-menu-item
-            class="one-list"
-            v-for="(item, index) in treeData"
-            :index="index + ''">
-            <div class="lists-box"
-                @click="getInfo(item.nodeCode)">
+    <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
+      <el-submenu class="two-box" v-for="(item1, index1) in treeData" :index="index1 + ''">
+        <template slot="title">
+          {{item1.dictTypeCname}}
 
-                <img class="img-box" :src="item.imgUrl">
+          <span @click.stop="setData(item1, index1)" class="add-box">
+          +
+          </span>
+        </template>
+        <el-menu-item v-for="(item2, index2) in item1.childNodes"
+            :index="index1 + '-' + index2">
 
+              <div class="lists-box"
+                  @click="getInfo(item1.dictKeyCode, item2.enterpriseCode, index1, index2)">
+                <img class="img-box" :src="item2.enterpriseLogoUrl">
                 <div class="p-box">
-
-                    <span class="title">{{item.label}}</span>
-
-                    <div>
-                        <i class="el-icon-delete del-icon"
-                            v-if="!item.status"
-                            @click.stop="delItem(item.nodeCode)"></i>
-                    </div>
+                  <span class="title">{{item2.enterpriseCname}}</span>
+                  <div>
+                    <img
+                        @click.stop="delItem(item2.enterpriseCode)"
+                        src="../../assets/images/delete-icon.png">
+                  </div>
                 </div>
-            </div>
+              </div>
         </el-menu-item>
+      </el-submenu>
     </el-menu>
-
     <el-dialog title="添加机构" :visible.sync="isAddTreeOne">
       <el-form :label-position="'left'" :model="addFormOne" label-width="80px">
         <el-form-item label="标题">
@@ -36,98 +41,189 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
             <el-button @click="isAddTreeOne = false">取 消</el-button>
-            <el-button type="primary" @click="isAddTreeOne = false">确 定</el-button>
+            <el-button type="primary" @click="confirmAdd">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
   import util from '../../assets/common/util'
+  import interfaces from '../../assets/common/interfaces'
+  import addDir from '../common/addDir.vue'
   import $ from 'Jquery'
   export default{
     data(){
       return {
+        isfirst: true,
         filterText: '',
         treeData: [
           {
             nodeCode: 0,
-            label: '第一企业机构',
-            imgUrl: '/static/images/bench1.png'
+            label: '第一企业证券',
+            children: [
+              {
+                nodeCode: 1,
+                label: '第二企业证券',
+                imgUrl: '/static/images/bench1.png'
+              },
+              {
+                nodeCode: 1,
+                label: '第二企业证券',
+                imgUrl: '/static/images/bench1.png'
+              }
+            ]
           },
           {
             nodeCode: 1,
-            label: '第二企业机构',
-            imgUrl: '/static/images/bench1.png'
+            label: '第二企业证券',
+            children: [
+              {
+                nodeCode: 1,
+                label: '第二企业证券',
+                imgUrl: '/static/images/bench1.png'
+              },
+              {
+                nodeCode: 1,
+                label: '第二企业证券',
+                imgUrl: '/static/images/bench1.png'
+              }
+            ]
           }
         ],
-        activeName: '',
-        openeds: [],
-        addData: {},
-        roleList: [],
-        checkedRoles: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        activeName: '0-0',
+        openeds: ['0'],
         isAddTreeOne: false,
         addFormOne: {
-            title: ''
+          title: '',
+          id: '',
+          type: ''
         },
-        currentData: {},
-        pageSize: 21,
-        pageNumber: 1,
-        total: 0
+        addDirIndex: ''
       }
     },
+    components: {
+      addDir
+    },
     mounted(){
-      // this.loadList()
+      this.loadList()
+    },
+    watch: {
+      filterText (value) {
+        var opens = []
+        if (value === '') {
+          let arrs = this.activeName.split('-')
+          opens = [arrs[0], arrs[0] + '-' + arrs[1]]
+          this.openeds = opens
+          return false
+        }
+
+        this.treeData.forEach((item1, index1) => {
+          // 外层有，打开
+          if (item1.label.indexOf(value) > -1) {
+            opens.push(String(index1))
+          }
+
+          if (!item1.childNodes || !item1.childNodes.length) {
+            return false
+          }
+          // 外层没有，内层有，也要打开外层
+          item1.childNodes.forEach((item2, index2) => {
+            if (item2.enterpriseCname.indexOf(value) > -1) {
+              opens.push(String(index1))
+              opens.push(String(index1 + '-' + index2))
+            }
+          })
+        })
+        this.openeds = opens
+      }
     },
     methods: {
       loadList(){
+        var formData = {}
         util.request({
           method: 'get',
-          interface: 'productTree',
-          data: {}
+          interface: 'investTree',
+          data: formData
         }).then(res => {
           this.treeData = res.result.result
-          if (!this.treeData.length) {
-            return
-          }
+          if (this.treeData[0].childNodes.length) {
+            let id = this.treeData[0].childNodes[0].enterpriseCode
+            let dirCode = this.treeData[0].dictTypeCode
 
-          var data = {
-            code: this.treeData[0].nodeCode
+            let data = {
+              id: id
+            }
+            // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+            localStorage.setItem("id", id)
+            localStorage.setItem("dirCode", dirCode)
+            this.$emit('getInfo', data)
           }
-          setTimeout(() => {
-              localStorage.setItem('id', data.code)
-              this.$emit('getInfo', data)
-          }, 0)
         })
       },
-      reLoadList (data) {
+      reloadList(newId){
         util.request({
           method: 'get',
-          interface: 'productTree',
+          interface: 'investTree',
           data: {}
         }).then(res => {
           this.treeData = res.result.result
 
-          for (var i = 0, len = this.treeData.length; i < len; i++) {
-            if (data.code == this.treeData[i].nodeCode) {
-              this.activeName = i
+          var arrData = this.treeData[this.addDirIndex]
+
+          this.openeds = [String(this.addDirIndex)]
+          for(var i = 0, len = arrData.childNodes.length; i < len; i++) {
+            if (arrData.children[i].enterpriseCode == newId) {
+              setTimeout(() => {
+                this.activeName = this.addDirIndex + '-' + i
+              }, 0)
               break
             }
           }
 
-          setTimeout(() => {
-            this.$emit('getInfo', data)
-          }, 0)
+          let formData = {
+            id: newId
+          }
+          // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+          localStorage.setItem("id", newId)
+          localStorage.setItem("dirCode", arrData.dictKeyCode)
+          this.$emit('getInfo', formData)
         })
       },
-      setOneData () {
-        this.isAddTreeOne = true
+      setData (item1, index1) {
+        this.addFormOne.type = item1.dictKeyCode
+        this.addDirIndex = index1
+        this.isAddTreeOne = true 
       },
-      getInfo (code) {
-        var data = {
-          code: code
+      confirmAdd () {
+        // 其查查，添加，设置ID
+        if (!this.addFormOne.title) {
+          this.$message.error('企业机构名称不能为空！')
+          return
         }
-        localStorage.setItem('id', code)
-        this.$emit('getInfo', data)
+
+        var formData = {
+            enterpriseCname: this.addFormOne.title,
+            enterpriseType: this.addFormOne.type
+        }
+
+        util.request({
+            method: 'post',
+            interface: 'saveInvestBase',
+            data: formData
+        }).then(res => {
+            // this.$parent.$refs.listBox.reloadList(res.result.result.id)
+            if (res.result.success == '1') {
+              this.isAddTreeOne = false
+              this.addFormOne.id = res.result.result.enterpriseCode
+              this.reloadList(this.addFormOne.id)
+            } else {
+              this.$message.error(res.result.message)
+            }
+        })
       },
       delItem (id) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -143,26 +239,46 @@
           })
         })
       },
+      getInfo (code1, code2, index1, index2) {
+        
+        var curIndex = index1 + '-' + index2
+        if (this.activeName === curIndex) {
+          return false
+        }
+        this.activeName = curIndex
+        var data = {
+          id: code2
+        }
+        // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
+        localStorage.setItem("id", code2)
+        localStorage.setItem("dirCode", code1)
+
+        this.$emit('getInfo', data)
+      },
       deleteArticleById (id) {
         util.request({
           method: 'post',
-          interface: 'deleteDraftFile',
+          interface: 'removeBase',
           data: {
-            html5PageCode: id
+            enterpriseCode: id
           }
         }).then(res => {
-          this.loadList()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          if (res.result.success == '1') {
+            this.loadList()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          } else {
+            this.$message.error(res.result.message)
+          }
         })
       }
     }
   }
 </script>
 <style lang="scss">
-  .allBoxA {
+  .allBox {
     width: 400px;
     background: #F9F9F9;
 
@@ -192,31 +308,11 @@
       width: 640px;
     }
 
-    .head-part {
-        padding: 10px;
-        box-sizing: border-box;
-        display: flex;
-
-        .search-title {
-          flex: 1;
-        }
-
-        .add-dir {
-            display: block;
-            width: 100%;
-            height: 36px;
-            font-size: 16px;
-            color: #000000;
-            text-align: center;
-            background: #ffffff;
-            line-height: 36px;
-            cursor: pointer;
-            border: 1px solid #E0E0E0;
-            border-radius: 5px;
-        }
+    .search-title {
+      margin: 10px 0;
+      padding: 0 10px;
+      box-sizing: border-box;
     }
-
-    
 
     .el-submenu {
       .el-submenu__title {
@@ -231,40 +327,55 @@
       }
     }
 
-    .right-btn {
+    .one-box {
+      .add-box {
         float: right;
-        margin: 18px 30px 0 3px;
-        font-size: 17px;
+        font-size: 30px;
+        margin-right: 30px;
+        line-height: 56px;
+        margin-top: -4px;
+        color: #000000;
+      }
     }
 
-    .del-btn {
+    .two-box {
+      background: #F9F9F9;
+
+      .add-box {
         float: right;
-        margin-top: 18px;
-        font-size: 17px;
-    }
+        font-size: 30px;
+        margin-right: 30px;
+        line-height: 56px;
+        margin-top: -4px;
+        color: #000000;
+      }
+
+      .delete-box {
+        float: right;
+        font-size: 18px;
+        margin-right: 10px;
+        line-height: 52px;
+        color: #000000;
+      }
   
-    .two-list {
-        .el-submenu__title {
-            font-size: 14px;
-            color: #000000;
-            background: #F9F9F9;
-            border-bottom: 1px solid #E0E0E0;
+      .el-submenu__title {
+        font-size: 14px;
+        color: #000000;
+        background: #F9F9F9;
+        border-bottom: 1px solid #E0E0E0;
 
-            &:hover {
-              background: #EFF2F7;
-            }
+        &:hover {
+          background: #EFF2F7;
         }
-    }
+      }
 
-    .el-menu-item {
+      .el-menu-item {
         height: 60px;
         background: #F9F9F9;
         border-bottom: 1px solid #E0E0E0;
 
         .lists-box {
           position: relative;
-          display: block;
-          width: 100%;
           height: 60px;
           box-sizing: border-box;
           cursor: pointer;
@@ -301,13 +412,11 @@
               height: 16px;
               cursor: pointer;
 
-              i {
+              img {
                 float: right;
                 width: 16px;
                 height: 16px;
-                margin-left: 3px;
-                font-size: 16px;
-                color: #000000;
+                margin-left: 8px;
 
                 &:hover {
                   opacity: 0.8;
@@ -328,10 +437,7 @@
             display: block;
           }
         }
-    }
-
-    .one-list {
-        padding-right: 45px !important;
+      }
     }
   }
 </style>

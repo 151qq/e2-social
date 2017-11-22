@@ -309,14 +309,27 @@
             id: id
           }
         }).then(res => {
-          if (res.result.success == '1') {
+          if (res.result.success == '0') {
+            this.$message.error(res.result.message)
+            return
+          }
+
+          if (res.result.result == 1) {
             this.loadList()
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
           } else {
-            this.$message.error(res.result.message)
+            var str = ''
+            res.result.result.forEach((item, index) => {
+              if (index) {
+                str = str + '、' + item.base.name
+              } else {
+                str = str + item.base.name
+              }
+            })
+            this.$message.error('该楼盘为（' + str + '）对标楼盘，不能删除！')
           }
         })
       }

@@ -9,15 +9,15 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.name">
+                                v-model="base.productCame">
                         </el-input>
                     </section>
                     <section class="baseInput">
                         <span>发行机构</span>
                         <el-select class="input-box"
-                                   v-model="base.propertyType"
+                                   v-model="base.productPublishOrg"
                                    name="investor"
-                                   placeholder="请选择投资顾问">
+                                   placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in propertyTypes"
                                     :key="index"
@@ -29,9 +29,9 @@
                     <section class="baseInput rightF">
                         <span>上市地点</span>
                         <el-select class="input-box"
-                                   v-model="base.city"
+                                   v-model="base.productIpoSite"
                                    name="investor"
-                                   placeholder="请选择投资顾问">
+                                   placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in citys"
                                     :key="index"
@@ -45,7 +45,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.createTime">
+                                v-model="base.productPublishTime">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -53,15 +53,15 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.sharesCode">
+                                v-model="base.productMarketCode">
                         </el-input>
                     </section>
                     <section class="baseInput">
                         <span>产品状态</span>
                         <el-select class="input-box"
-                                   v-model="base.city"
+                                   v-model="base.productState"
                                    name="investor"
-                                   placeholder="请选择投资顾问">
+                                   placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in citys"
                                     :key="index"
@@ -75,10 +75,10 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.sharesCode">
+                                v-model="base.productInfoLink">
                         </el-input>
                     </section>
-                    <section class="baseInput">
+                    <!-- <section class="baseInput">
                         <span>关联物业</span>
                         <el-select class="input-box"
                                    v-model="base.city"
@@ -131,11 +131,11 @@
                     <section class="baseInput rightF">
                         <span>占比</span>
                         <el-input-number class="input-box" size="small" :min="0" v-model="base.price"></el-input-number>
-                    </section>
+                    </section> -->
                     <section class="baseInput bigB">
                         <span>公司图片</span>
                         <div class="input-box">
-                            <upload :path="base.investImg"
+                            <upload :path="base.productLogo"
                                     :no-del="true"
                                     :bg-path="true"
                                     @changeImg="changeImg"></upload>
@@ -144,15 +144,13 @@
 
                     <section class="baseInput bigB">
                         <span>公司简介</span>
-                        <el-input
-                          type="textarea"
-                          :rows="4"
-                          :maxlength="140"
-                          placeholder="请输入内容"
-                          v-model="base.des"
-                          @change="desChange">
-                        </el-input>
-                        <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div>
+                        <div class="input-box">
+                            <ueditor
+                                :editor-id="'productDesc' + base.id"
+                                :editor-type="'text'"
+                                :content="base.productDesc"
+                                @setContent="setContent"></ueditor>
+                        </div>
                     </section>
 
                     
@@ -169,23 +167,25 @@
     import util from '../../assets/common/util'
     import upload from '../../components/common/upload'
     import ewmUpload from '../../components/common/ewm-upload'
+    import ueditor from '../../components/common/ueditor'
 
     export default {
         props: ['listInfo', 'articleInfo'],
         data () {
             return {
                 base: {
-                    name: '',
-                    holder: '',
-                    createTime: '',
-                    address: '',
-                    propertyType: '',
-                    city: '',
-                    companyCode: '',
-                    sharesCode: '',
-                    investImg: '',
-                    des: ''
+                    id: '',
+                    productCame: '',
+                    productPublishOrg: '',
+                    productIpoSite: '',
+                    productPublishTime: '',
+                    productMarketCode: '',
+                    productState: '',
+                    productInfoLink: '',
+                    productLogo: '',
+                    productDesc: ''
                 },
+                isBase: false,
                 abstractNum: 140,
                 activeNames: ['1'],
                 pickerPre: {
@@ -223,7 +223,7 @@
         },
         methods: {
             getAllData () {
-                // this.getBase()
+                this.getBase()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -241,9 +241,9 @@
             getBase () {
                 util.request({
                     method: 'get',
-                    interface: 'base',
+                    interface: 'getOrUpdate',
                     data: {
-                        id: localStorage.getItem("id")
+                        productCode: '1111'
                     }
                 }).then(res => {
                     if (res.result.success == '0') {
@@ -251,7 +251,8 @@
                         return
                     }
 
-                    var base = res.result.result.base
+                    // res.result.result.base.id = localStorage.getItem('id')
+                    var base = res.result.result
 
                     if (!base.benchmark) {
                         base.benchmark = []
@@ -259,12 +260,13 @@
 
                     this.base = Object.assign(this.base, base)
 
-                    this.rentChange()
-
                     setTimeout(() => {
-                        
+                        this.isBase = true
                     }, 0)
                 })
+            },
+            setContent (data) {
+                this.base.productDesc = data.content
             },
             collChange () {
                 localStorage.setItem("houseColl", this.activeNames)
@@ -326,7 +328,8 @@
         },
         components: {
             upload,
-            ewmUpload
+            ewmUpload,
+            ueditor
         }
     }
 </script>

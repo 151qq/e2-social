@@ -24,12 +24,14 @@ export default {
             houseDatas: {
                 name: '',
                 point: ''
-            }
+            },
+            isSubmit: true
         }
     },
     methods: {
         initMap () {
             this.$refs.searMap.resetKey()
+            this.isSubmit = true
             
             if (this.map) {
                 this.map.clearOverlays()
@@ -66,11 +68,17 @@ export default {
                 return false
             }
 
+            if (!this.isSubmit) {
+                return false
+            }
+
+            this.isSubmit = false
+
             util.request({
               method: 'post',
-              interface: 'validateHousesGps',
+              interface: 'validateHousesName',
               data: {
-                gps: this.houseDatas.point
+                name: this.houseDatas.name
               }
             }).then(res => {
               if (res.result.success == '1') {
@@ -85,6 +93,7 @@ export default {
               } else {
                 this.$message.error(res.result.message)
               }
+              this.isSubmit = true
             })
         }
     },

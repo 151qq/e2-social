@@ -94,6 +94,10 @@
             </div>
         </section>
         <div class="edit-btn">
+            <div @click="addTem('look')">
+                <img class="gray-box" src="../../assets/images/add-look-icon.png">
+                <img class="now-box" src="../../assets/images/look-icon.png">
+            </div>
             <div @click="addTem('upload')">
                 <img class="gray-box" src="../../assets/images/add-img-icon.png">
                 <img class="now-box" src="../../assets/images/img-now.png">
@@ -103,20 +107,16 @@
                 <img class="now-box" src="../../assets/images/text-now.png">
             </div>
             <div @click="addTem('table')">
-                <img class="gray-box" src="../../assets/images/add-text-icon.png">
-                <img class="now-box" src="../../assets/images/text-now.png">
+                <img class="gray-box" src="../../assets/images/add-table-icon.png">
+                <img class="now-box" src="../../assets/images/table-now.png">
             </div>
             <div @click="addTem('map')">
-                <img class="gray-box" src="../../assets/images/add-text-icon.png">
-                <img class="now-box" src="../../assets/images/text-now.png">
+                <img class="gray-box" src="../../assets/images/add-map-icon.png">
+                <img class="now-box" src="../../assets/images/map-now.png">
             </div>
             <div class="title-box" @click="addTem('title')">
                 <img class="gray-box" src="../../assets/images/add-title-icon.png">
                 <img class="now-box" src="../../assets/images/title-now.png">
-            </div>
-            <div @click="addTem('look')">
-                <img class="gray-box" src="../../assets/images/change-model-icon.png">
-                <img class="now-box" src="../../assets/images/change-now.png">
             </div>
             <div class="save-box" @click="saveAll">
                 <img class="gray-box" src="../../assets/images/save-all-data.png">
@@ -172,15 +172,15 @@ export default {
             titleLists: [
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; font-size: 16px; color: #000000; line-height: 30px;"
                 },
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; text-align: center; font-size: 16px; color: #000000; line-height: 30px;"
                 },
                 {
                     imgUrl: "/static/images/title-default.jpg",
-                    style: "display: block; width: 100%; padding: 3px 0; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px; border-bottom: 1px solid #46A8E0;"
+                    style: "display: block; width: 100%; padding: 3px 10px; border: none; text-align: right; font-size: 16px; color: #000000; line-height: 30px;"
                 }
             ],
             templateList: [],
@@ -387,7 +387,7 @@ export default {
                     areaType: type,
                     html5TemplateCode: this.html5TemplateCode,
                     areaTxt: this.articleList[index].content,
-                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("htmlHouseCode"),
+                    fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("id"),
                     id: this.articleList[index].id ? this.articleList[index].id : '',
                     sequence: index + 20
                 }

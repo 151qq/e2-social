@@ -247,6 +247,17 @@ export default {
         sendSubscriberArticle: platform + 'html5SiteInfo/sendSubscriberArticle.json',
         enterpriseList: platform + 'enterprise/list.json',
         publishArticle: platform + 'siteEdit/publishArticle.json',
-        validateHousesGps: platform + 'houses/validateHousesGps.json'
+        validateHousesName: platform + 'houses/validateHousesName.json',
+
+        getCitys: '/static/api/common/city.json',
+
+        investTree: platform + 'enterprise/enterpriseTree.json',
+        saveInvestBase: platform + 'enterprise/manageEnterpriseInfo.json',
+        getInvestBase: platform + 'enterprise/showEnterpriseInfo.json',
+        removeBase: platform + 'enterprise/removeEnterpriseInfo.json',
+        investTypes: platform + 'enterprise/disOfEnterpriseInfo.json',
+
+        saveOrUpdate: platform + 'financeProductInfo/saveOrUpdate.json',
+        getOrUpdate: platform + 'financeProductInfo/findByProductInfo.json'
     }
 }

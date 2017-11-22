@@ -161,11 +161,9 @@ export default {
     },
     mounted () {
         this.type = this.$route.params.type
-        if (this.type === 'edit') {
-            var reportColl = localStorage.getItem("reportColl")
-            if (reportColl) {
-                this.activeNames = reportColl.split(',')
-            }
+        var reportColl = localStorage.getItem("reportColl")
+        if (reportColl) {
+            this.activeNames = reportColl.split(',')
         }
 
         document.title = '报告维护'
