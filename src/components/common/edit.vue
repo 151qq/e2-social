@@ -197,7 +197,14 @@ export default {
             },
             sortNum: '',
             btnShowIndex: '',
-            isLook: false
+            isLook: false,
+            areaCodes: {
+                text: '001',
+                table: '002',
+                map: '003',
+                title: '004',
+                upload: '005'
+            }
         }
     },
     methods:{
@@ -385,6 +392,7 @@ export default {
                 interface: 'saveArticleArea',
                 data: {
                     areaType: type,
+                    areaCode: this.areaCodes[type],
                     html5TemplateCode: this.html5TemplateCode,
                     areaTxt: this.articleList[index].content,
                     fileCode: this.html5PageCode ? this.html5PageCode : localStorage.getItem("id"),
