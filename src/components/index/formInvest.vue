@@ -660,11 +660,11 @@
                     data: {}
                 }).then(res => {
                     if (res.result.success == '1') {
-                        this.cityList = res.result.result
+                        this.cityList = res.result.results
                         var citys = []
                         var posts = []
 
-                        res.result.result.forEach((item) => {
+                        res.result.results.forEach((item) => {
                             citys = citys.concat(item.citys)
                             posts = posts.concat(item.posts)
                         })
@@ -677,6 +677,8 @@
                 })
             },
             cityChange () {
+                console.log(this.cityData, this.base.enterpriseLogisticCity, this.postList)
+
                 for (var i = 0, len = this.cityData.length; i < len; i++) {
                     if (this.cityData[i] == this.base.enterpriseLogisticCity) {
                         this.base.enterpriseLogisticZipcode = this.postList[i]
