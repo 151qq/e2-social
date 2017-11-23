@@ -257,7 +257,14 @@ export default {
         removeBase: platform + 'enterprise/removeEnterpriseInfo.json',
         investTypes: platform + 'enterprise/disOfEnterpriseInfo.json',
 
+        orTree: platform + 'financeProductInfo/productTree.json',
         saveOrUpdate: platform + 'financeProductInfo/saveOrUpdate.json',
-        getOrUpdate: platform + 'financeProductInfo/findByProductInfo.json'
+        getOrUpdate: platform + 'financeProductInfo/findByProductInfo.json',
+        deleteFinanceProductInfo: platform + 'financeProductInfo/deleteFinanceProductInfo.json',
+        orDic: platform + 'financeProductInfo/dic.json',
+        financeProductHouseSave: platform + 'financeProductHouse/save.json',
+        deleteFinanceProductHouser: platform + 'financeProductHouse/deleteFinanceProductHouser.json',
+
+        searchMap: platform + 'houses/searchHousesFileter.json'
     }
 }

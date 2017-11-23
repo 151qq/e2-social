@@ -1,11 +1,11 @@
 <template>
   <div class="ewm-upload-box" :style="{width:width}">
-    <label for="ewm-upload">
+    <label :for="idName">
       <img v-if="!curPath" class="img-big"
           src="../../assets/images/img-default.jpg">
       <img v-else class="img-big" :src="curPath">    
     </label>
-    <input class="input-u" id="ewm-upload" type="file" name="" @change="postImg">
+    <input class="input-u" :id="idName" type="file" name="" @change="postImg">
 
     <div>{{titleName}}</div>
   </div>
@@ -14,7 +14,7 @@
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'titleName', 'width'],
+    props: ['path', 'titleName', 'idName', 'width'],
     data() {
       return {
         curPath: ''

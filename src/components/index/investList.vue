@@ -142,7 +142,7 @@
       }
     },
     methods: {
-      loadList(){
+      loadList(type){
         var formData = {}
         util.request({
           method: 'get',
@@ -150,6 +150,11 @@
           data: formData
         }).then(res => {
           this.treeData = res.result.result
+
+          if (type) {
+            return false
+          }
+
           if (this.treeData[0].childNodes.length) {
             let id = this.treeData[0].childNodes[0].enterpriseCode
             let dirCode = this.treeData[0].dictTypeCode
@@ -176,7 +181,7 @@
 
           this.openeds = [String(this.addDirIndex)]
           for(var i = 0, len = arrData.childNodes.length; i < len; i++) {
-            if (arrData.children[i].enterpriseCode == newId) {
+            if (arrData.childNodes[i].enterpriseCode == newId) {
               setTimeout(() => {
                 this.activeName = this.addDirIndex + '-' + i
               }, 0)
@@ -202,6 +207,11 @@
         // 其查查，添加，设置ID
         if (!this.addFormOne.title) {
           this.$message.error('企业机构名称不能为空！')
+          return
+        }
+
+        if (!this.addFormOne.type) {
+          this.$message.error('请重新添加！')
           return
         }
 

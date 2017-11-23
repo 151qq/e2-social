@@ -9,33 +9,28 @@
     <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
       <el-submenu class="one-box" v-for="(item1, index1) in treeData" :index="index1 + ''">
         <template slot="title">
-          {{item1.label}}
-          <span @click.stop="setDir(item1, index1)" class="add-box">
-            +
-          </span>
+          {{item1.dictKeyValue}}
         </template>
-        <el-submenu class="two-box" v-for="(item2, index2) in item1.children" :index="index1 + '-' + index2">
+        <el-submenu class="two-box" v-for="(item2, index2) in item1.childNodes"
+                    :index="index1 + '-' + index2">
           <template slot="title">
-            {{item2.label}}
+            {{item2.dictKeyValue}}
 
             <span @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
-            <span @click.stop="deleteDir(item1, item2)"
-                  class="delete-box el-icon-delete2"
-                  v-if="!item2.children.length || !item2.children"></span>
           </template>
-          <el-menu-item v-for="(item3, index3) in item2.children"
+          <el-menu-item v-for="(item3, index3) in item2.childNodes"
               :index="index1 + '-' + index2 + '-' + index3">
 
                 <div class="lists-box"
-                    @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode)">
-                  <img class="img-box" :src="item3.imgUrl">
+                    @click="getInfo(item1.dictKeyCode, item2.dictKeyCode, item3.productCode, index1, index2, index3)">
+                  <img class="img-box" :src="item3.productLogo">
                   <div class="p-box">
-                    <span class="title">{{item3.label}}</span>
+                    <span class="title">{{item3.productCame}}</span>
                     <div>
                       <img
-                          @click.stop="delItem(item3.nodeCode)"
+                          @click.stop="delItem(item3.productCode)"
                           src="../../assets/images/delete-icon.png">
                     </div>
                   </div>
@@ -44,15 +39,11 @@
         </el-submenu>
       </el-submenu>
     </el-menu>
-    <add-dir :is-add="isAdd" @addDirs="saveDir"></add-dir>
 
     <el-dialog title="添加证券" :visible.sync="isAddTreeTwo">
       <el-form :label-position="'left'" :model="addFormOne" label-width="80px">
         <el-form-item label="证券名称">
             <el-input v-model="addFormOne.title" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="上市地点">
-            <el-input v-model="addFormOne.city" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="股票代码">
             <el-input v-model="addFormOne.code" auto-complete="off"></el-input>
@@ -68,7 +59,6 @@
 <script>
   import util from '../../assets/common/util'
   import interfaces from '../../assets/common/interfaces'
-  import addDir from '../common/addDir.vue'
   import $ from 'Jquery'
   export default{
     data(){
@@ -77,7 +67,7 @@
         filterText: '',
         treeData: [],
         defaultProps: {
-          children: 'children',
+          childNodes: 'childNodes',
           label: 'label'
         },
         activeName: '0-0-0',
@@ -91,14 +81,11 @@
           id: '',
           title: '',
           city: '',
-          code: ''
+          code: '',
+          type: ''
         },
-        isAddTreeTwo: false,
-        addItemIndex: ''
+        isAddTreeTwo: false
       }
-    },
-    components: {
-      addDir
     },
     mounted(){
       this.loadList()
@@ -112,31 +99,31 @@
           this.openeds = opens
           return false
         }
-        if (!this.treeData[0].children || !this.treeData[0].children.length) {
+        if (!this.treeData[0].childNodes || !this.treeData[0].childNodes.length) {
           return false
         }
         this.treeData.forEach((item1, index1) => {
           // 外层有，打开
-          if (item1.label.indexOf(value) > -1) {
+          if (item1.dictKeyValue.indexOf(value) > -1) {
             opens.push(String(index1))
           }
 
-          if (!item1.children || !item1.children.length) {
+          if (!item1.childNodes || !item1.childNodes.length) {
             return false
           }
           // 外层没有，内层有，也要打开外层
-          item1.children.forEach((item2, index2) => {
-            if (item2.label.indexOf(value) > -1) {
+          item1.childNodes.forEach((item2, index2) => {
+            if (item2.dictKeyValue.indexOf(value) > -1) {
               opens.push(String(index1))
               opens.push(String(index1 + '-' + index2))
             }
 
-            if (!item2.children || !item2.children.length) {
+            if (!item2.childNodes || !item2.childNodes.length) {
               return false
             }
 
-            item2.children.forEach((item3, index3) => {
-              if (item3.label.indexOf(value)> -1) {
+            item2.childNodes.forEach((item3, index3) => {
+              if (item3.productCame.indexOf(value)> -1) {
                 opens.push(String(index1))
                 opens.push(String(index1 + '-' + index2))
               }
@@ -147,18 +134,23 @@
       }
     },
     methods: {
-      loadList(){
+      loadList(type){
         var formData = {}
         util.request({
           method: 'get',
-          interface: 'houseTree',
+          interface: 'orTree',
           data: formData
         }).then(res => {
           this.treeData = res.result.result
-          if (this.treeData[0].children.length && this.treeData[0].children[0].children.length) {
-            let id = this.treeData[0].children[0].children[0].nodeCode
-            let dirCode = this.treeData[0].children[0].nodeCode
-            let cityCode = this.treeData[0].nodeCode
+
+          if (type) {
+            this.$emit('getInfo')
+            return false
+          }
+
+          if (this.treeData[0].childNodes.length && this.treeData[0].childNodes[0].childNodes.length) {
+            let id = this.treeData[0].childNodes[0].childNodes[0].productCode
+            let dirCode = this.treeData[0].childNodes[0].dictKeyCode
 
             let data = {
               id: id
@@ -166,7 +158,6 @@
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
-            localStorage.setItem("cityCode", cityCode)
             this.$emit('getInfo', data)
           }
         })
@@ -174,31 +165,22 @@
       reloadList(newId){
         util.request({
           method: 'get',
-          interface: this.$route.name + 'Tree',
+          interface: 'orTree',
           data: {}
         }).then(res => {
           this.treeData = res.result.result
-          var tree = {}
-          if (!this.addData) {
-            var arrs = this.activeName.split('-')
-            tree = {
-              index1: Number(arrs[0]),
-              index2: Number(arrs[1])
-            }
-          } else {
-            tree = {
-              index1: this.addData.index1,
-              index2: this.addData.index2
-            }
+          var tree = {
+            index1: this.addData.index1,
+            index2: this.addData.index2
           }
 
           this.addData = ''
 
-          var arrData = this.treeData[tree.index1].children[tree.index2]
+          var arrData = this.treeData[tree.index1].childNodes[tree.index2]
 
           this.openeds = [String(tree.index1), tree.index1 + '-' + tree.index2]
-          for(var i = 0, len = arrData.children.length; i < len; i++) {
-            if (arrData.children[i].nodeCode == newId) {
+          for(var i = 0, len = arrData.childNodes.length; i < len; i++) {
+            if (arrData.childNodes[i].productCode == newId) {
               setTimeout(() => {
                 this.activeName = tree.index1 + '-' + tree.index2 + '-' + i
               }, 0)
@@ -211,25 +193,19 @@
           }
           // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
           localStorage.setItem("id", newId)
-          localStorage.setItem("dirCode", arrData.nodeCode)
-          localStorage.setItem("cityCode", this.treeData[tree.index1].nodeCode)
+          localStorage.setItem("dirCode", arrData.dictKeyCode)
           this.$emit('getInfo', formData)
         })
-      },
-      filterData (datas) {
-        var opDatas = datas.concat([])
-        opDatas = opDatas.filter((item1, index1) => {
-          return item1.children && item1.children.length
-        })
-
-        return opDatas
       },
       setData (item1, item2, index1, index2) {
         this.addData = {
           index1: index1,
           index2: index2
         }
-        this.addItemIndex = index2
+
+        this.addFormOne.type = item2.dictKeyCode
+        this.addFormOne.city = item1.dictKeyCode
+
         this.isAddTreeTwo = true
       },
       confirmAdd () {
@@ -251,7 +227,8 @@
         var formData = {
             productCame: this.addFormOne.title,
             productIpoSite: this.addFormOne.city,
-            productMarketCode: this.addFormOne.code
+            productMarketCode: this.addFormOne.code,
+            productType: this.addFormOne.type
         }
 
         util.request({
@@ -259,69 +236,13 @@
             interface: 'saveOrUpdate',
             data: formData
         }).then(res => {
-            // this.$parent.$refs.listBox.reloadList(res.result.result.id)
             if (res.result.success == '1') {
-              this.isAddTreeOne = false
-              // this.reloadList(this.addFormOne.id)
+              this.isAddTreeTwo = false
+              this.addFormOne.id = res.result.result.productCode
+              this.reloadList(this.addFormOne.id)
             } else {
               this.$message.error(res.result.message)
             }
-        })
-      },
-      setDir (item1, index1) {
-        this.clickDir = item1
-        this.isAdd.value = true
-      },
-      saveDir (data) {
-        var formData = {
-          cityCode: this.clickDir.nodeCode,
-          name: data.name
-        }
-
-        util.request({
-          method: 'post',
-          interface: 'saveHousesTrade',
-          data: formData
-        }).then(res => {
-          if (res.result.success == '1') {
-            this.reloadList(localStorage.getItem('id'))
-            this.isAdd.value = false
-          } else {
-            this.$message.error(res.result.message)
-          }
-        })
-      },
-      deleteDir (item1, item2) {
-        this.clickDir = item2
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.delDir(item2.nodeCode)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-      },
-      delDir (id) {
-        var formData = {
-          code: id
-        }
-
-        util.request({
-          method: 'get',
-          interface: 'deleteHousesTrade',
-          data: formData
-        }).then(res => {
-          if (res.result.success == '1') {
-            this.reloadList(localStorage.getItem('id'))
-            this.isAdd.value = false
-          } else {
-            this.$message.error(res.result.message)
-          }
         })
       },
       delItem (id) {
@@ -338,7 +259,7 @@
           })
         })
       },
-      getInfo (id, cityCode, index1, index2, index3, dirCode) {
+      getInfo (cityCode, dirCode, id, index1, index2, index3) {
         
         var curIndex = index1 + '-' + index2 + '-' + index3
         if (this.activeName === curIndex) {
@@ -351,16 +272,15 @@
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)
         localStorage.setItem("dirCode", dirCode)
-        localStorage.setItem("cityCode", cityCode)
 
         this.$emit('getInfo', data)
       },
       deleteArticleById (id) {
         util.request({
           method: 'post',
-          interface: 'deleteHousesInfo',
+          interface: 'deleteFinanceProductInfo',
           data: {
-            id: id
+            productCode: id
           }
         }).then(res => {
           if (res.result.success == '1') {

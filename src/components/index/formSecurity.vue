@@ -19,7 +19,7 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in propertyTypes"
+                                    v-for="(item, index) in investList"
                                     :key="index"
                                     :label="item.label"
                                     :value="item.nodeCode">
@@ -29,24 +29,26 @@
                     <section class="baseInput rightF">
                         <span>上市地点</span>
                         <el-select class="input-box"
-                                   v-model="base.productIpoSite"
-                                   name="investor"
-                                   placeholder="请选择">
+                               v-model="base.productIpoSite"
+                               name="investor"
+                               :disabled="true"
+                               placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in citys"
+                                    v-for="(item, index) in types.finance_market"
                                     :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
+                                    :label="item.typeName"
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </section>
                     <section class="baseInput">
                         <span>发行时间</span>
-                        <el-input
+                        <el-date-picker
                                 class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.productPublishTime">
-                        </el-input>
+                                v-model="base.productPublishTime"
+                                placeholder="选择日期"
+                                :picker-options="pickerPre">
+                        </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
                         <span>股票代码</span>
@@ -63,75 +65,38 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in citys"
+                                    v-for="(item, index) in productStateList"
                                     :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
+                                    :label="item.label"
+                                    :value="item.code">
                             </el-option>
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
+                        <span>产品类型</span>
+                        <el-select class="input-box"
+                               v-model="base.productType"
+                               name="investor"
+                               :disabled="true"
+                               placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in types.finance_product_type"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </section>
+
+                    <section class="baseInput bigB">
                         <span>产品链接</span>
                         <el-input
                                 class="input-box"
+                                @change="checkWebSite"
                                 placeholder="请输入内容"
                                 v-model="base.productInfoLink">
                         </el-input>
                     </section>
-                    <!-- <section class="baseInput">
-                        <span>关联物业</span>
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择投资顾问">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>占比</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.price"></el-input-number>
-                    </section>
-                    <section class="baseInput">
-                        <span></span>
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择投资顾问">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>占比</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.price"></el-input-number>
-                    </section>
-                    <section class="baseInput">
-                        <span></span>
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择投资顾问">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>占比</span>
-                        <el-input-number class="input-box" size="small" :min="0" v-model="base.price"></el-input-number>
-                    </section> -->
                     <section class="baseInput bigB">
                         <span>公司图片</span>
                         <div class="input-box">
@@ -146,6 +111,7 @@
                         <span>公司简介</span>
                         <div class="input-box">
                             <ueditor
+                                v-if="isBase"
                                 :editor-id="'productDesc' + base.id"
                                 :editor-type="'text'"
                                 :content="base.productDesc"
@@ -160,6 +126,41 @@
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
+            <div class="line-bold"></div>
+            <el-collapse-item class="formStyle" title="产品构成" name="2">
+                <el-button class="add-btn" type="primary" size="small" @click="addHouseRate">新增</el-button>
+
+                <el-table
+                    :data="base.productHouseRate"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                      label="楼盘">
+                      <template scope="scope">
+                        <search-filter :row-data="scope.row"></search-filter>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      label="占比">
+                      <template scope="scope">
+                        <el-input class="table-input-box" type="number" size="small" 
+                                        :min="0" :step="0.01"
+                                        v-model="scope.row.productHouseRate"></el-input>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      label="操作"
+                      width="140">
+                      <template scope="scope">
+                        <el-button @click="deleteRow(scope.row, scope.$index)"
+                                    type="danger" size="small">删除</el-button>
+
+                        <el-button @click="saveRow(scope.row)"
+                                    type="success" size="small">保存</el-button>
+                      </template>
+                    </el-table-column>
+                </el-table>
+            </el-collapse-item>
         </el-collapse>
     </div>
 </template>
@@ -168,6 +169,7 @@
     import upload from '../../components/common/upload'
     import ewmUpload from '../../components/common/ewm-upload'
     import ueditor from '../../components/common/ueditor'
+    import searchFilter from '../../components/common/search-filter'
 
     export default {
         props: ['listInfo', 'articleInfo'],
@@ -183,7 +185,9 @@
                     productState: '',
                     productInfoLink: '',
                     productLogo: '',
-                    productDesc: ''
+                    productDesc: '',
+                    productType: '',
+                    productHouseRate: []
                 },
                 isBase: false,
                 abstractNum: 140,
@@ -193,25 +197,22 @@
                         return time.getTime() >= Date.now()
                     }
                 },
-                citys: [],
-                propertyTypes: [],
+                types: {
+                    finance_market: [],
+                    finance_product_type: []
+                },
+                productStateList: [
+                    {
+                        code: '0',
+                        label: '未上市'
+                    },
+                    {
+                        code: '1',
+                        label: '已上市'
+                    }
+                ],
+                investList: [],
                 timer: null,
-                wxPulic: {
-                    titleName: '微信公众号',
-                    imgUrl: ''
-                },
-                twitter: {
-                    titleName: 'twitter账号',
-                    imgUrl: ''
-                },
-                facebook: {
-                    titleName: 'facebook账号',
-                    imgUrl: ''
-                },
-                wbPulic: {
-                    titleName: '微博账号',
-                    imgUrl: ''
-                }
             }
         },
         mounted () {
@@ -223,7 +224,9 @@
         },
         methods: {
             getAllData () {
+                this.isBase = false
                 this.getBase()
+                this.getTypes()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -232,8 +235,6 @@
                 // this.timer = setInterval(() => {
                 //     this.saveAll()
                 // }, 180000)
-                
-                this.bigImgs = []
             },
             desChange () {
                 this.abstractNum = 140 - this.base.des.length
@@ -243,26 +244,82 @@
                     method: 'get',
                     interface: 'getOrUpdate',
                     data: {
-                        productCode: '1111'
+                        productCode: localStorage.getItem('id')
                     }
                 }).then(res => {
                     if (res.result.success == '0') {
+                        setTimeout(() => {
+                            this.isBase = true
+                        }, 0)
                         this.$message.error(res.result.message)
                         return
                     }
 
-                    // res.result.result.base.id = localStorage.getItem('id')
-                    var base = res.result.result
-
-                    if (!base.benchmark) {
-                        base.benchmark = []
-                    }
-
-                    this.base = Object.assign(this.base, base)
+                    this.base = res.result.result
 
                     setTimeout(() => {
                         this.isBase = true
                     }, 0)
+                })
+            },
+            getTypes () {
+                util.request({
+                    method: 'get',
+                    interface: 'orDic',
+                    data: {}
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.types = res.result.result
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            checkWebSite () {
+                var webSite = this.base.productInfoLink
+                this.base.productInfoLink = webSite.replace(/[\u4e00-\u9fa5]/g,'')
+            },
+            addHouseRate () {
+                var obj = {
+                    id: '',
+                    houseCname: '国贸中心',
+                    financeProductCode: localStorage.getItem('id'),
+                    houseId: '6',
+                    productHouseRate: ''
+                }
+
+                this.base.productHouseRate.push(obj)
+            },
+            deleteRow (row, index) {
+                if (row.id) {
+                    util.request({
+                        method: 'post',
+                        interface: 'deleteFinanceProductHouser',
+                        data: {
+                            id: row.id
+                        }
+                    }).then(res => {
+                        if (res.result.success == '1') {
+                            this.$message({
+                                message: '删除成功！',
+                                type: 'success'
+                            })
+                            this.base.productHouseRate.splice(index, 1)
+                        } else {
+                            this.$message.error(res.result.message)
+                        }
+                    })
+                } else {
+                    this.base.productHouseRate.splice(index, 1)
+                }
+            },
+            saveRow (row) {
+                util.request({
+                    method: 'post',
+                    interface: 'financeProductHouseSave',
+                    data: row
+                }).then(res => {
+                    this.$parent.$refs.listBox.loadList('reload')
                 })
             },
             setContent (data) {
@@ -272,42 +329,40 @@
                 localStorage.setItem("houseColl", this.activeNames)
             },
             changeImg (data) {
-                this.base.housesImg = data.url
+                this.base.productLogo = data.url
+            },
+            formDataDate (str) {
+                var dateStr = new Date(str)
+                var year = dateStr.getFullYear()
+                var monthStr = dateStr.getMonth() + 1
+                var dayStr = dateStr.getDate()
+                var month = monthStr < 10 ? '0' + monthStr : monthStr
+                var day = dayStr < 10 ? '0' + dayStr : dayStr
+                return year + '-' + month + '-' + day
             },
             saveBase () {
-                var formData = {
-                    id: localStorage.getItem("id"),
-                    type: 'base',
-                    data: this.base
-                }
-
-                if (this.base.benchmark.length > 3) {
+                if (!this.base.productCame) {
                     this.$message({
-                        message: '请务必选择3个对标物业！',
+                        message: '证券名称不能为空！',
                         type: 'warning'
                     })
                     return false
                 }
 
+                if (this.base.productPublishTime) {
+                    this.base.productPublishTime = this.formDataDate(this.base.productPublishTime)
+                }
+
                 util.request({
                     method: 'post',
-                    interface: 'houseInfo',
-                    data: formData
+                    interface: 'saveOrUpdate',
+                    data: this.base
                 }).then(res => {
-                    this.$parent.$refs.listBox.reloadList(res.result.result.id)
+                    this.$parent.$refs.listBox.loadList('reload')
                 })
             },
             saveAll () {
                 // this.saveBase()
-            },
-            getTypes () {
-                util.request({
-                    method: 'get',
-                    interface: 'typeMap',
-                    data: {}
-                }).then(res => {
-                    this.types = res.result.result
-                })
             },
             getMalls () {
                 util.request({
@@ -329,7 +384,8 @@
         components: {
             upload,
             ewmUpload,
-            ueditor
+            ueditor,
+            searchFilter
         }
     }
 </script>
@@ -345,6 +401,23 @@
         position: relative;
         width: 640px;
         margin: 0 auto;
+
+        .table-input-box {
+            width: 100%;
+            height: 30px;
+
+            .el-input__inner {
+                height: 30px;
+            }
+        }
+
+        .edui-default .edui-editor {
+            border-color: #bfcbd9;
+        }
+
+        .edui-editor-iframeholder {
+            min-height: 150px;
+        }
 
         .link-btn {
             position: absolute;
@@ -364,7 +437,6 @@
             position: absolute;
             right: 0;
             top: 7px;
-            
         }
 
         .save-btn {

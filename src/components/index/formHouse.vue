@@ -206,7 +206,7 @@
                             </el-option>
                         </el-select>
                     </section>
-                    <section class="baseInput">
+                    <!-- <section class="baseInput">
                         <span>证券类型</span>
                         <el-select class="input-box"
                                     v-model="base.bondType"
@@ -241,7 +241,7 @@
                                 新添类型
                             </router-link>
                         </div>
-                    </section>
+                    </section> -->
                     <section class="baseInput bigB">
                         <span>交通状况</span>
                         <el-input
@@ -719,6 +719,9 @@
                     }
                 }).then(res => {
                     if (res.result.success == '0') {
+                        setTimeout(() => {
+                            this.isBase = true
+                        }, 0)
                         // this.$message.error(res.result.message)
                         return
                     }
@@ -1256,7 +1259,6 @@
             position: absolute;
             right: 0;
             top: 7px;
-            
         }
 
         .save-btn {

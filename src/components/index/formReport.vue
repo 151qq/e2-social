@@ -38,7 +38,7 @@
                 <el-input
                   type="textarea"
                   :rows="4"
-                  :maxlength="70"
+                  :maxlength="200"
                   placeholder="请输入内容"
                   v-model="abstract">
                 </el-input>
@@ -154,7 +154,7 @@ export default {
             isAdd: {
               value: false
             },
-            abstractNum: 70,
+            abstractNum: 200,
             titleNum: 25,
             reportAllList: []
         }
@@ -170,7 +170,7 @@ export default {
     },
     watch: {
       abstract () {
-        this.abstractNum = 70 - this.abstract.length
+        this.abstractNum = 200 - this.abstract.length
       },
       title () {
         this.titleNum = 25 - this.title.length
@@ -207,6 +207,8 @@ export default {
               this.coverImg = resData.html5PageindexImg
               this.createTime = res.result.responsetime.split(' ')[0]
               this.abstract = resData.html5Summary
+
+              this.abstractNum = 200 - this.abstract.length
 
               this.getSelectList()
               this.getReportList()
@@ -268,6 +270,14 @@ export default {
           })
         },
         saveForm () {
+          if (this.abstract.length < 140) {
+            this.$message({
+                message: '报告摘要至少140个字！',
+                type: 'warning'
+            })
+            return false
+          }
+
           var obj = {
             title: this.title,
             investor: this.investor,

@@ -5,52 +5,57 @@
                 <div class="list-group-item"
                         v-for="(item, index) in articleList"
                         :data-id="index"> 
-                    <div class="show-box" v-if="item.type === 'upload'">
-                        <upload 
-                            :path="item.imgUrl"
-                            :num="index" 
-                            :idx="item.id"
-                            :id-name="'edit-img' + index"
-                            :no-save="true"
-                            @delImg="delImg"
-                            @changeImg="changeImg"
-                            @saveImg="saveData('upload', index)"></upload>
-                    </div>
+                    
+                    <template v-if="!isLook">
+                        <div class="show-box" v-if="item.type === 'upload'">
+                            <upload
+                                :path="item.imgUrl"
+                                :num="index" 
+                                :idx="item.id"
+                                :id-name="'edit-img' + index"
+                                :no-save="true"
+                                @delImg="delImg"
+                                @changeImg="changeImg"
+                                @saveImg="saveData('upload', index)"></upload>
+                        </div>
 
-                    <div class="show-box" v-if="item.type === 'text'">
-                        <ueditor :editor-id="'editorText' + index"
-                                    :editor-type="'text'"
-                                    :index="index"
-                                    :content="item.content"
-                                    @setContent="setContent"></ueditor>
-                    </div>
+                        <div class="show-box" v-if="item.type === 'text'">
+                            <ueditor :editor-id="'editorText' + index"
+                                        :editor-type="'text'"
+                                        :index="index"
+                                        :content="item.content"
+                                        @setContent="setContent"></ueditor>
+                        </div>
 
-                    <div class="show-box btn-show" v-if="item.type === 'table'">
-                        <ueditor :editor-id="'editorTable' + index"
-                                    :editor-type="'table'"
-                                    :index="index"
-                                    :content="item.content"
-                                    @setContent="setContent"></ueditor>
-                    </div>
+                        <div class="show-box btn-show" v-if="item.type === 'table'">
+                            <ueditor :editor-id="'editorTable' + index"
+                                        :editor-type="'table'"
+                                        :index="index"
+                                        :content="item.content"
+                                        @setContent="setContent"></ueditor>
+                        </div>
 
-                    <div class="show-box" v-if="item.type === 'map'">
-                        <div v-html="item.content"></div>
-                    </div>
+                        <div class="show-box" v-if="item.type === 'map'">
+                            <div v-html="item.content"></div>
+                        </div>
 
-                    <div class="show-box overflow-box" v-if="item.type === 'title'">
-                        <input v-if="item.style"
-                                type="text"
-                                v-model="item.title"
-                                @blur="titleBlur(item, index)"
-                                :style="item.style"
-                                placeholder="编辑中的内标题样式">
-                        <img v-if="!item.style"
-                                class="img-default"
-                                @click.prevent="setStyle(index, item.style)"
-                                src="../../assets/images/title-default.jpg">
-                    </div>
+                        <div class="show-box overflow-box" v-if="item.type === 'title'">
+                            <input v-if="item.style"
+                                    type="text"
+                                    v-model="item.title"
+                                    @blur="titleBlur(item, index)"
+                                    :style="item.style"
+                                    placeholder="编辑中的内标题样式">
+                            <img v-if="!item.style"
+                                    class="img-default"
+                                    @click.prevent="setStyle(index, item.style)"
+                                    src="../../assets/images/title-default.jpg">
+                        </div>
+                    </template>
 
-                    <section class="btn-show">
+                    <div v-if="isLook" v-html="item.content"></div>
+
+                    <section v-if="!isLook" class="btn-show">
                         <div class="btn-hover">
                             <el-button class="delete-btn" type="danger"
                                     :plain="true" size="small"
@@ -136,12 +141,12 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="选择内标题样式" :visible.sync="isLook">
+        <!-- <el-dialog title="选择内标题样式" :visible.sync="isLook">
             <div class=""
                     v-for="(item, index) in articleList"
                     v-html="item.content">
             </div>
-        </el-dialog>
+        </el-dialog> -->
 
         <search-map :is-add="isMapBox" :map-data="mapData" ref="searchMap" @setMap="setMap"></search-map>
     </section>
@@ -489,7 +494,7 @@ export default {
                     this.selectStyle(0)
                     break
                 case 'look':
-                    this.isLook = true
+                    this.isLook = !this.isLook
                     break
             }
         },
