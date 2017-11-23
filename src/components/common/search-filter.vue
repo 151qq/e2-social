@@ -8,9 +8,10 @@
       >
     </el-input>
     <div class="mess-box" v-show="isShow">
-      <a  v-if="messDate.length"
-          v-for="item in messDate" class="nav-r"
-          @click="setHousesId(item)">{{ item.housesDesc }}</a>
+      <template v-if="messDate.length">
+        <a  v-for="item in messDate" class="nav-r"
+            @click="setHousesId(item)">{{ item.housesDesc }}</a>
+      </template>
 
       <span v-else class="null-house">
         暂无相关楼盘！
@@ -72,13 +73,16 @@ export default {
     setHousesId (house) {
       this.rowData.houseId = house.housesId
       this.rowData.houseCname = house.housesDesc
+      this.keyValue = house.housesDesc
+
+      console.log(this.keyValue, house, this.rowData)
     },
     getMess () {
       if (this.isFirst) {
         return
       }
 
-      this.rowData.housesId = ''
+      this.rowData.houseId = ''
       this.rowData.houseCname = ''
 
       if (this.keyValue === '') {
@@ -109,7 +113,7 @@ export default {
     .mess-box {
       position: absolute;
       left: 0;
-      top: 30px;
+      bottom: 30px;
       width: 100%;
       box-sizing: border-box;
       padding: 15px 0;
@@ -132,6 +136,7 @@ export default {
       }
 
       .null-house {
+        display: block;
         font-size: 14px;
         color: #999999;
         line-height: 60px;

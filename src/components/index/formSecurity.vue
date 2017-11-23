@@ -21,8 +21,8 @@
                             <el-option
                                     v-for="(item, index) in investList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.nodeCode">
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -201,6 +201,7 @@
                     finance_market: [],
                     finance_product_type: []
                 },
+                investList: [],
                 productStateList: [
                     {
                         code: '0',
@@ -211,8 +212,7 @@
                         label: '已上市'
                     }
                 ],
-                investList: [],
-                timer: null,
+                timer: null
             }
         },
         mounted () {
@@ -220,13 +220,14 @@
             if (houseColl) {
                 this.activeNames = houseColl.split(',')
             }
-            document.title = '投资机构'
+            document.title = '证券产品'
+            this.getTypes()
+            this.getInvests()
         },
         methods: {
             getAllData () {
                 this.isBase = false
                 this.getBase()
-                this.getTypes()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -282,9 +283,9 @@
             addHouseRate () {
                 var obj = {
                     id: '',
-                    houseCname: '国贸中心',
+                    houseCname: '',
                     financeProductCode: localStorage.getItem('id'),
-                    houseId: '6',
+                    houseId: '',
                     productHouseRate: ''
                 }
 
@@ -314,6 +315,22 @@
                 }
             },
             saveRow (row) {
+                if (!row.houseCname) {
+                    this.$message({
+                        message: '楼盘不能为空！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!row.productHouseRate) {
+                    this.$message({
+                        message: '占比不能为空！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
                 util.request({
                     method: 'post',
                     interface: 'financeProductHouseSave',
@@ -364,15 +381,15 @@
             saveAll () {
                 // this.saveBase()
             },
-            getMalls () {
+            getInvests () {
                 util.request({
-                    method: 'post',
-                    interface: 'malls',
+                    method: 'get',
+                    interface: 'findEntByEntType',
                     data: {
-                        city: this.base.city
+                        enterpriseTypes: 'finance_org_type_8,finance_org_type_7'
                     }
                 }).then(res => {
-                    this.malls = res.result.result
+                    this.investList = res.result.result
                 })
             }
         },
@@ -401,6 +418,14 @@
         position: relative;
         width: 640px;
         margin: 0 auto;
+
+        .el-table, .el-table .cell, .el-table__footer-wrapper {
+            overflow: visible;
+        }
+
+        .el-table__body-wrapper, .el-table__header-wrapper {
+            overflow: visible;
+        }
 
         .table-input-box {
             width: 100%;

@@ -256,6 +256,7 @@ export default {
         getInvestBase: platform + 'enterprise/showEnterpriseInfo.json',
         removeBase: platform + 'enterprise/removeEnterpriseInfo.json',
         investTypes: platform + 'enterprise/disOfEnterpriseInfo.json',
+        findEntByEntType: platform + 'enterprise/findEntByEntType.json',
 
         orTree: platform + 'financeProductInfo/productTree.json',
         saveOrUpdate: platform + 'financeProductInfo/saveOrUpdate.json',
