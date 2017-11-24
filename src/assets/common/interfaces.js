@@ -140,6 +140,7 @@ export default {
         */
         changes: platform +'houses/findHousesTrade.json',
         deleteTradeHistory: platform + 'houses/deleteTradeHistory.json',
+        getTradeHistoryById: platform + 'houses/findTenantRecordById.json',
 
         deleteRentHistory: platform + 'houses/deleteRentHistory.json',
         evalues: platform +'houses/findValuationHistory.json',

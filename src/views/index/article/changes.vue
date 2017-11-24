@@ -261,19 +261,36 @@ export default {
             })
         },
         showModel (row) {
-            this.dialogFormVisible = true
-            this.curentData = Object.assign({}, row)
-            if (this.curentData.tenantFinanceTool) {
-                this.curentData.tenantFinanceTool = this.curentData.tenantFinanceTool.split(',')
-            } else {
-                this.curentData.tenantFinanceTool = []
-            }
+            util.request({
+                method: 'get',
+                interface: 'getTradeHistoryById',
+                data: {
+                    id: row.id
+                }
+            }).then(res => {
+                if (res.result.success == "1") {
+                    var result = res.result.result
+                    result.dateString = result.date.split(' ')[0]
 
-            if (this.curentData.evalCodes) {
-                this.curentData.evalCodes = this.curentData.evalCodes.split(',')
-            } else {
-                this.curentData.evalCodes = []
-            }
+                    if (result.tenantFinanceTool) {
+                        result.tenantFinanceTool = result.tenantFinanceTool.split(',')
+                    } else {
+                        result.tenantFinanceTool = []
+                    }
+
+                    if (result.evalCodes) {
+                        result.evalCodes = result.evalCodes.split(',')
+                    } else {
+                        result.evalCodes = []
+                    }
+
+                    this.curentData = result
+                    this.dialogFormVisible = true
+
+                } else {
+                    this.$message.error(res.result.message)
+                }
+            })
         },
         formDataDate (str) {
             var dateStr = new Date(str)
@@ -328,13 +345,15 @@ export default {
                 interface: 'houseInfo',
                 data: formData
             }).then(res => {
-                if (res.result.success) {
+                if (res.result.success == "1") {
                     this.getChanges()
                     this.dialogFormVisible = false
                     this.$message({
                         message: '恭喜，修改成功',
                         type: 'success'
                     })
+                } else {
+                    this.$message.error(res.result.message)
                 }
             })
         }
