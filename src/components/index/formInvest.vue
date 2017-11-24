@@ -183,7 +183,7 @@
                                 :width="'160px'"></ewm-upload>
                 </section>
             </el-collapse-item>
-            <template>
+            <template v-if="isQYBG">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="企业报告员" name="3">
                     <span class="link-btn">新增</span>
@@ -218,6 +218,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isBGGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="报告管理员" name="4">
                     <span class="link-btn">新增</span>
@@ -252,6 +254,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isSQGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="商圈管理员" name="5">
                     <span class="link-btn">新增</span>
@@ -286,6 +290,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isLPFB">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="楼盘发布员" name="6">
                     <span class="link-btn">新增</span>
@@ -320,6 +326,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isLPGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="楼盘管理员" name="7">
                     <span class="link-btn">新增</span>
@@ -354,6 +362,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isWYTZ">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业投资顾问" name="8">
                     <span class="link-btn">新增</span>
@@ -388,6 +398,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isTZJG">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="投资机构发布员" name="9">
                     <span class="link-btn">新增</span>
@@ -422,6 +434,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isTZGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="投资机构管理员" name="10">
                     <span class="link-btn">新增</span>
@@ -456,6 +470,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isZQCP">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="证券产品发布员" name="11">
                     <span class="link-btn">新增</span>
@@ -490,6 +506,8 @@
                         </div>                  
                     </div>
                 </el-collapse-item>
+            </template>
+            <template v-if="isZQGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="证券产品管理员" name="12">
                     <span class="link-btn">新增</span>
@@ -542,7 +560,6 @@
                     id: '',
                     enterpriseCname: '',
                     enterpriseCode: '',
-                    enterpriseCode: '',
                     enterpriseRegDate: '',
                     enterpriseType: '',
                     enterpriseLevel: '',
@@ -587,6 +604,68 @@
 
             this.getTypes()
             this.getCitys()
+        },
+        computed: {
+            // 企业报告
+            isQYBG () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                return type && arr.indexOf(type) > -1
+            },
+            // 报告管理
+            isBGGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                return type && arr.indexOf(type) > -1
+            },
+            // 商圈管理
+            isSQGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0']
+                return type && arr.indexOf(type) > -1
+            },
+            // 楼盘发布
+            isLPFB () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0']
+                return type && arr.indexOf(type) > -1
+            },
+            // 楼盘管理
+            isLPGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0']
+                return type && arr.indexOf(type) > -1
+            },
+            // 物业投资顾问
+            isWYTZ () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0']
+                return type && arr.indexOf(type) > -1
+            },
+            // 投资机构发布
+            isTZJG () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_4']
+                return type && arr.indexOf(type) == -1
+            },
+            // 投资机构管理
+            isTZGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_4']
+                return type && arr.indexOf(type) == -1
+            },
+            // 证券发布
+            isZQCP () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0', 'finance_org_type_7']
+                return type && arr.indexOf(type) > -1
+            },
+            // 证券管理
+            isZQGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0', 'finance_org_type_7']
+                return type && arr.indexOf(type) > -1
+            }
         },
         methods: {
             wxPulicImg (data) {

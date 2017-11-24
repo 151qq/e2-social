@@ -9,7 +9,7 @@
     <el-menu :default-active="activeName" :default-openeds="openeds" class="el-menu-vertical-demo">
       <el-submenu class="two-box" v-for="(item1, index1) in treeData" :index="index1 + ''">
         <template slot="title">
-          {{item1.dictTypeCname}}
+          {{item1.dictKeyValue}}
 
           <span @click.stop="setData(item1, index1)" class="add-box">
           +
