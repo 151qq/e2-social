@@ -5,7 +5,7 @@
                 <div class="form-box">
                     <div class="clear"></div>
                     <section class="baseInput bigB">
-                        <span>投资机构名称</span>
+                        <span>机构名称</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -13,7 +13,24 @@
                         </el-input>
                     </section>
                     <section class="baseInput">
-                        <span>投资机构法人</span>
+                        <span>机构简称</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容,最多10个字"
+                                v-model="base.enterpriseNameReg">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>公司官网</span>
+                        <el-input
+                                class="input-box"
+                                @change="checkWebSite"
+                                placeholder="请输入内容"
+                                v-model="base.enterpriseWebLink">
+                        </el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>机构法人</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -32,7 +49,7 @@
                         <span>成立时间</span>
                         <el-date-picker
                                 class="input-box"
-                                v-model="base.enterpriseRegDate"
+                                v-model="base.enterpriseOpenTime"
                                 placeholder="选择日期"
                                 :picker-options="pickerPre">
                         </el-date-picker>
@@ -40,11 +57,11 @@
                     <section class="baseInput rightF">
                         <span>企业类型</span>
                         <el-select class="input-box"
-                                   v-model="base.enterpriseType"
+                                   v-model="base.enterpriseIndustry"
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in types.finance_org_type"
+                                    v-for="(item, index) in types[typeKey]"
                                     :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
@@ -101,7 +118,6 @@
                         <el-select class="input-box"
                                    v-model="base.enterpriseStockSite"
                                    name="investor"
-                                   :disabled="true"
                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in types.finance_market"
@@ -117,15 +133,6 @@
                                 class="input-box"
                                 placeholder="请输入内容"
                                 v-model="base.enterpriseStockCode">
-                        </el-input>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>公司官网</span>
-                        <el-input
-                                class="input-box"
-                                @change="checkWebSite"
-                                placeholder="请输入内容"
-                                v-model="base.enterpriseWebLink">
                         </el-input>
                     </section>
                     <section class="baseInput bigB">
@@ -159,29 +166,38 @@
             <el-collapse-item class="formStyle" title="公共账号" name="2">
                 <section class="upload-list-box">
                     <ewm-upload :path="base.enterpriseEntprisewechatQrcode"
-                                :title-name="'微信公众号'"
+                                :title-name="base.enterprisePubwechatAccount"
+                                :place-holder="'请输入微信公众号'"
                                 :id-name="'wxPulic'"
                                 @changeImg='wxPulicImg'
                                 :width="'160px'"></ewm-upload>
 
                     <ewm-upload :path="base.enterpriseTwitterQrcode"
-                                :title-name="'twitter账号'"
+                                :title-name="base.enterpriseTwitterAccount"
+                                :place-holder="'请输入twitter账号'"
                                 :id-name="'twitterName'"
                                 @changeImg='twitterImg'
                                 :width="'160px'"></ewm-upload>
 
                     <ewm-upload :path="base.enterpriseFacebookQrcode"
-                                :title-name="'facebook账号'"
+                                :title-name="base.enterpriseFacebookAccount"
+                                :place-holder="'请输入facebook账号'"
                                 :id-name="'facebookName'"
                                 @changeImg='facebookImg'
                                 :width="'160px'"></ewm-upload>
 
                     <ewm-upload :path="base.enterpriseSinamicroblogQrcode"
-                                :title-name="'微博账号'"
+                                :title-name="base.enterpriseSinamicorblogAccount"
+                                :place-holder="'请输入微博账号'"
                                 :id-name="'wbName'"
                                 @changeImg='wbImg'
                                 :width="'160px'"></ewm-upload>
                 </section>
+                
+                <div class="clear"></div>
+                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                           @click="saveBase">保存</el-button>
+                <div class="clear"></div>
             </el-collapse-item>
             <template v-if="isQYBG">
                 <div class="line-bold"></div>
@@ -559,8 +575,9 @@
                 base: {
                     id: '',
                     enterpriseCname: '',
+                    enterpriseNameReg: '',
                     enterpriseCode: '',
-                    enterpriseRegDate: '',
+                    enterpriseOpenTime: '',
                     enterpriseType: '',
                     enterpriseLevel: '',
                     enterpriseRegPlace: '',
@@ -572,10 +589,15 @@
                     enterpriseWebLink: '',
                     enterpriseLogoUrl: '',
                     enterpriseDesc: '',
+                    enterpriseIndustry: '',
                     enterpriseEntprisewechatQrcode: '',
                     enterpriseTwitterQrcode: '',
                     enterpriseFacebookQrcode: '',
-                    enterpriseSinamicroblogQrcode: ''
+                    enterpriseSinamicroblogQrcode: '',
+                    enterprisePubwechatAccount: '',
+                    enterpriseFacebookAccount: '',
+                    enterprisePubwechatAccount: '',
+                    enterpriseSinamicorblogAccount: ''
                 },
                 isBase: false,
                 activeNames: ['1'],
@@ -592,7 +614,13 @@
                     finance_org_type: [],
                     finance_market: []
                 },
-                timer: null
+                timer: null,
+                typeData: {
+                    finance_org_type_0: '',
+                    finance_org_type_1: 'propertys_investmen_type',
+                    finance_org_type_2: 'propertys_agent_type'
+                },
+                typeKey: ''
             }
         },
         mounted () {
@@ -670,21 +698,22 @@
         methods: {
             wxPulicImg (data) {
                 this.base.enterpriseEntprisewechatQrcode = data.url
-                this.saveBase()
+                this.base.enterprisePubwechatAccount = data.title
             },
             twitterImg (data) {
                 this.base.enterpriseTwitterQrcode = data.url
-                this.saveBase()
+                this.base.enterpriseTwitterAccount = data.title
             },
             facebookImg (data) {
                 this.base.enterpriseFacebookQrcode = data.url
-                this.saveBase()
-            },
+                this.base.enterpriseFacebookAccount = data.title
+           },
             wbImg (data) {
                 this.base.enterpriseSinamicroblogQrcode = data.url
-                this.saveBase()
+                this.base.enterpriseSinamicorblogAccount = data.title
             },
             getAllData () {
+                this.typeKey = this.typeData[localStorage.getItem('dirCode')]
                 this.isBase = false
                 this.getBase()
 
@@ -756,8 +785,6 @@
                 })
             },
             cityChange () {
-                console.log(this.cityData, this.base.enterpriseLogisticCity, this.postList)
-
                 for (var i = 0, len = this.cityData.length; i < len; i++) {
                     if (this.cityData[i] == this.base.enterpriseLogisticCity) {
                         this.base.enterpriseLogisticZipcode = this.postList[i]
@@ -788,8 +815,16 @@
                 return year + '-' + month + '-' + day
             },
             saveBase () {
-                if (this.base.enterpriseRegDate) {
-                    this.base.enterpriseRegDate = this.formDataDate(this.base.enterpriseRegDate)
+                if (this.base.enterpriseNameReg.length > 10) {
+                    this.$message({
+                        message: '机构简称最多10个字！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.base.enterpriseOpenTime) {
+                    this.base.enterpriseOpenTime = this.formDataDate(this.base.enterpriseOpenTime)
                 }
                 
                 util.request({

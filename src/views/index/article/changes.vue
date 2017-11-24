@@ -12,6 +12,9 @@
                   <el-form-item label="评估机构：">
                     <span>{{ props.row.evalCodes }}</span>
                   </el-form-item>
+                  <el-form-item label="咨询机构：">
+                    <span>{{ props.row.tenantFinanceTool }}</span>
+                  </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
@@ -25,15 +28,13 @@
             </el-table-column>
             <el-table-column
                     prop="changeA"
+                    width="240"
                     label="交易甲方">
             </el-table-column>
             <el-table-column
                     prop="changeB"
+                    width="240"
                     label="交易乙方">
-            </el-table-column>
-            <el-table-column
-                    prop="tenantFinanceTool"
-                    label="金融工具">
             </el-table-column>
             <el-table-column
                     prop="recordCreater"
@@ -73,16 +74,60 @@
                                     :min="0" :step="0.01" v-model="curentData.price"></el-input>
                 </el-form-item>
                 <el-form-item label="交易甲方">
-                    <el-input class="input-box" v-model="curentData.changeA"></el-input>
+                    <el-select class="input-box"
+                               v-model="curentData.changeA"
+                               name="changeA"
+                               placeholder="请选择">
+                        <el-option
+                                v-if="item.enterpriseCode != curentData.changeB"
+                                v-for="(item, index) in investList"
+                                :key="index"
+                                :label="item.enterpriseCname"
+                                :value="item.enterpriseCode">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="交易乙方">
-                    <el-input class="input-box" v-model="curentData.changeB"></el-input>
+                    <el-select class="input-box"
+                               v-model="curentData.changeB"
+                               name="changeB"
+                               placeholder="请选择">
+                        <el-option
+                                v-if="item.enterpriseCode != curentData.changeA"
+                                v-for="(item, index) in investList"
+                                :key="index"
+                                :label="item.enterpriseCname"
+                                :value="item.enterpriseCode">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="评估机构">
-                    <el-input class="input-box" v-model="curentData.evalCodes"></el-input>
+                    <el-select class="input-box"
+                               v-model="curentData.evalCodes"
+                               name="evalCodes"
+                               multiple
+                               placeholder="请选择">
+                        <el-option
+                                v-for="(item, index) in agentAList"
+                                :key="index"
+                                :label="item.enterpriseCname"
+                                :value="item.enterpriseCode">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="金融工具">
-                    <el-input class="input-box" v-model="curentData.tenantFinanceTool"></el-input>
+                <el-form-item label="咨询机构">
+                    <el-select class="input-box"
+                               v-model="curentData.tenantFinanceTool"
+                               name="tenantFinanceTool"
+                               multiple
+                               placeholder="请选择">
+                        <el-option
+                                v-for="(item, index) in agentBList"
+                                :key="index"
+                                :label="item.enterpriseCname"
+                                :value="item.enterpriseCode">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="交易备注">
                     <el-input
@@ -120,18 +165,24 @@ export default {
                 changeA: '',
                 changeB: '',
                 tenantDesc: '',
-                tenantFinanceTool: '',
-                evalCodes: ''
+                tenantFinanceTool: [],
+                evalCodes: []
             },
             pickerPre: {
                 disabledDate(time) {
                     return time.getTime() > Date.now()
                 }
-            }
+            },
+            investList: [],
+            agentAList: [],
+            agentBList: []
         }
     },
     mounted () {
         this.getChanges()
+        this.getInvests()
+        this.getAgentA()
+        this.getAgentB()
         document.title = '交易历史明细'
     },
     methods: {
@@ -150,6 +201,39 @@ export default {
                 })
                 this.changes = res.result.result.changes
                 this.total = this.total ? Number(this.total) : 0
+            })
+        },
+        getInvests () {
+            util.request({
+                method: 'get',
+                interface: 'findEntByEntType',
+                data: {
+                    enterpriseTypes: 'finance_org_type_1'
+                }
+            }).then(res => {
+                this.investList = res.result.result
+            })
+        },
+        getAgentA () {
+            util.request({
+                method: 'get',
+                interface: 'findEntByEntType',
+                data: {
+                    enterpriseTypes: 'propertys_agent_type_3'
+                }
+            }).then(res => {
+                this.agentAList = res.result.result
+            })
+        },
+        getAgentB () {
+            util.request({
+                method: 'get',
+                interface: 'findEntByEntType',
+                data: {
+                    enterpriseTypes: 'propertys_agent_type_1'
+                }
+            }).then(res => {
+                this.agentBList = res.result.result
             })
         },
         pageChange (page) {
@@ -179,6 +263,17 @@ export default {
         showModel (row) {
             this.dialogFormVisible = true
             this.curentData = Object.assign({}, row)
+            if (this.curentData.tenantFinanceTool) {
+                this.curentData.tenantFinanceTool = this.curentData.tenantFinanceTool.split(',')
+            } else {
+                this.curentData.tenantFinanceTool = []
+            }
+
+            if (this.curentData.evalCodes) {
+                this.curentData.evalCodes = this.curentData.evalCodes.split(',')
+            } else {
+                this.curentData.evalCodes = []
+            }
         },
         formDataDate (str) {
             var dateStr = new Date(str)
@@ -215,20 +310,18 @@ export default {
                 })
                 return false
             }
-            if (this.curentData.changeA == '') {
+
+            if (this.curentData.changeA == '' && this.curentData.changeB == '') {
                 this.$message({
-                    message: '请务填写交易甲方！',
+                    message: '请务填写交易方！',
                     type: 'warning'
                 })
                 return false
             }
-            if (this.curentData.changeB == '') {
-                this.$message({
-                    message: '请务填写交易乙方！',
-                    type: 'warning'
-                })
-                return false
-            }
+
+            this.curentData.evalCodes = this.curentData.evalCodes.join(',')
+
+            this.curentData.tenantFinanceTool = this.curentData.tenantFinanceTool.join(',')
 
             util.request({
                 method: 'post',

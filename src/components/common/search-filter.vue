@@ -30,8 +30,7 @@ export default {
       isShow: false,
       keyValue: '',
       messDate: [],
-      count: 0,
-      isFirst: true
+      count: 0
     }
   },
   created () {
@@ -40,10 +39,12 @@ export default {
       _self.isShow = false
     })
 
-    setTimeout(() => {
+    this.keyValue = this.rowData.houseCname
+  },
+  watch: {
+    rowData () {
       this.keyValue = this.rowData.houseCname
-      this.isFirst = false
-    }, 300)
+    }
   },
   methods: {
     // 获取搜索数据
@@ -74,14 +75,8 @@ export default {
       this.rowData.houseId = house.housesId
       this.rowData.houseCname = house.housesDesc
       this.keyValue = house.housesDesc
-
-      console.log(this.keyValue, house, this.rowData)
     },
     getMess () {
-      if (this.isFirst) {
-        return
-      }
-
       this.rowData.houseId = ''
       this.rowData.houseCname = ''
 
@@ -113,7 +108,7 @@ export default {
     .mess-box {
       position: absolute;
       left: 0;
-      bottom: 30px;
+      top: 30px;
       width: 100%;
       box-sizing: border-box;
       padding: 15px 0;

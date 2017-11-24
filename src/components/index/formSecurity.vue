@@ -51,7 +51,7 @@
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
-                        <span>股票代码</span>
+                        <span>证券代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -98,7 +98,7 @@
                         </el-input>
                     </section>
                     <section class="baseInput bigB">
-                        <span>公司图片</span>
+                        <span>证券图片</span>
                         <div class="input-box">
                             <upload :path="base.productLogo"
                                     :no-del="true"
@@ -108,7 +108,7 @@
                     </section>
 
                     <section class="baseInput bigB">
-                        <span>公司简介</span>
+                        <span>证券说明</span>
                         <div class="input-box">
                             <ueditor
                                 v-if="isBase"
@@ -135,33 +135,41 @@
                     border
                     style="width: 100%">
                     <el-table-column
+                      prop="houseCname"
                       label="楼盘">
-                      <template scope="scope">
-                        <search-filter :row-data="scope.row"></search-filter>
-                      </template>
                     </el-table-column>
                     <el-table-column
-                      label="占比">
-                      <template scope="scope">
-                        <el-input class="table-input-box" type="number" size="small" 
-                                        :min="0" :step="0.01"
-                                        v-model="scope.row.productHouseRate"></el-input>
-                      </template>
+                      prop="productHouseRate"
+                      label="占比(%)">
                     </el-table-column>
                     <el-table-column
                       label="操作"
-                      width="140">
+                      width="80">
                       <template scope="scope">
                         <el-button @click="deleteRow(scope.row, scope.$index)"
                                     type="danger" size="small">删除</el-button>
-
-                        <el-button @click="saveRow(scope.row)"
-                                    type="success" size="small">保存</el-button>
                       </template>
                     </el-table-column>
                 </el-table>
             </el-collapse-item>
         </el-collapse>
+
+        <el-dialog title="添加产品构成" :visible.sync="addHouse">
+            <el-form :label-position="'left'">
+                <el-form-item label="物业" :label-width="'80px'">
+                  <search-filter :row-data="nowHouseData"></search-filter>
+                </el-form-item>
+                <el-form-item label="占比(%)" :label-width="'80px'">
+                  <el-input class="table-input-box" type="number" size="small" 
+                                        :min="0" :step="0.01"
+                                        v-model="nowHouseData.productHouseRate"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addHouse = false">取 消</el-button>
+                <el-button type="primary" @click="saveRow(nowHouseData)">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -212,7 +220,9 @@
                         label: '已上市'
                     }
                 ],
-                timer: null
+                timer: null,
+                addHouse: false,
+                nowHouseData: {}
             }
         },
         mounted () {
@@ -289,7 +299,8 @@
                     productHouseRate: ''
                 }
 
-                this.base.productHouseRate.push(obj)
+                this.nowHouseData = obj
+                this.addHouse = true
             },
             deleteRow (row, index) {
                 if (row.id) {
@@ -337,6 +348,8 @@
                     data: row
                 }).then(res => {
                     this.$parent.$refs.listBox.loadList('reload')
+                    this.base.productHouseRate.push(Object.assign(this.nowHouseData))
+                    this.addHouse = false
                 })
             },
             setContent (data) {
@@ -386,7 +399,7 @@
                     method: 'get',
                     interface: 'findEntByEntType',
                     data: {
-                        enterpriseTypes: 'finance_org_type_8,finance_org_type_7'
+                        enterpriseTypes: 'propertys_investmen_type_1,propertys_investmen_type_2'
                     }
                 }).then(res => {
                     this.investList = res.result.result
@@ -409,6 +422,10 @@
 <style lang="scss">
 .form-invest {
     margin-top: 30px;
+
+    .el-dialog--small {
+        width: 400px;
+    }
 
     .upload-list-box {
         width: 110%;

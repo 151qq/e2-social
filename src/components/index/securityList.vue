@@ -144,7 +144,6 @@
           this.treeData = res.result.result
 
           if (type) {
-            this.$emit('getInfo')
             return false
           }
 

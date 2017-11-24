@@ -56,44 +56,7 @@
       return {
         isfirst: true,
         filterText: '',
-        treeData: [
-          {
-            nodeCode: 0,
-            label: '第一企业证券',
-            children: [
-              {
-                nodeCode: 1,
-                label: '第二企业证券',
-                imgUrl: '/static/images/bench1.png'
-              },
-              {
-                nodeCode: 1,
-                label: '第二企业证券',
-                imgUrl: '/static/images/bench1.png'
-              }
-            ]
-          },
-          {
-            nodeCode: 1,
-            label: '第二企业证券',
-            children: [
-              {
-                nodeCode: 1,
-                label: '第二企业证券',
-                imgUrl: '/static/images/bench1.png'
-              },
-              {
-                nodeCode: 1,
-                label: '第二企业证券',
-                imgUrl: '/static/images/bench1.png'
-              }
-            ]
-          }
-        ],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
+        treeData: [],
         activeName: '0-0',
         openeds: ['0'],
         isAddTreeOne: false,
@@ -157,7 +120,7 @@
 
           if (this.treeData[0].childNodes.length) {
             let id = this.treeData[0].childNodes[0].enterpriseCode
-            let dirCode = this.treeData[0].dictTypeCode
+            let dirCode = this.treeData[0].dictKeyCode
 
             let data = {
               id: id

@@ -38,21 +38,7 @@
                             </el-option>
                         </el-select>
                     </section>
-                    <section class="baseInput">
-                        <span>投资顾问</span>
-                        <el-select class="input-box"
-                                   v-model="base.investor"
-                                   name="investor"
-                                   placeholder="请选择投资顾问">
-                            <el-option
-                                    v-for="(item, index) in investors"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput switch-box rightF">
+                    <section class="baseInput switch-box">
                         <span>星标</span>
                         <el-switch
                             v-model="base.star"
@@ -60,21 +46,6 @@
                             on-value="1"
                             off-value="0">
                         </el-switch>
-                    </section>
-                    <section class="baseInput">
-                        <span>物业类型</span>
-                        <el-select class="input-box"
-                                    v-model="base.logisticsType"
-                                    name="type"
-                                    :disabled="true"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.propertys"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
                     </section>
                     <section class="baseInput rightF">
                         <span>楼盘等级</span>
@@ -109,20 +80,42 @@
                                     :min="0" :step="0.01" v-model="base.ratio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>业主信息</span>
+                        <span>网站地址</span>
                         <el-input
                                 class="input-box"
+                                @change="checkWebSite"
                                 placeholder="请输入内容"
-                                v-model="base.owner">
+                                v-model="base.webSite">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>物业信息</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.property">
-                        </el-input>
+                        <el-select class="input-box"
+                                    v-model="base.property"
+                                    name="property"
+                                    placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in housesList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>业主信息</span>
+                        <el-select class="input-box"
+                                   v-model="base.owner"
+                                   multiple
+                                   name="owner"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in investList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput bigB">
                         <span>现在租户</span>
@@ -255,15 +248,6 @@
                         <div class="abstract-num">剩余<span>{{trafficNum}}</span>个字</div>
                     </section>
                     <section class="baseInput bigB">
-                        <span>网站地址</span>
-                        <el-input
-                                class="input-box"
-                                @change="checkWebSite"
-                                placeholder="请输入内容"
-                                v-model="base.webSite">
-                        </el-input>
-                    </section>
-                    <section class="baseInput bigB">
                         <span>对标物业</span>
                         <div class="input-box">
                             <el-select
@@ -345,35 +329,63 @@
                     </section>
                     <section class="baseInput">
                         <span>交易甲方</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="changes.changeA">
-                        </el-input>
+                        <el-select class="input-box"
+                                   v-model="changes.changeA"
+                                   name="changeA"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-if="item.enterpriseCode != changes.changeB"
+                                    v-for="(item, index) in investList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput rightF">
                         <span>交易乙方</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="changes.changeB">
-                        </el-input>
+                        <el-select class="input-box"
+                                    v-model="changes.changeB"
+                                    name="changeB"
+                                    placeholder="请选择">
+                            <el-option
+                                    v-if="item.enterpriseCode != changes.changeA"
+                                    v-for="(item, index) in investList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput bigB">
                         <span>评估机构</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="changes.evalCodes">
-                        </el-input>
+                        <el-select class="input-box"
+                                   v-model="changes.evalCodes"
+                                   name="evalCodes"
+                                   multiple
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentAList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput bigB">
-                        <span>金融工具</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="changes.tenantFinanceTool">
-                        </el-input>
+                        <span>咨询机构</span>
+                        <el-select class="input-box"
+                                    name="tenantFinanceTool"
+                                    v-model="changes.tenantFinanceTool"
+                                    multiple
+                                    placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentBList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput bigB">
                         <span>交易备注</span>
@@ -548,7 +560,7 @@
                     year: 0,
                     ratio: 0,
                     star: '0',
-                    owner: '',
+                    owner: [],
                     property: '',
                     rent: '',
                     area: '',
@@ -590,8 +602,8 @@
                     changeA: '',
                     changeB: '',
                     tenantDesc: '',
-                    tenantFinanceTool: '',
-                    evalCodes: ''
+                    tenantFinanceTool: [],
+                    evalCodes: []
                 },
                 rents: {
                     id: '',
@@ -649,7 +661,11 @@
                     pointer: {}
                 },
                 timer: null,
-                isStar: false
+                isStar: false,
+                investList: [],
+                housesList: [],
+                agentAList: [],
+                agentBList: []
             }
         },
         mounted () {
@@ -660,6 +676,10 @@
 
             this.getTypes()
             this.getInvestors()
+            this.getInvests()
+            this.getHouses()
+            this.getAgentA()
+            this.getAgentB()
 
             var houseColl = localStorage.getItem("houseColl")
             if (houseColl) {
@@ -685,6 +705,50 @@
                 // }, 180000)
                 
                 this.bigImgs = []
+            },
+            getInvests () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'finance_org_type_1'
+                    }
+                }).then(res => {
+                    this.investList = res.result.result
+                })
+            },
+            getHouses () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_4'
+                    }
+                }).then(res => {
+                    this.housesList = res.result.result
+                })
+            },
+            getAgentA () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_3'
+                    }
+                }).then(res => {
+                    this.agentAList = res.result.result
+                })
+            },
+            getAgentB () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_1'
+                    }
+                }).then(res => {
+                    this.agentBList = res.result.result
+                })
             },
             checkWebSite () {
                 var webSite = this.base.webSite
@@ -727,6 +791,13 @@
                     }
 
                     res.result.result.base.id = localStorage.getItem('id')
+
+                    if (res.result.result.base.owner) {
+                        res.result.result.base.owner = res.result.result.base.owner.split(',')
+                    } else {
+                        res.result.result.base.owner = []
+                    }
+                    
 
                     var base = res.result.result.base
 
@@ -844,6 +915,10 @@
                     return false
                 }
 
+                if (this.base.owner) {
+                    this.base.owner = this.base.owner.join(',')
+                }
+
                 util.request({
                     method: 'post',
                     interface: 'houseInfo',
@@ -887,20 +962,17 @@
                     })
                     return false
                 }
-                if (this.changes.changeA == '') {
+                if (this.changes.changeA == '' && this.changes.changeB == '') {
                     this.$message({
-                        message: '请务填写交易甲方！',
+                        message: '请务填写交易方！',
                         type: 'warning'
                     })
                     return false
                 }
-                if (this.changes.changeB == '') {
-                    this.$message({
-                        message: '请务填写交易乙方！',
-                        type: 'warning'
-                    })
-                    return false
-                }
+
+                this.changes.evalCodes = this.changes.evalCodes.join(',')
+
+                this.changes.tenantFinanceTool = this.changes.tenantFinanceTool.join(',')
 
                 util.request({
                     method: 'post',
@@ -914,8 +986,8 @@
                             price: '',
                             changeA: '',
                             changeB: '',
-                            evalCodes: '',
-                            tenantFinanceTool: '',
+                            evalCodes: [],
+                            tenantFinanceTool: [],
                             tenantDesc: ''
                         }
 

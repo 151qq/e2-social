@@ -7,34 +7,45 @@
     </label>
     <input class="input-u" :id="idName" type="file" name="" @change="postImg">
 
-    <div>{{titleName}}</div>
+    <input class="title-box" v-model="curTitle" @input="changeTitle" :placeholder="placeHolder">
   </div>
 </template>
 <script>
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'titleName', 'idName', 'width'],
+    props: ['path', 'titleName', 'idName', 'width', 'placeHolder'],
     data() {
       return {
-        curPath: ''
+        curPath: '',
+        curTitle: ''
       }
     },
     mounted () {
       this.curPath = this.path
+      this.curTitle = this.titleName
     },
     watch: {
       path () {
         this.curPath = this.path
+        this.curTitle = this.titleName
       }
     },
     methods: {
+      changeTitle () {
+        var data = {
+            url: this.curPath,
+            title: this.curTitle
+          }
+        this.$emit('changeImg', data)
+      },
       postImg (e) {
         util.upFile(e).then(res => {
           let imgUrl = res.result.result[0]
           this.curPath = imgUrl
           var data = {
             url: this.curPath,
+            title: this.curTitle
           }
           this.$emit('changeImg', data)
         })
@@ -60,7 +71,12 @@ export default {
     display: none;
   }
 
-  div {
+  .title-box {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    border-top: 1px solid #f5f5f5;
     display: block;
     font-size: 14px;
     text-align: center;
