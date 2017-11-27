@@ -78,22 +78,16 @@
                     </section>
                     <section class="baseInput">
                         <span>办公地点</span>
-                        <el-select class="input-box"
-                                   v-model="base.enterpriseLogisticCity"
-                                   name="investor"
-                                   @change="cityChange"
-                                   placeholder="请选择">
-                            <el-option-group
-                                v-for="(group, index) in cityList"
-                                :key="index"
-                                :label="group.province">
-                                <el-option
-                                    v-for="(item, index1) in group.citys"
-                                    :key="index1"
-                                    :label="item"
-                                    :value="item">
-                                </el-option>
-                            </el-option-group>
+                        <el-select v-model="base.enterpriseLogisticCity"
+                                    class="input-box"
+                                    @change="cityChange"
+                                    filterable placeholder="请选择">
+                            <el-option
+                              v-for="(item, index) in cityData"
+                              :key="index"
+                              :label="item"
+                              :value="item">
+                            </el-option>
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
@@ -606,7 +600,6 @@
                         return time.getTime() >= Date.now()
                     }
                 },
-                cityList: [],
                 postList: [],
                 cityData: [],
                 citys: [],
@@ -768,7 +761,6 @@
                     data: {}
                 }).then(res => {
                     if (res.result.success == '1') {
-                        this.cityList = res.result.results
                         var citys = []
                         var posts = []
 
