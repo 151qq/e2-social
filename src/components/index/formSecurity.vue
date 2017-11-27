@@ -51,6 +51,76 @@
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
+                        <span>清算时间</span>
+                        <el-date-picker
+                                class="input-box"
+                                v-model="base.productEndTime"
+                                placeholder="选择日期"
+                                :picker-options="pickerPre">
+                        </el-date-picker>
+                    </section>
+                    <section class="baseInput">
+                        <span>发行金额(万)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.productQuotation"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>承销机构</span>
+                        <el-select class="input-box"
+                                   v-model="base.productSalesOrg"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in productStateList"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput">
+                        <span>评估机构</span>
+                        <el-select class="input-box"
+                                   v-model="base.productEvaluationOrg"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in productStateList"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>评级机构</span>
+                        <el-select class="input-box"
+                                   v-model="base.productRatingOrg"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in productStateList"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput">
+                        <span>现金流预测机构</span>
+                        <el-select class="input-box"
+                                   v-model="base.productCashflowConsultingOrg"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in productStateList"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput rightF">
                         <span>证券代码</span>
                         <el-input
                                 class="input-box"
@@ -103,7 +173,18 @@
                             <upload :path="base.productLogo"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :id-name="'productLogo'"
                                     @changeImg="changeImg"></upload>
+                        </div>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>证券结构图</span>
+                        <div class="input-box">
+                            <upload :path="base.productArcUrl"
+                                    :no-del="true"
+                                    :bg-path="true"
+                                    :id-name="'productArcUrl'"
+                                    @changeImg="changeArcImg"></upload>
                         </div>
                     </section>
 
@@ -127,7 +208,40 @@
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="产品构成" name="2">
+            <!-- <el-collapse-item class="formStyle" title="资产现金流" name="2">
+                <el-table
+                :data="payAndProfit"
+                style="width: 100%">
+                    <el-table-column type="expand">
+                      <template scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                          <el-form-item label="交易备注：">
+                            <span>{{ props.row.tenantDesc }}</span>
+                          </el-form-item>
+                          <el-form-item label="评估机构：">
+                            <span>{{ props.row.evalCodes }}</span>
+                          </el-form-item>
+                          <el-form-item label="咨询机构：">
+                            <span>{{ props.row.tenantFinanceTool }}</span>
+                          </el-form-item>
+                        </el-form>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="dateString"
+                            label="交易日期">
+                    </el-table-column>
+                    <el-table-column
+                            label="操作"
+                            width="100">
+                        <template scope="scope">
+                            <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
+                            <el-button @click="showModel(scope.row)" type="text" size="small">编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-collapse-item> -->
+            <el-collapse-item class="formStyle" title="产品构成" name="3">
                 <el-button class="add-btn" type="primary" size="small" @click="addHouseRate">新增</el-button>
 
                 <el-table
@@ -195,7 +309,14 @@
                     productLogo: '',
                     productDesc: '',
                     productType: '',
-                    productHouseRate: []
+                    productHouseRate: [],
+                    productEndTime: '',
+                    productQuotation: '',
+                    productSalesOrg: '',
+                    productEvaluationOrg: '',
+                    productRatingOrg: '',
+                    productCashflowConsultingOrg: '',
+                    productArcUrl: ''
                 },
                 isBase: false,
                 abstractNum: 140,
@@ -222,7 +343,8 @@
                 ],
                 timer: null,
                 addHouse: false,
-                nowHouseData: {}
+                nowHouseData: {},
+                payAndProfit: []
             }
         },
         mounted () {
@@ -361,6 +483,9 @@
             changeImg (data) {
                 this.base.productLogo = data.url
             },
+            changeArcImg (data) {
+                this.base.productArcUrl = data.url
+            },
             formDataDate (str) {
                 var dateStr = new Date(str)
                 var year = dateStr.getFullYear()
@@ -383,12 +508,20 @@
                     this.base.productPublishTime = this.formDataDate(this.base.productPublishTime)
                 }
 
+                if (this.base.productEndTime) {
+                    this.base.productEndTime = this.formDataDate(this.base.productEndTime)
+                }
+
                 util.request({
                     method: 'post',
                     interface: 'saveOrUpdate',
                     data: this.base
                 }).then(res => {
-                    this.$parent.$refs.listBox.loadList('reload')
+                    if (res.result.success == '1') {
+                        this.$parent.$refs.listBox.loadList('reload')
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
                 })
             },
             saveAll () {
@@ -543,7 +676,7 @@
 
         &>span {
             float: left;
-            width: 90px;
+            width: 100px;
             height: 30px;
             font-size: 14px;
             color: #666666;
@@ -559,7 +692,7 @@
 
         .input-box {
             float: left;
-            width: 215px;
+            width: 205px;
 
             input {
                 height: 30px;
@@ -579,15 +712,15 @@
 
     .bigB {
         .input-box {
-            width: 550px;
+            width: 540px;
 
             .el-select {
-                width: 550px;
+                width: 540px;
             }
         }
 
         .el-textarea {
-          width: 550px;
+          width: 540px;
         }
     }
 

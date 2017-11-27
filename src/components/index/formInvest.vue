@@ -21,6 +21,20 @@
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
+                        <span>主体评级</span>
+                        <el-select class="input-box"
+                                   v-model="base.enterpriseCreditLevel"
+                                   name="investor"
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in types[typeKey]"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
                         <span>公司官网</span>
                         <el-input
                                 class="input-box"
@@ -128,6 +142,46 @@
                                 placeholder="请输入内容"
                                 v-model="base.enterpriseStockCode">
                         </el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>总资产(万)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseTotalAsset"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>资产负债率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseAssetLiabilityRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>资本充足率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseCapitalAdequacyRatio"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>核心资本充足率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseCoreCapitialAdequacyRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>存贷款比</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseDepositLoanRatio"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>不良贷款率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseNplRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>拨备覆盖率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseProvisionCoverage"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>资产收益率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01" v-model="base.enterpriseAssetsReturn"></el-input>
                     </section>
                     <section class="baseInput bigB">
                         <span>公司图片</span>
@@ -591,7 +645,16 @@
                     enterprisePubwechatAccount: '',
                     enterpriseFacebookAccount: '',
                     enterprisePubwechatAccount: '',
-                    enterpriseSinamicorblogAccount: ''
+                    enterpriseSinamicorblogAccount: '',
+                    enterpriseCreditLevel: '',
+                    enterpriseTotalAsset: '',
+                    enterpriseAssetLiabilityRatio: '',
+                    enterpriseCapitalAdequacyRatio: '',
+                    enterpriseCoreCapitialAdequacyRatio: '',
+                    enterpriseDepositLoanRatio: '',
+                    enterpriseNplRatio: '',
+                    enterpriseProvisionCoverage: '',
+                    enterpriseAssetsReturn: ''
                 },
                 isBase: false,
                 activeNames: ['1'],
@@ -824,7 +887,11 @@
                     interface: 'saveInvestBase',
                     data: this.base
                 }).then(res => {
-                    this.$parent.$refs.listBox.loadList('reload')
+                    if (res.result.success == '1') {
+                        this.$parent.$refs.listBox.loadList('reload')
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
                 })
             },
             saveAll () {
@@ -969,7 +1036,7 @@
 
         &>span {
             float: left;
-            width: 90px;
+            width: 100px;
             font-size: 14px;
             color: #666666;
             line-height: 30px;
@@ -984,7 +1051,7 @@
 
         .input-box {
             float: left;
-            width: 215px;
+            width: 205px;
 
             input {
                 height: 30px;
@@ -1004,15 +1071,15 @@
 
     .bigB {
         .input-box {
-            width: 550px;
+            width: 540px;
 
             .el-select {
-                width: 550px;
+                width: 540px;
             }
         }
 
         .el-textarea {
-          width: 550px;
+          width: 540px;
         }
     }
 
