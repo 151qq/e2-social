@@ -716,33 +716,33 @@
                         return
                     }
 
-                    res.result.result.forEach((item) => {
-                        if (item.productSalesOrg) {
-                            item.productSalesOrg = item.productSalesOrg.split(',')
-                        } else {
-                            item.productSalesOrg = []
-                        }
+                    var result = res.result.result
 
-                        if (item.productEvaluationOrg) {
-                            item.productEvaluationOrg = item.productEvaluationOrg.split(',')
-                        } else {
-                            item.productEvaluationOrg = []
-                        }
+                    if (result.productSalesOrg) {
+                        result.productSalesOrg = result.productSalesOrg.split(',')
+                    } else {
+                        result.productSalesOrg = []
+                    }
 
-                        if (item.productRatingOrg) {
-                            item.productRatingOrg = item.productRatingOrg.split(',')
-                        } else {
-                            item.productRatingOrg = []
-                        }
+                    if (result.productEvaluationOrg) {
+                        result.productEvaluationOrg = result.productEvaluationOrg.split(',')
+                    } else {
+                        result.productEvaluationOrg = []
+                    }
 
-                        if (item.productCashflowConsultingOrg) {
-                            item.productCashflowConsultingOrg = item.productCashflowConsultingOrg.split(',')
-                        } else {
-                            item.productCashflowConsultingOrg = []
-                        }
-                    })
+                    if (result.productRatingOrg) {
+                        result.productRatingOrg = result.productRatingOrg.split(',')
+                    } else {
+                        result.productRatingOrg = []
+                    }
 
-                    this.base = res.result.result
+                    if (result.productCashflowConsultingOrg) {
+                        result.productCashflowConsultingOrg = result.productCashflowConsultingOrg.split(',')
+                    } else {
+                        result.productCashflowConsultingOrg = []
+                    }
+
+                    this.base = result
 
                     setTimeout(() => {
                         this.findByProductInfo()
