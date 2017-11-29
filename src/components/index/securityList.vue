@@ -45,7 +45,7 @@
         <el-form-item label="证券名称">
             <el-input v-model="addFormOne.title" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="股票代码">
+        <el-form-item label="证券代码">
             <el-input v-model="addFormOne.code" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>

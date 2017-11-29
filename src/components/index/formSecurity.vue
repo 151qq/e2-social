@@ -9,6 +9,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
+                                :disabled="true"
                                 v-model="base.productCame">
                         </el-input>
                     </section>
@@ -27,19 +28,13 @@
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
-                        <span>上市地点</span>
-                        <el-select class="input-box"
-                               v-model="base.productIpoSite"
-                               name="investor"
-                               :disabled="true"
-                               placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.finance_market"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
+                        <span>证券代码</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                :disabled="true"
+                                v-model="base.productMarketCode">
+                        </el-input>
                     </section>
                     <section class="baseInput">
                         <span>发行时间</span>
@@ -62,7 +57,7 @@
                     <section class="baseInput">
                         <span>发行金额(万)</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.productQuotation"></el-input>
+                                    :min="0" v-model="base.productQuotation"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>承销机构</span>
@@ -71,10 +66,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in productStateList"
+                                    v-for="(item, index) in agentCxList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.code">
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -85,10 +80,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in productStateList"
+                                    v-for="(item, index) in agentPgList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.code">
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -99,10 +94,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in productStateList"
+                                    v-for="(item, index) in agentPjList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.code">
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -113,20 +108,27 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in productStateList"
+                                    v-for="(item, index) in agentYcList"
                                     :key="index"
-                                    :label="item.label"
-                                    :value="item.code">
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
-                        <span>证券代码</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.productMarketCode">
-                        </el-input>
+                        <span>上市地点</span>
+                        <el-select class="input-box"
+                               v-model="base.productIpoSite"
+                               name="investor"
+                               :disabled="true"
+                               placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in types.finance_market"
+                                    :key="index"
+                                    :label="item.typeName"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
                     </section>
                     <section class="baseInput">
                         <span>产品状态</span>
@@ -208,67 +210,305 @@
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
-            <!-- <el-collapse-item class="formStyle" title="资产现金流" name="2">
-                <el-table
-                :data="payAndProfit"
-                style="width: 100%">
-                    <el-table-column type="expand">
-                      <template scope="props">
-                        <el-form label-position="left" inline class="demo-table-expand">
-                          <el-form-item label="交易备注：">
-                            <span>{{ props.row.tenantDesc }}</span>
-                          </el-form-item>
-                          <el-form-item label="评估机构：">
-                            <span>{{ props.row.evalCodes }}</span>
-                          </el-form-item>
-                          <el-form-item label="咨询机构：">
-                            <span>{{ props.row.tenantFinanceTool }}</span>
-                          </el-form-item>
-                        </el-form>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="dateString"
-                            label="交易日期">
-                    </el-table-column>
-                    <el-table-column
-                            label="操作"
-                            width="100">
-                        <template scope="scope">
-                            <el-button @click="deleteRow(scope.row)" type="text" size="small">删除</el-button>
-                            <el-button @click="showModel(scope.row)" type="text" size="small">编辑</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-collapse-item> -->
-            <el-collapse-item class="formStyle" title="产品构成" name="3">
+            <el-collapse-item class="formStyle" title="优先级" name="2">
+                <div class="form-big-box">
+                    <div class="clear"></div>
+                    <section class="baseInput">
+                        <span>分层</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="优先级"
+                                :disabled="true">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>比例</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitOne.fundLevelRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券代码</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                :disabled="true"
+                                v-model="payAndProfitOne.fundLevelCode">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>剩余本金面额(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitOne.fundLevelResidualPrincipal"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券净价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitOne.fundLevelNetPrice"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>证券全价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitOne.fundLevelTotalPrice"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券预期收益率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitOne.fundLevelForcastPayback"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>加权年限</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="payAndProfitOne.fundLevelWeightingPeriod">
+                        </el-input>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                           @click="savePayAndProfit('payAndProfitOne')">保存</el-button>
+                <div class="clear"></div>
+            </el-collapse-item>
+            <div class="line-bold"></div>
+            <el-collapse-item class="formStyle" title="夹层" name="3">
+                <div class="form-big-box">
+                    <div class="clear"></div>
+                    <section class="baseInput">
+                        <span>分层</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="夹层"
+                                :disabled="true">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>比例</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitTwo.fundLevelRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券代码</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                :disabled="true"
+                                v-model="payAndProfitTwo.fundLevelCode">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>剩余本金面额(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitTwo.fundLevelResidualPrincipal"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券净价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitTwo.fundLevelNetPrice"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>证券全价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitTwo.fundLevelTotalPrice"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券预期收益率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitTwo.fundLevelForcastPayback"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>加权年限</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="payAndProfitTwo.fundLevelWeightingPeriod">
+                        </el-input>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                           @click="savePayAndProfit('payAndProfitTwo')">保存</el-button>
+                <div class="clear"></div>
+            </el-collapse-item>
+            <div class="line-bold"></div>
+            <el-collapse-item class="formStyle" title="劣后级" name="4">
+                <div class="form-big-box">
+                    <div class="clear"></div>
+                    <section class="baseInput">
+                        <span>分层</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="劣后级"
+                                :disabled="true">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>比例</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitThree.fundLevelRatio"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券代码</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                :disabled="true"
+                                v-model="payAndProfitThree.fundLevelCode">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>剩余本金面额(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitThree.fundLevelResidualPrincipal"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券净价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitThree.fundLevelNetPrice"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>证券全价(元)</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="1"
+                                    v-model="payAndProfitThree.fundLevelTotalPrice"></el-input>
+                    </section>
+                    <section class="baseInput">
+                        <span>证券预期收益率</span>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="payAndProfitThree.fundLevelForcastPayback"></el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>加权年限</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="payAndProfitThree.fundLevelWeightingPeriod">
+                        </el-input>
+                    </section>
+                    <div class="clear"></div>
+                </div>
+                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                           @click="savePayAndProfit('payAndProfitThree')">保存</el-button>
+                <div class="clear"></div>
+            </el-collapse-item>
+            <div class="line-bold"></div>
+            <el-collapse-item class="formStyle" title="资产现金流" name="5">
                 <el-button class="add-btn" type="primary" size="small" @click="addHouseRate">新增</el-button>
+                
+                <template v-for="(item, index) in perList">
+                    <div class="line-sper" v-if="index"></div>
 
-                <el-table
-                    :data="base.productHouseRate"
-                    border
-                    style="width: 100%">
-                    <el-table-column
-                      prop="houseCname"
-                      label="楼盘">
-                    </el-table-column>
-                    <el-table-column
-                      prop="productHouseRate"
-                      label="占比(%)">
-                    </el-table-column>
-                    <el-table-column
-                      label="操作"
-                      width="80">
-                      <template scope="scope">
-                        <el-button @click="deleteRow(scope.row, scope.$index)"
-                                    type="danger" size="small">删除</el-button>
-                      </template>
-                    </el-table-column>
-                </el-table>
+                    <section class="asset-money">
+                        <img class="cover-img" :src="item.housesInfo.housesImg">
+                        <div class="right-content">
+                            <div>物业名称：{{item.housesInfo.housesDesc}}</div>
+                            <div>物业地址：{{item.housesInfo.housesAddr}}</div>
+                            <div>
+                                基金占比：
+                                <el-input class="list-input" type="number" size="small" 
+                                    :min="0" :step="0.01"
+                                    v-model="item.productHouseRate"></el-input>
+                            </div>
+                            <div class="btn-box">
+                                <el-button type="danger"
+                                            :plain="true" size="mini" icon="delete2"
+                                            @click="deleteRow(item)">删除</el-button>
+                                <el-button type="info"
+                                            :plain="true" size="mini" icon="document"
+                                            @click="saveRow(item)">保存</el-button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <el-table
+                        :data="item.cashflowList"
+                        class="cashBox"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="year"
+                          label="年">
+                        </el-table-column>
+                        <el-table-column
+                          label="预测现金流"
+                          width="110">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.houseForcastCashflow"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                          label="保底现金流"
+                          width="100">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.houseGuaranteeCashflow"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                          label="真实现金流"
+                          width="100">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.houseRealCashflow"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                          label="优先级"
+                          width="80">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.fundPriorityLevelPayback"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                          label="夹层"
+                          width="80">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.fundMiddleLevelPayback"></el-input>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                          label="劣后"
+                          width="80">
+                            <template scope="scope">
+                                <el-input class="input-box" type="number" size="small" 
+                                    :min="0"
+                                    v-model="scope.row.fundLastLevelPayback"></el-input>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="table-btn-box">
+                        <el-button type="info"
+                                    :plain="true" size="mini" icon="document"
+                                    @click="saveCash(item.cashflowList)">保存</el-button>
+                    </div>
+                </template>
+
+                
             </el-collapse-item>
         </el-collapse>
 
-        <el-dialog title="添加产品构成" :visible.sync="addHouse">
+        <el-dialog title="添加资产现金流" :visible.sync="addHouse">
             <el-form :label-position="'left'">
                 <el-form-item label="物业" :label-width="'80px'">
                   <search-filter :row-data="nowHouseData"></search-filter>
@@ -318,6 +558,8 @@
                     productCashflowConsultingOrg: '',
                     productArcUrl: ''
                 },
+                publishTime: '',
+                endTime: '',
                 isBase: false,
                 abstractNum: 140,
                 activeNames: ['1'],
@@ -344,7 +586,41 @@
                 timer: null,
                 addHouse: false,
                 nowHouseData: {},
-                payAndProfit: []
+                payAndProfitOne: {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: 0,
+                    fundLevelNetPrice: 0,
+                    fundLevelTotalPrice: 0,
+                    fundLevelForcastPayback: 0,
+                    fundLevelWeightingPeriod: ''
+                },
+                payAndProfitTwo: {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: 0,
+                    fundLevelNetPrice: 0,
+                    fundLevelTotalPrice: 0,
+                    fundLevelForcastPayback: 0,
+                    fundLevelWeightingPeriod: ''
+                },
+                payAndProfitThree: {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: 0,
+                    fundLevelNetPrice: 0,
+                    fundLevelTotalPrice: 0,
+                    fundLevelForcastPayback: 0,
+                    fundLevelWeightingPeriod: ''
+                },
+                perList: [],
+                agentCxList: [],
+                agentPgList: [],
+                agentPjList: [],
+                agentYcList: []
             }
         },
         mounted () {
@@ -354,12 +630,16 @@
             }
             document.title = '证券产品'
             this.getTypes()
+            this.getAgentCx()
+            this.getAgentPg()
+            this.getAgentPj()
             this.getInvests()
         },
         methods: {
             getAllData () {
                 this.isBase = false
                 this.getBase()
+                this.findByProductInfo()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -371,6 +651,50 @@
             },
             desChange () {
                 this.abstractNum = 140 - this.base.des.length
+            },
+            getAgentCx () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_6'
+                    }
+                }).then(res => {
+                    this.agentCxList = res.result.result
+                })
+            },
+            getAgentPg () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_3'
+                    }
+                }).then(res => {
+                    this.agentPgList = res.result.result
+                })
+            },
+            getAgentPj () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_5'
+                    }
+                }).then(res => {
+                    this.agentPjList = res.result.result
+                })
+            },
+            getAgentYc () {
+                util.request({
+                    method: 'get',
+                    interface: 'findEntByEntType',
+                    data: {
+                        enterpriseTypes: 'propertys_agent_type_1'
+                    }
+                }).then(res => {
+                    this.agentYcList = res.result.result
+                })
             },
             getBase () {
                 util.request({
@@ -391,7 +715,31 @@
                     this.base = res.result.result
 
                     setTimeout(() => {
+                        this.findByProductInfo()
+                        this.findListByProductCode()
                         this.isBase = true
+                        if (!this.payAndProfitOne.id) {
+                            this.payAndProfitOne.fundLevelCode = this.base.productMarketCode + '1'
+                        }
+
+                        if (!this.payAndProfitTwo.id) {
+                            this.payAndProfitTwo.fundLevelCode = this.base.productMarketCode + '2'
+                        }
+
+                        if (!this.payAndProfitThree.id) {
+                            this.payAndProfitThree.fundLevelCode = this.base.productMarketCode + '3'
+                        }
+
+
+                        // 保存时间
+                        if (this.base.productPublishTime) {
+                            this.publishTime = this.base.productPublishTime
+                        }
+
+                        if (this.base.productEndTime) {
+                            this.endTime = this.base.productEndTime
+                        }
+
                     }, 0)
                 })
             },
@@ -408,11 +756,89 @@
                     }
                 })
             },
+            findListByProductCode () {
+                util.request({
+                    method: 'get',
+                    interface: 'findListByProductCode',
+                    data: {
+                        productCode: localStorage.getItem('id')
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        res.result.result.forEach((item) => {
+                            if (!item.cashflowList || !item.cashflowList.length) {
+                                var yearList = []
+                                var startYear = Number(this.base.productPublishTime.split('-')[0])
+                                var endYear = Number(this.base.productEndTime.split('-')[0])
+
+                                for (var i = startYear; i <= endYear; i++) {
+                                    yearList.push({
+                                        financeProductCode: localStorage.getItem('id'),
+                                        houseId: item.houseId,
+                                        houseForcastCashflow: '',
+                                        year: i,
+                                        houseGuaranteeCashflow: '',
+                                        houseRealCashflow: '',
+                                        fundPriorityLevelPayback: '',
+                                        fundMiddleLevelPayback: '',
+                                        fundLastLevelPayback: ''
+                                    })
+                                }
+
+                                item.cashflowList = yearList
+                            }
+                        })
+
+                        this.perList = res.result.result
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            findByProductInfo () {
+                util.request({
+                    method: 'get',
+                    interface: 'findByProductInfo',
+                    data: {
+                        financeProductCode: localStorage.getItem('id')
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        res.result.result.forEach((item) => {
+                            if (item.fundLevelCode == this.base.productMarketCode + '1') {
+                                this.payAndProfitOne = item
+                            } else if (item.fundLevelCode == this.base.productMarketCode + '2') {
+                                this.payAndProfitTwo = item
+                            } else if (item.fundLevelCode == this.base.productMarketCode + '3') {
+                                this.payAndProfitThree = item
+                            }
+                        })
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
             checkWebSite () {
                 var webSite = this.base.productInfoLink
                 this.base.productInfoLink = webSite.replace(/[\u4e00-\u9fa5]/g,'')
             },
             addHouseRate () {
+                if (!this.base.productPublishTime) {
+                    this.$message({
+                        message: '请先保存发行时间！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!this.base.productEndTime) {
+                    this.$message({
+                        message: '请先保存清算时间！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
                 var obj = {
                     id: '',
                     houseCname: '',
@@ -424,33 +850,42 @@
                 this.nowHouseData = obj
                 this.addHouse = true
             },
-            deleteRow (row, index) {
-                if (row.id) {
-                    util.request({
-                        method: 'post',
-                        interface: 'deleteFinanceProductHouser',
-                        data: {
-                            id: row.id
-                        }
-                    }).then(res => {
-                        if (res.result.success == '1') {
-                            this.$message({
-                                message: '删除成功！',
-                                type: 'success'
-                            })
-                            this.base.productHouseRate.splice(index, 1)
-                        } else {
-                            this.$message.error(res.result.message)
-                        }
-                    })
-                } else {
-                    this.base.productHouseRate.splice(index, 1)
-                }
+            deleteRow (item) {
+                util.request({
+                    method: 'post',
+                    interface: 'deleteFinanceProductHouser',
+                    data: {
+                        id: item.id
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.$message({
+                            message: '删除成功！',
+                            type: 'success'
+                        })
+                        this.findListByProductCode()
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            savePayAndProfit (type) {
+                util.request({
+                    method: 'post',
+                    interface: 'saveOrUpdate',
+                    data: this[type]
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.findByProductInfo()
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
             },
             saveRow (row) {
-                if (!row.houseCname) {
+                if (!row.productHouseRate) {
                     this.$message({
-                        message: '楼盘不能为空！',
+                        message: '占比不能为空！',
                         type: 'warning'
                     })
                     return false
@@ -469,9 +904,17 @@
                     interface: 'financeProductHouseSave',
                     data: row
                 }).then(res => {
-                    this.$parent.$refs.listBox.loadList('reload')
-                    this.base.productHouseRate.push(Object.assign(this.nowHouseData))
+                    this.findListByProductCode()
                     this.addHouse = false
+                })
+            },
+            saveCash (data) {
+                util.request({
+                    method: 'post',
+                    interface: 'saveFundCashflow',
+                    data: data
+                }).then(res => {
+                    this.findListByProductCode()
                 })
             },
             setContent (data) {
@@ -499,6 +942,22 @@
                 if (!this.base.productCame) {
                     this.$message({
                         message: '证券名称不能为空！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.publishTime && this.publishTime != this.base.productPublishTime && this.perList.length) {
+                    this.$message({
+                        message: '要更改发行时间，请先清空资产现金流！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.endTime && this.endTime != this.base.productEndTime && this.perList.length) {
+                    this.$message({
+                        message: '要更改结算时间，请先清空资产现金流！',
                         type: 'warning'
                     })
                     return false
@@ -556,6 +1015,57 @@
 .form-invest {
     margin-top: 30px;
 
+    .el-table .cell {
+        padding: 0 10px;
+    }
+
+    .cashBox {
+        margin-top: 20px;
+    }
+
+    .asset-money {
+        display: flex;
+
+        .cover-img {
+            width: 200px;
+            height: 160px;
+        }
+
+        .right-content {
+            flex: 1;
+            margin-left: 15px;
+
+            div {
+                height: 40px;
+                font-size: 14px;
+                color: #1f2d3d;
+                line-height: 40px;
+
+                .list-input {
+                    display: inline-block;
+                    width: 205px;
+
+                    input {
+                        height: 30px;
+                    }
+                }
+            }
+
+            .btn-box {
+                height: 30px;
+                margin-top: 10px;
+                text-align: right;
+            }
+        }
+    }
+
+    .table-btn-box {
+        height: 40px;
+        padding: 0 18px;
+        text-align: right;
+        line-height: 40px;
+    }
+
     .el-dialog--small {
         width: 400px;
     }
@@ -584,6 +1094,25 @@
             .el-input__inner {
                 height: 30px;
             }
+        }
+
+        .demo-table-expand {
+            font-size: 0;
+        }
+        .demo-table-expand label {
+            float: left;
+            width: 150px;
+            color: #99a9bf;
+        }
+
+        .demo-table-expand .el-form-item__content {
+            width: 110px;
+            float: left;
+        }
+        .demo-table-expand .el-form-item {
+            margin-right: 0;
+            margin-bottom: 0;
+            width: 50%;
         }
 
         .edui-default .edui-editor {
@@ -640,6 +1169,11 @@
         border-top: 1px solid #99A9BF;
         background: #F9F9F9;
         margin: 30px 0;
+    }
+
+    .line-sper {
+        border-top: 1px solid #99A9BF;
+        margin: 20px 0;
     }
 
     .el-collapse, .el-collapse-item__header, .el-collapse-item__wrap {
@@ -726,6 +1260,34 @@
 
     .rightF {
         float: right;
+    }
+
+    .form-big-box {
+        .baseInput {
+
+            &>span {
+                float: left;
+                width: 120px;
+            }
+
+            .input-box {
+                width: 185px;
+            }
+        }
+
+        .bigB {
+            .input-box {
+                width: 520px;
+
+                .el-select {
+                    width: 520px;
+                }
+            }
+
+            .el-textarea {
+              width: 520px;
+            }
+        }
     }
 
     .over-box {

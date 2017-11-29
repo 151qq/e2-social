@@ -7,32 +7,35 @@
               <template scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
                   <el-form-item label="交易备注：">
-                    <span>{{ props.row.tenantDesc }}</span>
+                    <span>{{ props.row.houseTradeDesc }}</span>
                   </el-form-item>
                   <el-form-item label="评估机构：">
-                    <span>{{ props.row.evalCodes }}</span>
+                    <span>{{ props.row.houseTradeConsultingOrg }}</span>
                   </el-form-item>
                   <el-form-item label="咨询机构：">
-                    <span>{{ props.row.tenantFinanceTool }}</span>
+                    <span>{{ props.row.houseTradeEvaluationOrg }}</span>
+                  </el-form-item>
+                  <el-form-item label="交易类型：">
+                    <span>{{ props.row.houseTradeType }}</span>
                   </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
             <el-table-column
-                    prop="dateString"
+                    prop="houseTradeDate"
                     label="交易日期">
             </el-table-column>
             <el-table-column
-                    prop="price"
+                    prop="houseRradePrice"
                     label="价格(万)">
             </el-table-column>
             <el-table-column
-                    prop="changeA"
+                    prop="houseTradeACode"
                     width="240"
                     label="交易甲方">
             </el-table-column>
             <el-table-column
-                    prop="changeB"
+                    prop="houseTradeBCode"
                     width="240"
                     label="交易乙方">
             </el-table-column>
@@ -63,7 +66,7 @@
                 <el-form-item label="交易日期">
                     <el-date-picker
                             class="input-box"
-                            v-model="curentData.dateString"
+                            v-model="curentData.houseTradeDate"
                             type="date"
                             placeholder="选择日期"
                             :picker-options="pickerPre">
@@ -71,15 +74,14 @@
                 </el-form-item>
                 <el-form-item label="价格(万)">
                     <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="curentData.price"></el-input>
+                                    :min="0" :step="0.01" v-model="curentData.houseRradePrice"></el-input>
                 </el-form-item>
                 <el-form-item label="交易甲方">
                     <el-select class="input-box"
-                               v-model="curentData.changeA"
+                               v-model="curentData.houseTradeACode"
                                name="changeA"
                                placeholder="请选择">
                         <el-option
-                                v-if="item.enterpriseCode != curentData.changeB"
                                 v-for="(item, index) in investList"
                                 :key="index"
                                 :label="item.enterpriseCname"
@@ -89,11 +91,10 @@
                 </el-form-item>
                 <el-form-item label="交易乙方">
                     <el-select class="input-box"
-                               v-model="curentData.changeB"
+                               v-model="curentData.houseTradeBCode"
                                name="changeB"
                                placeholder="请选择">
                         <el-option
-                                v-if="item.enterpriseCode != curentData.changeA"
                                 v-for="(item, index) in investList"
                                 :key="index"
                                 :label="item.enterpriseCname"
@@ -103,7 +104,7 @@
                 </el-form-item>
                 <el-form-item label="评估机构">
                     <el-select class="input-box"
-                               v-model="curentData.evalCodes"
+                               v-model="curentData.houseTradeEvaluationOrg"
                                name="evalCodes"
                                multiple
                                placeholder="请选择">
@@ -117,7 +118,7 @@
                 </el-form-item>
                 <el-form-item label="咨询机构">
                     <el-select class="input-box"
-                               v-model="curentData.tenantFinanceTool"
+                               v-model="curentData.houseTradeConsultingOrg"
                                name="tenantFinanceTool"
                                multiple
                                placeholder="请选择">
@@ -129,6 +130,19 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="交易类型">
+                    <el-select class="input-box"
+                               v-model="curentData.houseTradeType"
+                               name="houseTradeType"
+                               placeholder="请选择">
+                        <el-option
+                                v-for="(item, index) in houseTradeTypeList"
+                                :key="index"
+                                :label="item.dictKeyValue"
+                                :value="item.dictKeyCode">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="交易备注">
                     <el-input
                           type="textarea"
@@ -136,7 +150,7 @@
                           :rows="4"
                           :maxlength="1000"
                           placeholder="请输入内容"
-                          v-model="curentData.tenantDesc">
+                          v-model="curentData.houseTradeDesc">
                         </el-input>
                 </el-form-item>
             </el-form>
@@ -160,13 +174,15 @@ export default {
             dialogFormVisible: false,
             curentData: {
                 id: '',
-                dateString: '',
-                price: '',
-                changeA: '',
-                changeB: '',
-                tenantDesc: '',
-                tenantFinanceTool: [],
-                evalCodes: []
+                housesId: '',
+                houseTradeDate: '',
+                houseRradePrice: '',
+                houseTradeACode: '',
+                houseTradeBCode: '',
+                houseTradeDesc: '',
+                houseTradeType: '',
+                houseTradeConsultingOrg: [],
+                houseTradeEvaluationOrg: []
             },
             pickerPre: {
                 disabledDate(time) {
@@ -175,7 +191,8 @@ export default {
             },
             investList: [],
             agentAList: [],
-            agentBList: []
+            agentBList: [],
+            houseTradeTypeList: []
         }
     },
     mounted () {
@@ -183,6 +200,7 @@ export default {
         this.getInvests()
         this.getAgentA()
         this.getAgentB()
+        this.getHouseTradeTypeList()
         document.title = '交易历史明细'
     },
     methods: {
@@ -191,13 +209,13 @@ export default {
                 method: 'get',
                 interface: 'changes',
                 data: {
-                    id: localStorage.getItem("id"),
+                    housesId: localStorage.getItem("id"),
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }
             }).then(res => {
                 res.result.result.changes.forEach((item) => {
-                    item.dateString = item.date.split(' ')[0]
+                    item.houseTradeDate = item.houseTradeDate.split(' ')[0]
                 })
                 this.changes = res.result.result.changes
                 this.total = this.total ? Number(this.total) : 0
@@ -236,6 +254,17 @@ export default {
                 this.agentBList = res.result.result
             })
         },
+        getHouseTradeTypeList () {
+            util.request({
+                method: 'get',
+                interface: 'findDictionaryByType',
+                data: {
+                    typeCode: 'propertys_trade_type'
+                }
+            }).then(res => {
+                this.houseTradeTypeList = res.result.result
+            })
+        },
         pageChange (page) {
             this.pageNumber++
             this.getChanges()
@@ -251,11 +280,15 @@ export default {
                             id: row.id
                         }
                     }).then(res => {
-                        this.getChanges()
-                        this.$message({
-                            type: 'info',
-                            message: '删除成功'
-                        })
+                        if (res.result.success == '1') {
+                            this.getChanges()
+                            this.$message({
+                                type: 'info',
+                                message: '删除成功'
+                            })
+                        } else {
+                            this.$message.error(res.result.message)
+                        }
                     })
                 }
             })
@@ -270,18 +303,18 @@ export default {
             }).then(res => {
                 if (res.result.success == "1") {
                     var result = res.result.result
-                    result.dateString = result.date.split(' ')[0]
+                    result.houseTradeDate = result.houseTradeDate.split(' ')[0]
 
-                    if (result.tenantFinanceTool) {
-                        result.tenantFinanceTool = result.tenantFinanceTool.split(',')
+                    if (result.houseTradeConsultingOrg) {
+                        result.houseTradeConsultingOrg = result.houseTradeConsultingOrg.split(',')
                     } else {
-                        result.tenantFinanceTool = []
+                        result.houseTradeConsultingOrg = []
                     }
 
-                    if (result.evalCodes) {
-                        result.evalCodes = result.evalCodes.split(',')
+                    if (result.houseTradeEvaluationOrg) {
+                        result.houseTradeEvaluationOrg = result.houseTradeEvaluationOrg.split(',')
                     } else {
-                        result.evalCodes = []
+                        result.houseTradeEvaluationOrg = []
                     }
 
                     this.curentData = result
@@ -302,15 +335,7 @@ export default {
             return year + '-' + month + '-' + day
         },
         confirmEdit () {
-            var formData = {
-                id: localStorage.getItem("id"),
-                type: 'changes',
-                data: this.curentData
-            }
-
-            formData.data.recordCreater = this.curentData.recordCreater
-
-            if (this.curentData.dateString == '') {
+            if (this.curentData.houseTradeDate == '') {
                 this.$message({
                     message: '请务填写交易日期！',
                     type: 'warning'
@@ -318,9 +343,9 @@ export default {
                 return false
             }
 
-            formData.data.date = this.formDataDate(formData.data.dateString)
+            this.curentData.houseTradeDate = this.formDataDate(this.curentData.houseTradeDate)
 
-            if (this.curentData.price == '') {
+            if (this.curentData.houseRradePrice == '') {
                 this.$message({
                     message: '请务填写交易价格！',
                     type: 'warning'
@@ -328,7 +353,7 @@ export default {
                 return false
             }
 
-            if (this.curentData.changeA == '' && this.curentData.changeB == '') {
+            if (this.curentData.houseTradeACode == '' && this.curentData.houseTradeBCode == '') {
                 this.$message({
                     message: '请务填写交易方！',
                     type: 'warning'
@@ -336,14 +361,14 @@ export default {
                 return false
             }
 
-            this.curentData.evalCodes = this.curentData.evalCodes.join(',')
+            this.curentData.houseTradeEvaluationOrg = this.curentData.houseTradeEvaluationOrg.join(',')
 
-            this.curentData.tenantFinanceTool = this.curentData.tenantFinanceTool.join(',')
+            this.curentData.houseTradeConsultingOrg = this.curentData.houseTradeConsultingOrg.join(',')
 
             util.request({
                 method: 'post',
-                interface: 'houseInfo',
-                data: formData
+                interface: 'manageHouseTradeDetail',
+                data: this.curentData
             }).then(res => {
                 if (res.result.success == "1") {
                     this.getChanges()

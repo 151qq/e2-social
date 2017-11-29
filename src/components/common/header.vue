@@ -37,9 +37,9 @@
       </el-dropdown>
     </div>
 
-    <div class="line-box"></div>
+    <!-- <div class="line-box"></div> -->
 
-    <div class="save-box" @click="saveAll"></div>
+    <!-- <div class="save-box" @click="saveAll"></div> -->
 
     <!-- <div class="mess-box" v-popover:popover1>
       <i class="el-icon-message"></i>

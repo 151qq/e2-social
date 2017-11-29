@@ -40,7 +40,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
-    // 112.126.90.50
+    // 112.126.90.50 192.168.2.103:8080/E2-Platform
     proxyTable: {
       '/e2-platform-api': {
         target: 'http://192.168.2.103:8080/E2-Platform',

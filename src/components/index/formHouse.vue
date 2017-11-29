@@ -199,42 +199,6 @@
                             </el-option>
                         </el-select>
                     </section>
-                    <!-- <section class="baseInput">
-                        <span>证券类型</span>
-                        <el-select class="input-box"
-                                    v-model="base.bondType"
-                                    name="floor"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in bonds"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.typeName">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>产品类型</span>
-                        <el-select class="input-box"
-                                    v-model="base.bondCode"
-                                    name="holding"
-                                    :disabled="true"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.hold"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-
-                        <div class="message-box">
-                            *如无所需产品，请
-                            <router-link :to="{name:'security'}" target="_blank">
-                                新添类型
-                            </router-link>
-                        </div>
-                    </section> -->
                     <section class="baseInput bigB">
                         <span>交通状况</span>
                         <el-input
@@ -316,7 +280,7 @@
                         <span>交易日期</span>
                         <el-date-picker
                                 class="input-box"
-                                v-model="changes.date"
+                                v-model="changes.houseTradeDate"
                                 type="date"
                                 placeholder="选择日期"
                                 :picker-options="pickerPre">
@@ -325,16 +289,15 @@
                     <section class="baseInput rightF">
                         <span>价格(万)</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="changes.price"></el-input>
+                                    :min="0" :step="0.01" v-model="changes.houseRradePrice"></el-input>
                     </section>
                     <section class="baseInput">
                         <span>交易甲方</span>
                         <el-select class="input-box"
-                                   v-model="changes.changeA"
-                                   name="changeA"
+                                   v-model="changes.houseTradeACode"
+                                   name="houseTradeACode"
                                    placeholder="请选择">
                             <el-option
-                                    v-if="item.enterpriseCode != changes.changeB"
                                     v-for="(item, index) in investList"
                                     :key="index"
                                     :label="item.enterpriseCname"
@@ -345,11 +308,10 @@
                     <section class="baseInput rightF">
                         <span>交易乙方</span>
                         <el-select class="input-box"
-                                    v-model="changes.changeB"
-                                    name="changeB"
+                                    v-model="changes.houseTradeBCode"
+                                    name="houseTradeBCode"
                                     placeholder="请选择">
                             <el-option
-                                    v-if="item.enterpriseCode != changes.changeA"
                                     v-for="(item, index) in investList"
                                     :key="index"
                                     :label="item.enterpriseCname"
@@ -360,8 +322,8 @@
                     <section class="baseInput bigB">
                         <span>评估机构</span>
                         <el-select class="input-box"
-                                   v-model="changes.evalCodes"
-                                   name="evalCodes"
+                                   v-model="changes.houseTradeEvaluationOrg"
+                                   name="houseTradeEvaluationOrg"
                                    multiple
                                    placeholder="请选择">
                             <el-option
@@ -372,11 +334,11 @@
                             </el-option>
                         </el-select>
                     </section>
-                    <section class="baseInput bigB">
+                    <section class="baseInput">
                         <span>咨询机构</span>
                         <el-select class="input-box"
-                                    name="tenantFinanceTool"
-                                    v-model="changes.tenantFinanceTool"
+                                    name="houseTradeConsultingOrg"
+                                    v-model="changes.houseTradeConsultingOrg"
                                     multiple
                                     placeholder="请选择">
                             <el-option
@@ -387,6 +349,20 @@
                             </el-option>
                         </el-select>
                     </section>
+                    <section class="baseInput rightF">
+                        <span>交易类型</span>
+                        <el-select class="input-box"
+                                    name="houseTradeType"
+                                    v-model="changes.houseTradeType"
+                                    placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in houseTradeTypeList"
+                                    :key="index"
+                                    :label="item.dictKeyValue"
+                                    :value="item.dictKeyCode">
+                            </el-option>
+                        </el-select>
+                    </section>
                     <section class="baseInput bigB">
                         <span>交易备注</span>
                         <el-input
@@ -394,10 +370,10 @@
                           :rows="4"
                           :maxlength="1000"
                           placeholder="请输入内容"
-                          v-model="changes.tenantDesc"
+                          v-model="changes.houseTradeDesc"
                           @change="changeDescChange">
                         </el-input>
-                        <div class="abstract-num">剩余<span>{{changeAbstractNum}}</span>个字</div>
+                        <div class="abstract-num">剩余<span>{{houseTradeACodebstractNum}}</span>个字</div>
                     </section>
                     <div class="clear"></div>
                     <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
@@ -582,7 +558,7 @@
                 },
                 isBase: false,
                 abstractNum: 1000,
-                changeAbstractNum: 1000,
+                houseTradeACodebstractNum: 1000,
                 trafficNum: 500,
                 bonds: [
                     {
@@ -595,15 +571,18 @@
                         typeName: 'REITs'
                     }
                 ],
+                houseTradeTypeList: [],
                 changes: {
                     id: '',
-                    date: '',
-                    price: '',
-                    changeA: '',
-                    changeB: '',
-                    tenantDesc: '',
-                    tenantFinanceTool: [],
-                    evalCodes: []
+                    housesId: localStorage.getItem('id'),
+                    houseTradeDate: '',
+                    houseRradePrice: '',
+                    houseTradeACode: '',
+                    houseTradeBCode: '',
+                    houseTradeDesc: '',
+                    houseTradeType: '',
+                    houseTradeConsultingOrg: [],
+                    houseTradeEvaluationOrg: []
                 },
                 rents: {
                     id: '',
@@ -680,6 +659,7 @@
             this.getHouses()
             this.getAgentA()
             this.getAgentB()
+            this.getHouseTradeTypeList()
 
             var houseColl = localStorage.getItem("houseColl")
             if (houseColl) {
@@ -728,6 +708,17 @@
                     this.housesList = res.result.result
                 })
             },
+            getHouseTradeTypeList () {
+                util.request({
+                    method: 'get',
+                    interface: 'findDictionaryByType',
+                    data: {
+                        typeCode: 'propertys_trade_type'
+                    }
+                }).then(res => {
+                    this.houseTradeTypeList = res.result.result
+                })
+            },
             getAgentA () {
                 util.request({
                     method: 'get',
@@ -761,7 +752,7 @@
                 this.trafficNum = 500 - this.base.traffic.length
             },
             changeDescChange () {
-                this.changeAbstractNum = 1000 - this.changes.tenantDesc.length
+                this.houseTradeACodebstractNum = 1000 - this.changes.houseTradeDesc.length
             },
             rentChange () {
                 if (this.base.rent != '') {
@@ -924,7 +915,7 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    this.$parent.$refs.listBox.reloadList(res.result.result.id)
+                    this.$parent.$refs.listBox.reloadList('reload')
                 })
             },
             formDataDate (str) {
@@ -937,15 +928,9 @@
                 return year + '-' + month + '-' + day
             },
             saveChanges (isShow) {
-                var formData = {
-                    id: localStorage.getItem("id"),
-                    type: 'changes',
-                    data: this.changes
-                }
+                this.changes.recordCreater = window.UserInfo.userCnName
 
-                formData.data.recordCreater = window.UserInfo.userCnName
-
-                if (this.changes.date == '') {
+                if (this.changes.houseTradeDate == '') {
                     this.$message({
                         message: '请务填写交易日期！',
                         type: 'warning'
@@ -953,16 +938,16 @@
                     return false
                 }
 
-                formData.data.date = this.formDataDate(formData.data.date)
+                this.changes.houseTradeDate = this.formDataDate(this.changes.houseTradeDate)
 
-                if (this.changes.price == '') {
+                if (this.changes.houseRradePrice == '') {
                     this.$message({
                         message: '请务填写交易价格！',
                         type: 'warning'
                     })
                     return false
                 }
-                if (this.changes.changeA == '' && this.changes.changeB == '') {
+                if (this.changes.houseTradeACode == '' && this.changes.houseTradeBCode == '') {
                     this.$message({
                         message: '请务填写交易方！',
                         type: 'warning'
@@ -970,25 +955,35 @@
                     return false
                 }
 
-                this.changes.evalCodes = this.changes.evalCodes.join(',')
+                if (this.changes.houseTradeEvaluationOrg && this.changes.houseTradeEvaluationOrg.length) {
+                    this.changes.houseTradeEvaluationOrg = this.changes.houseTradeEvaluationOrg.join(',')
+                } else {
+                    this.changes.houseTradeEvaluationOrg = ''
+                }
 
-                this.changes.tenantFinanceTool = this.changes.tenantFinanceTool.join(',')
+                if (this.changes.houseTradeConsultingOrg && this.changes.houseTradeConsultingOrg.length) {
+                    this.changes.houseTradeConsultingOrg = this.changes.houseTradeConsultingOrg.join(',')
+                } else {
+                    this.changes.houseTradeConsultingOrg = ''
+                }
 
                 util.request({
                     method: 'post',
-                    interface: 'houseInfo',
-                    data: formData
+                    interface: 'manageHouseTradeDetail',
+                    data: this.changes
                 }).then(res => {
                     if (res.result.success == '1') {
                         this.changes = {
                             id: '',
-                            date: '',
-                            price: '',
-                            changeA: '',
-                            changeB: '',
-                            evalCodes: [],
-                            tenantFinanceTool: [],
-                            tenantDesc: ''
+                            housesId: localStorage.getItem('id'),
+                            houseTradeDate: '',
+                            houseRradePrice: '',
+                            houseTradeACode: '',
+                            houseTradeBCode: '',
+                            houseTradeType: '',
+                            houseTradeEvaluationOrg: [],
+                            houseTradeConsultingOrg: [],
+                            houseTradeDesc: ''
                         }
 
                         if (isShow) {

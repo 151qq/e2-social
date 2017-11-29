@@ -121,7 +121,7 @@
       }
     },
     methods: {
-      loadList(){
+      loadList(type){
         var formData = {}
         util.request({
           method: 'get',
@@ -129,6 +129,11 @@
           data: formData
         }).then(res => {
           this.treeData = res.result.result
+
+          if (type) {
+            return false
+          }
+
           if (this.treeData[0].children.length && this.treeData[0].children[0].children.length) {
             let id = this.treeData[0].children[0].children[0].nodeCode
             let dirCode = this.treeData[0].children[0].nodeCode

@@ -28,7 +28,7 @@ export default {
         /**
         * 保存草草 post
         * html5PageCode
-        * id pageID                                  
+        * id pageID                 
         */
         "draftArticle": platform + "siteEdit/draftArticle.json",
         /**
@@ -138,9 +138,10 @@ export default {
         * id 楼盘序列标识
          * '/static/api/property/changes.json'
         */
-        changes: platform +'houses/findHousesTrade.json',
-        deleteTradeHistory: platform + 'houses/deleteTradeHistory.json',
-        getTradeHistoryById: platform + 'houses/findTenantRecordById.json',
+        changes: platform +'houses/showHouseTradeDetailByHousesId.json',
+        manageHouseTradeDetail: platform + 'houses/manageHouseTradeDetail.json',
+        deleteTradeHistory: platform + 'houses/removeHouseTradeDetail.json',
+        getTradeHistoryById: platform + 'houses/showHouseTradeDetail.json',
 
         deleteRentHistory: platform + 'houses/deleteRentHistory.json',
         evalues: platform +'houses/findValuationHistory.json',
@@ -258,6 +259,7 @@ export default {
         removeBase: platform + 'enterprise/removeEnterpriseInfo.json',
         investTypes: platform + 'enterprise/disOfEnterpriseInfo.json',
         findEntByEntType: platform + 'enterprise/findEntByEntType.json',
+        findDictionaryByType: platform + 'houses/findDictionaryByType.json',
 
         orTree: platform + 'financeProductInfo/productTree.json',
         saveOrUpdate: platform + 'financeProductInfo/saveOrUpdate.json',
@@ -267,6 +269,12 @@ export default {
         financeProductHouseSave: platform + 'financeProductHouse/save.json',
         deleteFinanceProductHouser: platform + 'financeProductHouse/deleteFinanceProductHouser.json',
 
-        searchMap: platform + 'houses/searchHousesFileter.json'
+        searchMap: platform + 'houses/searchHousesFileter.json',
+        saveOrUpdate: platform + 'fundDetail/saveOrUpdate.json',
+        findByProductInfo: platform + 'fundDetail/findByProductInfo.json',
+        deleteFundDetail: platform + 'fundDetail/deleteFundDetail.json',
+
+        findListByProductCode: platform + 'financeProductHouse/findListByProductCode.json',
+        saveFundCashflow: platform + 'fundCashflow/saveOrUpdate.json'
     }
 }
