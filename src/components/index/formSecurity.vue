@@ -64,6 +64,7 @@
                         <el-select class="input-box"
                                    v-model="base.productSalesOrg"
                                    name="investor"
+                                   multiple
                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in agentCxList"
@@ -78,6 +79,7 @@
                         <el-select class="input-box"
                                    v-model="base.productEvaluationOrg"
                                    name="investor"
+                                   multiple
                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in agentPgList"
@@ -92,6 +94,7 @@
                         <el-select class="input-box"
                                    v-model="base.productRatingOrg"
                                    name="investor"
+                                   multiple
                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in agentPjList"
@@ -106,6 +109,7 @@
                         <el-select class="input-box"
                                    v-model="base.productCashflowConsultingOrg"
                                    name="investor"
+                                   multiple
                                    placeholder="请选择">
                             <el-option
                                     v-for="(item, index) in agentYcList"
@@ -552,10 +556,10 @@
                     productHouseRate: [],
                     productEndTime: '',
                     productQuotation: '',
-                    productSalesOrg: '',
-                    productEvaluationOrg: '',
-                    productRatingOrg: '',
-                    productCashflowConsultingOrg: '',
+                    productSalesOrg: [],
+                    productEvaluationOrg: [],
+                    productRatingOrg: [],
+                    productCashflowConsultingOrg: [],
                     productArcUrl: ''
                 },
                 publishTime: '',
@@ -711,6 +715,32 @@
                         this.$message.error(res.result.message)
                         return
                     }
+
+                    res.result.result.forEach((item) => {
+                        if (item.productSalesOrg) {
+                            item.productSalesOrg = item.productSalesOrg.split(',')
+                        } else {
+                            item.productSalesOrg = []
+                        }
+
+                        if (item.productEvaluationOrg) {
+                            item.productEvaluationOrg = item.productEvaluationOrg.split(',')
+                        } else {
+                            item.productEvaluationOrg = []
+                        }
+
+                        if (item.productRatingOrg) {
+                            item.productRatingOrg = item.productRatingOrg.split(',')
+                        } else {
+                            item.productRatingOrg = []
+                        }
+
+                        if (item.productCashflowConsultingOrg) {
+                            item.productCashflowConsultingOrg = item.productCashflowConsultingOrg.split(',')
+                        } else {
+                            item.productCashflowConsultingOrg = []
+                        }
+                    })
 
                     this.base = res.result.result
 
@@ -969,6 +999,30 @@
 
                 if (this.base.productEndTime) {
                     this.base.productEndTime = this.formDataDate(this.base.productEndTime)
+                }
+
+                if (this.base.productSalesOrg.length) {
+                    this.base.productSalesOrg = this.base.productSalesOrg.join(',')
+                } else {
+                    this.base.productSalesOrg = ''
+                }
+
+                if (this.base.productEvaluationOrg.length) {
+                    this.base.productEvaluationOrg = this.base.productEvaluationOrg.join(',')
+                } else {
+                    this.base.productEvaluationOrg = ''
+                }
+
+                if (this.base.productRatingOrg.length) {
+                    this.base.productRatingOrg = this.base.productRatingOrg.join(',')
+                } else {
+                    this.base.productRatingOrg = ''
+                }
+
+                if (this.base.productCashflowConsultingOrg.length) {
+                    this.base.productCashflowConsultingOrg = this.base.productCashflowConsultingOrg.join(',')
+                } else {
+                    this.base.productCashflowConsultingOrg = ''
                 }
 
                 util.request({
