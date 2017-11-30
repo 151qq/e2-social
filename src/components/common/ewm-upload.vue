@@ -14,7 +14,7 @@
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'titleName', 'idName', 'width', 'placeHolder'],
+    props: ['path', 'titleName', 'idName', 'width', 'isDelete', 'placeHolder'],
     data() {
       return {
         curPath: '',
@@ -40,7 +40,15 @@ export default {
         this.$emit('changeImg', data)
       },
       postImg (e) {
-        util.upFile(e).then(res => {
+        var opotion = {
+          url: 'uploadArticleAreaImage',
+          event: e,
+          data: {
+            fileCode: localStorage.getItem('id')
+          }
+        }
+
+        util.uploadFile(opotion).then(res => {
           let imgUrl = res.result.result[0]
           this.curPath = imgUrl
           var data = {
