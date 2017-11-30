@@ -2,7 +2,7 @@
     <div class="float-box flexBox" v-cloak>
         <!-- 左侧文章列表 -->
         <section class="leftBox">
-            <articles @getInfo="getInfo" ref="listBox"></articles>
+            <!-- <articles @getInfo="getInfo" ref="listBox"></articles> -->
         </section>
         <!-- 中间文章编辑区域 -->
         <div class="body-mid flexItem">
@@ -36,6 +36,10 @@ export default {
 }
 </script>
 <style lang="scss">
+.float-box {
+    min-height: 600px;
+}
+
 .leftBox {
     width: 400px;
     min-height: 100%;

@@ -1,6 +1,9 @@
 <template>
     <div class="form-b">
-        <el-collapse v-model="activeNames" @change="collChange">
+        <div class="null-page-box">
+          暂未开发该功能，敬请期待！
+        </div>
+        <!-- <el-collapse v-model="activeNames" @change="collChange">
           <el-collapse-item class="formStyleR" title="基础信息" name="0">
             <section class="baseInput bigB">
                 <span>报告标题</span>
@@ -121,7 +124,7 @@
 
         <add-report :is-add="isAdd"
                 @addReports="addNewReport"
-                ref="addReports"></add-report>
+                ref="addReports"></add-report> -->
     </div>
 </template>
 <script>
@@ -160,281 +163,281 @@ export default {
         }
     },
     mounted () {
-        this.type = this.$route.params.type
-        var reportColl = localStorage.getItem("reportColl")
-        if (reportColl) {
-            this.activeNames = reportColl.split(',')
-        }
+        // this.type = this.$route.params.type
+        // var reportColl = localStorage.getItem("reportColl")
+        // if (reportColl) {
+        //     this.activeNames = reportColl.split(',')
+        // }
 
         document.title = '报告维护'
-    },
-    watch: {
-      abstract () {
-        this.abstractNum = 200 - this.abstract.length
-      },
-      title () {
-        this.titleNum = 25 - this.title.length
-      }
-    },
-    methods: {
-        getAllData () {
-          this.getArticle()
-          this.getInvestors()
-
-          this.pageNumber = 1
-
-          if (this.timer) {
-              clearInterval(this.timer)
-          }
-
-          // this.timer = setInterval(() => {
-          //     this.saveAll()
-          // }, 180000)
-        },
-        getArticle () {
-          util.request({
-              method: 'get',
-              interface: 'findArticleByFileCode',
-              data: {
-                fileCode: localStorage.getItem("id")
-              }
-          }).then(res => {
-              var resData = res.result.result
-              this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
-              this.title = resData.html5PageTitle
-              this.articleId = resData.id
-              this.investor = resData.editorCode
-              this.coverImg = resData.html5PageindexImg
-              this.createTime = res.result.responsetime.split(' ')[0]
-              this.abstract = resData.html5Summary
-
-              this.abstractNum = 200 - this.abstract.length
-
-              this.getSelectList()
-              this.getReportList()
-
-              var data = {
-                article: this.articleinfo,
-                bgImg: resData.backgroundImg
-              }
-
-              this.$refs.articleForm.editInte(data)
-          })
-        },
-        changeImg (data) {
-          this.coverImg = data.url
-        },
-        checkTitle () {
-          if (this.title.length > 25) {
-            this.$message({
-              message: '最多只能输入25个字符',
-              type: 'warning'
-            })
-            this.title = this.title.substring(0, 25)
-          }
-        },
-        collChange () {
-            localStorage.setItem("reportColl", this.activeNames)
-        },
-        // saveData (type, index) {
-        //     var formData = {
-        //       id: localStorage.getItem("id"),
-        //       type: type,
-        //       data: this[type],
-        //     }
-
-        //     if (index !== undefined) {
-        //       formData.index = index
-        //     }
-
-        //     util.request({
-        //         method: 'post',
-        //         interface: 'savereport',
-        //         data: formData
-        //     }).then(res => {
-        //         console.log(res)
-        //     })
-        // },
-        setArticles () {
-          var formData = {
-            articleCode: localStorage.getItem("id"),
-            recommend: this.articles.join(',')
-          }
-
-          util.request({
-              method: 'post',
-              interface: 'setArticles',
-              data: formData
-          }).then(res => {
-              console.log(res)
-          })
-        },
-        saveForm () {
-          if (this.abstract.length < 140) {
-            this.$message({
-                message: '报告摘要至少140个字！',
-                type: 'warning'
-            })
-            return false
-          }
-
-          var obj = {
-            title: this.title,
-            investor: this.investor,
-            abstract: this.abstract,
-            pageImg: this.coverImg,
-            id: this.articleId,
-            html5CatalogCode: localStorage.getItem('dirCode'),
-            html5PageCode: localStorage.getItem('id')
-          }
-
-          this.$refs.articleForm.saveArticle(obj)
-        },
-        saveAll () {
-          this.saveForm()
-          this.$refs.articleForm.saveAll()
-          this.setArticles()
-        }, 
-        showAdd () {
-          this.$refs.addReports.initData()
-          this.isAdd.value = true
-        },
-        addNewReport (data) {
-          this.title = data.title
-          this.coverImg = data.coverImg
-          var obj = {
-            title: this.title,
-            pageImg: data.coverImg,
-            id: '',
-            html5CatalogCode: localStorage.getItem('houseMall')
-          }
-          this.$refs.articleForm.saveArticle(obj)
-          this.isAdd.value = false
-        },
-        getInvestors () {
-            util.request({
-                method: 'get',
-                interface: 'getInvestors',
-                data: {
-                    roleCode: 'entadconsultant'
-                }
-            }).then(res => {
-                this.investors = res.result.result
-            })
-        },
-        getSelectList () {
-          var formD = {
-            fileCode: localStorage.getItem("id")
-          }
-
-          util.request({
-              method: 'get',
-              interface: 'findRecommendArticleByCode',
-              data: formD
-          }).then(res => {
-              this.reportSelect = res.result.result
-
-              this.reportSelect.forEach((item) => {
-                this.articles.push(item.html5PageCode)
-              })
-          })
-        },
-        getReportList () {
-            util.request({
-                method: 'get',
-                interface: 'findRecommendArticleByCode',
-                data: {
-                  self: this.articleId
-                }
-            }).then(res => {
-                this.reportAllList = res.result.result
-                this.total = this.reportAllList.length
-                this.resetReport()
-                this.getPageReport()
-            })
-        },
-        getPageReport () {
-          var startL = this.pageSize * (this.pageNumber - 1)
-          var stopL = this.pageSize * this.pageNumber
-          this.reportList = this.reportAllList.slice(startL, stopL)
-        },
-        deleteReport (index) {
-          if (!this.articles.length) {
-            return false
-          }
-          this.articles.splice(index, 1)
-          this.reportSelect.splice(index, 1)
-          this.resetReport()
-        },
-        resetReport () {
-          // 存储选择状态
-          this.selListInit = []
-
-          this.reportAllList.forEach((item) => {
-            var index = this.articles.indexOf(String(item.html5PageCode))
-            // 存储选择状态
-            this.selListInit.push(index > -1)
-
-            if (index > -1) {
-              item.isSelected = true
-            } else {
-              item.isSelected = false
-            }
-          })
-          this.reportAllList = this.reportAllList.concat([])
-        },
-        changeReport (index) {
-          let item = this.reportList[index]
-          item.isSelected = !item.isSelected
-          this.reportList = this.reportList.concat([])
-        },
-        addReport () {
-          this.dialogVisible = true
-        },
-        closeSelect () {
-          this.reportAllList.forEach((item, index) => {
-            item.isSelected = this.selListInit[index]
-          })
-          this.dialogVisible = false
-          this.reportAllList = this.reportAllList.concat([])
-        },
-        confirmSelect () {
-          // 存储选择状态
-          this.selListInit = []
-          var selects = this.articles.concat([])
-          this.reportAllList.forEach((item, num) => {
-            var index = selects.indexOf(item.html5PageCode)
-            // 存储选择状态
-            this.selListInit.push(item.isSelected)
-
-            if (index > -1 && !item.isSelected) {
-              // 删除
-              selects.splice(index, 1)
-              this.reportSelect.splice(index, 1)
-            } if (index < 0 && item.isSelected) {
-              // 添加
-              selects.push(item.html5PageCode)
-              this.reportSelect.push(item)
-            }
-          })
-          this.articles = selects.concat([])
-          this.dialogVisible = false
-        },
-        changePage (size) {
-          this.pageNumber = size
-          this.getPageReport()
-        }
-    },
-    destroyed() {
-        if (this.timer) {
-            clearInterval(this.timer)
-        }
-    },
-    components: {
-      editBox,
-      upload,
-      addReport
     }
+    // watch: {
+    //   abstract () {
+    //     this.abstractNum = 200 - this.abstract.length
+    //   },
+    //   title () {
+    //     this.titleNum = 25 - this.title.length
+    //   }
+    // },
+    // methods: {
+    //     getAllData () {
+    //       this.getArticle()
+    //       this.getInvestors()
+
+    //       this.pageNumber = 1
+
+    //       if (this.timer) {
+    //           clearInterval(this.timer)
+    //       }
+
+    //       // this.timer = setInterval(() => {
+    //       //     this.saveAll()
+    //       // }, 180000)
+    //     },
+    //     getArticle () {
+    //       util.request({
+    //           method: 'get',
+    //           interface: 'findArticleByFileCode',
+    //           data: {
+    //             fileCode: localStorage.getItem("id")
+    //           }
+    //       }).then(res => {
+    //           var resData = res.result.result
+    //           this.articleinfo = resData.fileAreaList ? resData.fileAreaList : []
+    //           this.title = resData.html5PageTitle
+    //           this.articleId = resData.id
+    //           this.investor = resData.editorCode
+    //           this.coverImg = resData.html5PageindexImg
+    //           this.createTime = res.result.responsetime.split(' ')[0]
+    //           this.abstract = resData.html5Summary
+
+    //           this.abstractNum = 200 - this.abstract.length
+
+    //           this.getSelectList()
+    //           this.getReportList()
+
+    //           var data = {
+    //             article: this.articleinfo,
+    //             bgImg: resData.backgroundImg
+    //           }
+
+    //           this.$refs.articleForm.editInte(data)
+    //       })
+    //     },
+    //     changeImg (data) {
+    //       this.coverImg = data.url
+    //     },
+    //     checkTitle () {
+    //       if (this.title.length > 25) {
+    //         this.$message({
+    //           message: '最多只能输入25个字符',
+    //           type: 'warning'
+    //         })
+    //         this.title = this.title.substring(0, 25)
+    //       }
+    //     },
+    //     collChange () {
+    //         localStorage.setItem("reportColl", this.activeNames)
+    //     },
+    //     // saveData (type, index) {
+    //     //     var formData = {
+    //     //       id: localStorage.getItem("id"),
+    //     //       type: type,
+    //     //       data: this[type],
+    //     //     }
+
+    //     //     if (index !== undefined) {
+    //     //       formData.index = index
+    //     //     }
+
+    //     //     util.request({
+    //     //         method: 'post',
+    //     //         interface: 'savereport',
+    //     //         data: formData
+    //     //     }).then(res => {
+    //     //         console.log(res)
+    //     //     })
+    //     // },
+    //     setArticles () {
+    //       var formData = {
+    //         articleCode: localStorage.getItem("id"),
+    //         recommend: this.articles.join(',')
+    //       }
+
+    //       util.request({
+    //           method: 'post',
+    //           interface: 'setArticles',
+    //           data: formData
+    //       }).then(res => {
+    //           console.log(res)
+    //       })
+    //     },
+    //     saveForm () {
+    //       if (this.abstract.length < 140) {
+    //         this.$message({
+    //             message: '报告摘要至少140个字！',
+    //             type: 'warning'
+    //         })
+    //         return false
+    //       }
+
+    //       var obj = {
+    //         title: this.title,
+    //         investor: this.investor,
+    //         abstract: this.abstract,
+    //         pageImg: this.coverImg,
+    //         id: this.articleId,
+    //         html5CatalogCode: localStorage.getItem('dirCode'),
+    //         html5PageCode: localStorage.getItem('id')
+    //       }
+
+    //       this.$refs.articleForm.saveArticle(obj)
+    //     },
+    //     saveAll () {
+    //       this.saveForm()
+    //       this.$refs.articleForm.saveAll()
+    //       this.setArticles()
+    //     }, 
+    //     showAdd () {
+    //       this.$refs.addReports.initData()
+    //       this.isAdd.value = true
+    //     },
+    //     addNewReport (data) {
+    //       this.title = data.title
+    //       this.coverImg = data.coverImg
+    //       var obj = {
+    //         title: this.title,
+    //         pageImg: data.coverImg,
+    //         id: '',
+    //         html5CatalogCode: localStorage.getItem('houseMall')
+    //       }
+    //       this.$refs.articleForm.saveArticle(obj)
+    //       this.isAdd.value = false
+    //     },
+    //     getInvestors () {
+    //         util.request({
+    //             method: 'get',
+    //             interface: 'getInvestors',
+    //             data: {
+    //                 roleCode: 'entadconsultant'
+    //             }
+    //         }).then(res => {
+    //             this.investors = res.result.result
+    //         })
+    //     },
+    //     getSelectList () {
+    //       var formD = {
+    //         fileCode: localStorage.getItem("id")
+    //       }
+
+    //       util.request({
+    //           method: 'get',
+    //           interface: 'findRecommendArticleByCode',
+    //           data: formD
+    //       }).then(res => {
+    //           this.reportSelect = res.result.result
+
+    //           this.reportSelect.forEach((item) => {
+    //             this.articles.push(item.html5PageCode)
+    //           })
+    //       })
+    //     },
+    //     getReportList () {
+    //         util.request({
+    //             method: 'get',
+    //             interface: 'findRecommendArticleByCode',
+    //             data: {
+    //               self: this.articleId
+    //             }
+    //         }).then(res => {
+    //             this.reportAllList = res.result.result
+    //             this.total = this.reportAllList.length
+    //             this.resetReport()
+    //             this.getPageReport()
+    //         })
+    //     },
+    //     getPageReport () {
+    //       var startL = this.pageSize * (this.pageNumber - 1)
+    //       var stopL = this.pageSize * this.pageNumber
+    //       this.reportList = this.reportAllList.slice(startL, stopL)
+    //     },
+    //     deleteReport (index) {
+    //       if (!this.articles.length) {
+    //         return false
+    //       }
+    //       this.articles.splice(index, 1)
+    //       this.reportSelect.splice(index, 1)
+    //       this.resetReport()
+    //     },
+    //     resetReport () {
+    //       // 存储选择状态
+    //       this.selListInit = []
+
+    //       this.reportAllList.forEach((item) => {
+    //         var index = this.articles.indexOf(String(item.html5PageCode))
+    //         // 存储选择状态
+    //         this.selListInit.push(index > -1)
+
+    //         if (index > -1) {
+    //           item.isSelected = true
+    //         } else {
+    //           item.isSelected = false
+    //         }
+    //       })
+    //       this.reportAllList = this.reportAllList.concat([])
+    //     },
+    //     changeReport (index) {
+    //       let item = this.reportList[index]
+    //       item.isSelected = !item.isSelected
+    //       this.reportList = this.reportList.concat([])
+    //     },
+    //     addReport () {
+    //       this.dialogVisible = true
+    //     },
+    //     closeSelect () {
+    //       this.reportAllList.forEach((item, index) => {
+    //         item.isSelected = this.selListInit[index]
+    //       })
+    //       this.dialogVisible = false
+    //       this.reportAllList = this.reportAllList.concat([])
+    //     },
+    //     confirmSelect () {
+    //       // 存储选择状态
+    //       this.selListInit = []
+    //       var selects = this.articles.concat([])
+    //       this.reportAllList.forEach((item, num) => {
+    //         var index = selects.indexOf(item.html5PageCode)
+    //         // 存储选择状态
+    //         this.selListInit.push(item.isSelected)
+
+    //         if (index > -1 && !item.isSelected) {
+    //           // 删除
+    //           selects.splice(index, 1)
+    //           this.reportSelect.splice(index, 1)
+    //         } if (index < 0 && item.isSelected) {
+    //           // 添加
+    //           selects.push(item.html5PageCode)
+    //           this.reportSelect.push(item)
+    //         }
+    //       })
+    //       this.articles = selects.concat([])
+    //       this.dialogVisible = false
+    //     },
+    //     changePage (size) {
+    //       this.pageNumber = size
+    //       this.getPageReport()
+    //     }
+    // },
+    // destroyed() {
+    //     if (this.timer) {
+    //         clearInterval(this.timer)
+    //     }
+    // },
+    // components: {
+    //   editBox,
+    //   upload,
+    //   addReport
+    // }
 }
 </script>
 <style lang="scss">
@@ -447,6 +450,13 @@ export default {
 
 .form-b {
     margin-top: 30px;
+
+    .null-page-box {
+      margin-top: 120px;
+      font-size: 36px;
+      color: #999999;
+      text-align: center;
+    }
 }
 
 .formStyleR {

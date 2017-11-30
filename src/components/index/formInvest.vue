@@ -644,7 +644,6 @@
                     enterpriseSinamicroblogQrcode: '',
                     enterprisePubwechatAccount: '',
                     enterpriseFacebookAccount: '',
-                    enterprisePubwechatAccount: '',
                     enterpriseSinamicorblogAccount: '',
                     enterpriseCreditLevel: '',
                     enterpriseTotalAsset: '',
@@ -870,9 +869,49 @@
                 return year + '-' + month + '-' + day
             },
             saveBase () {
+                if (!this.base.enterpriseNameReg) {
+                    this.$message({
+                        message: '请填写机构简称！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
                 if (this.base.enterpriseNameReg.length > 10) {
                     this.$message({
                         message: '机构简称最多10个字！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!this.base.enterpriseCreditLevel) {
+                    this.$message({
+                        message: '请选择主体评级！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!this.base.enterpriseCode) {
+                    this.$message({
+                        message: '请选添加组织机构代码！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!this.base.enterpriseIndustry) {
+                    this.$message({
+                        message: '请选添加企业类型！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!this.base.enterpriseLegalPerson) {
+                    this.$message({
+                        message: '请选添加机构法人！',
                         type: 'warning'
                     })
                     return false
