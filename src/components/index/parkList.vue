@@ -144,6 +144,14 @@
             localStorage.setItem("dirCode", dirCode)
             localStorage.setItem("cityCode", cityCode)
             this.$emit('getInfo', data)
+          } else {
+            let data = {
+              id: null
+            }
+
+            localStorage.removeItem("id")
+            localStorage.removeItem("dirCode")
+            this.$emit('getInfo', data)
           }
         })
       },

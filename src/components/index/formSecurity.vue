@@ -1,5 +1,5 @@
 <template>
-    <div class="form-invest">
+    <div v-show="isId" class="form-invest">
         <el-collapse v-model="activeNames" @change="collChange">
             <el-collapse-item class="formStyle" title="基本信息" name="1">
                 <div class="form-box">
@@ -626,7 +626,8 @@
                 agentCxList: [],
                 agentPgList: [],
                 agentPjList: [],
-                agentYcList: []
+                agentYcList: [],
+                isId: false
             }
         },
         mounted () {
@@ -642,7 +643,12 @@
             this.getInvests()
         },
         methods: {
-            getAllData () {
+            getAllData (data) {
+                this.isId = data.id !== null
+                if (!this.isId) {
+                    return false
+                }
+                
                 this.isBase = false
                 this.getBase()
                 this.findByProductInfo()

@@ -120,6 +120,8 @@
             return false
           }
 
+
+
           if (this.treeData[0].childNodes.length) {
             let id = this.treeData[0].childNodes[0].enterpriseCode
             let dirCode = this.treeData[0].dictKeyCode
@@ -130,6 +132,14 @@
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
+            this.$emit('getInfo', data)
+          } else {
+            let data = {
+              id: null
+            }
+
+            localStorage.removeItem("id")
+            localStorage.removeItem("dirCode")
             this.$emit('getInfo', data)
           }
         })

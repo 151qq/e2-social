@@ -26,7 +26,7 @@ export default {
     methods: {
         getInfo (data) {
             // 编辑区域获取初始数据
-            this.$refs.editBox.getAllData()
+            this.$refs.editBox.getAllData(data)
         }
     },
     components: {

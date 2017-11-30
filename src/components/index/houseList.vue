@@ -31,7 +31,7 @@
                 <div class="lists-box"
                     @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode)">
                   <div class="img-box">
-                    <img v-if="item3.imgUrl" class="img-box" :src="item3.imgUrl">
+                    <img v-if="item3.imgUrl" :src="item3.imgUrl">
                   </div>
                   <div class="p-box">
                     <span class="title">{{item3.label}}</span>
@@ -148,6 +148,14 @@
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
             localStorage.setItem("cityCode", cityCode)
+            this.$emit('getInfo', data)
+          } else {
+            let data = {
+              id: null
+            }
+
+            localStorage.removeItem("id")
+            localStorage.removeItem("dirCode")
             this.$emit('getInfo', data)
           }
         })

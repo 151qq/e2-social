@@ -1,5 +1,5 @@
 <template>
-    <div class="form-b">
+    <div v-show="isId" class="form-b">
         <el-collapse v-model="activeNames" @change="collChange">
             <el-collapse-item class="formStyle" title="物业基本信息" name="1">
                 <div id="container"></div>
@@ -644,7 +644,8 @@
                 investList: [],
                 housesList: [],
                 agentAList: [],
-                agentBList: []
+                agentBList: [],
+                isId: false
             }
         },
         mounted () {
@@ -669,7 +670,12 @@
             this.addBase = Object.assign({}, this.base)
         },
         methods: {
-            getAllData () {
+            getAllData (data) {
+                this.isId = data.id !== null
+                if (!this.isId) {
+                    return false
+                }
+                
                 this.isBase = false
                 this.getBase()
                 this.getAppearance()

@@ -1,5 +1,5 @@
 <template>
-    <div class="form-invest">
+    <div v-show="isId" class="form-invest">
         <el-collapse v-model="activeNames" @change="collChange">
             <el-collapse-item class="formStyle" title="基本信息" name="1">
                 <div class="form-box">
@@ -249,23 +249,11 @@
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
-            <template v-if="isQYBG">
+            <template v-if="isQYGL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="企业报告员" name="3">
+                <el-collapse-item class="formStyle" title="企业管理员" name="3">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择报告类型">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -290,18 +278,6 @@
                 <el-collapse-item class="formStyle" title="报告管理员" name="4">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择报告类型">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -326,18 +302,6 @@
                 <el-collapse-item class="formStyle" title="商圈管理员" name="5">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择城市">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -357,23 +321,11 @@
                     </div>
                 </el-collapse-item>
             </template>
-            <template v-if="isLPFB">
+            <template v-if="isWYGL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="楼盘发布员" name="6">
+                <el-collapse-item class="formStyle" title="物业管理员" name="6">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -393,131 +345,11 @@
                     </div>
                 </el-collapse-item>
             </template>
-            <template v-if="isLPGL">
+            <template v-if="isWYJL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="楼盘管理员" name="7">
+                <el-collapse-item class="formStyle" title="物业管理经理" name="7">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
-                </el-collapse-item>
-            </template>
-            <template v-if="isWYTZ">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="物业投资顾问" name="8">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
-                </el-collapse-item>
-            </template>
-            <template v-if="isTZJG">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="投资机构发布员" name="9">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
-                </el-collapse-item>
-            </template>
-            <template v-if="isTZGL">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="投资机构管理员" name="10">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -539,57 +371,9 @@
             </template>
             <template v-if="isZQCP">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="证券产品发布员" name="11">
+                <el-collapse-item class="formStyle" title="证券产品管理员" name="8">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
-                </el-collapse-item>
-            </template>
-            <template v-if="isZQGL">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="证券产品管理员" name="12">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <el-select class="input-box"
-                                   v-model="base.city"
-                                   name="investor"
-                                   placeholder="请选择商圈">
-                            <el-option
-                                    v-for="(item, index) in citys"
-                                    :key="index"
-                                    :label="item.userLoginName"
-                                    :value="item.userCode">
-                            </el-option>
-                        </el-select>
-
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
@@ -678,7 +462,8 @@
                     finance_org_type_2: 'propertys_agent_type'
                 },
                 typeKey: '',
-                enterpriseCreditLevelList: []
+                enterpriseCreditLevelList: [],
+                isId: false
             }
         },
         mounted () {
@@ -693,8 +478,8 @@
             this.getEnterpriseCreditLevel()
         },
         computed: {
-            // 企业报告
-            isQYBG () {
+            // 企业管理
+            isQYGL () {
                 var type = this.base.enterpriseType
                 var arr = ['finance_org_type_0', 'finance_org_type_4']
                 return type && arr.indexOf(type) > -1
@@ -702,7 +487,7 @@
             // 报告管理
             isBGGL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                var arr = ['finance_org_type_4']
                 return type && arr.indexOf(type) > -1
             },
             // 商圈管理
@@ -711,46 +496,22 @@
                 var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
             },
-            // 楼盘发布
-            isLPFB () {
+            // 物业管理
+            isWYGL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0']
+                var arr = ['finance_org_type_0', 'finance_org_type_4']
                 return type && arr.indexOf(type) > -1
             },
-            // 楼盘管理
-            isLPGL () {
+            // 物业管理经理
+            isWYJL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0']
+                var arr = ['finance_org_type_0', 'finance_org_type_4']
                 return type && arr.indexOf(type) > -1
             },
-            // 物业投资顾问
-            isWYTZ () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0']
-                return type && arr.indexOf(type) > -1
-            },
-            // 投资机构发布
-            isTZJG () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_4']
-                return type && arr.indexOf(type) == -1
-            },
-            // 投资机构管理
-            isTZGL () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_4']
-                return type && arr.indexOf(type) == -1
-            },
-            // 证券发布
+            // 证券产品管理
             isZQCP () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_7']
-                return type && arr.indexOf(type) > -1
-            },
-            // 证券管理
-            isZQGL () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_7']
+                var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
             }
         },
@@ -771,7 +532,12 @@
                 this.base.enterpriseSinamicroblogQrcode = data.url
                 this.base.enterpriseSinamicorblogAccount = data.title
             },
-            getAllData () {
+            getAllData (data) {
+                this.isId = data.id !== null
+                if (!this.isId) {
+                    return false
+                }
+
                 this.typeKey = this.typeData[localStorage.getItem('dirCode')]
                 this.isBase = false
                 this.getBase()
@@ -1051,7 +817,7 @@
 
         .input-box {
             float: left;
-            width: 190px;
+            width: 290px;
             margin-right: 10px;
 
             input {

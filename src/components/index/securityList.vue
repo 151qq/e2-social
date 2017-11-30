@@ -26,7 +26,7 @@
                 <div class="lists-box"
                     @click="getInfo(item1.dictKeyCode, item2.dictKeyCode, item3.productCode, index1, index2, index3)">
                   <div class="img-box">
-                    <img v-if="item3.productLogo" class="img-box" :src="item3.productLogo">
+                    <img v-if="item3.productLogo" :src="item3.productLogo">
                   </div>
                   <div class="p-box">
                     <span class="title">{{item3.productCame}}</span>
@@ -159,6 +159,14 @@
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
+            this.$emit('getInfo', data)
+          } else {
+            let data = {
+              id: null
+            }
+
+            localStorage.removeItem("id")
+            localStorage.removeItem("dirCode")
             this.$emit('getInfo', data)
           }
         })

@@ -166,6 +166,14 @@
             localStorage.setItem("reportStatus", status)
             this.$emit('getInfo', data)
             this.isfirst = false
+          } else {
+            let data = {
+              id: null
+            }
+
+            localStorage.removeItem("id")
+            localStorage.removeItem("dirCode")
+            this.$emit('getInfo', data)
           }
         })
       },
