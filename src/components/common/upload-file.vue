@@ -2,7 +2,8 @@
   <el-dialog title="头像更改" v-model="dialogFormVisible.visibleF" size="tiny">
     <div class="el-upload file-container">
       <div class="el-dragger">
-        <img class="preview-img" :src="imgPath" v-show="imgPath" />
+        <img v-if="imgPath" class="preview-img" :src="imgPath"/>
+        <img v-else class="preview-img" src="../../assets/images/default-avatar.png"/>
         <input class="btn_file" type="file" @change="fileChange"/>
       </div>
       {{remark}}
@@ -70,8 +71,6 @@ export default {
       width: 180px;
       height: 180px;
       margin: 0 auto 10px;
-      background: url(http://img2.imgtn.bdimg.com/it/u=1651318081,2860235060&fm=214&gp=0.jpg) center no-repeat;
-      background-size: 100% auto;
       border: 1px solid #f2f2f2;
       border-radius: 50%;
       overflow: hidden;
