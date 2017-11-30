@@ -189,6 +189,7 @@
                             <upload :path="base.enterpriseLogoUrl"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :is-house-id="true"
                                     @changeImg="changeImg"></upload>
                         </div>
                     </section>

@@ -179,6 +179,7 @@
                             <upload :path="base.productLogo"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :is-house-id="true"
                                     :id-name="'productLogo'"
                                     @changeImg="changeImg"></upload>
                         </div>
@@ -189,6 +190,7 @@
                             <upload :path="base.productArcUrl"
                                     :no-del="true"
                                     :bg-path="true"
+                                    :is-house-id="true"
                                     :id-name="'productArcUrl'"
                                     @changeImg="changeArcImg"></upload>
                         </div>
