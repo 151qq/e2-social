@@ -21,16 +21,16 @@
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>主体评级</span>
+                        <span>信用评级</span>
                         <el-select class="input-box"
                                    v-model="base.enterpriseCreditLevel"
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
-                                    v-for="(item, index) in types[typeKey]"
+                                    v-for="(item, index) in enterpriseCreditLevelList"
                                     :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
+                                    :label="item.dictKeyValue"
+                                    :value="item.dictKeyCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -676,7 +676,8 @@
                     finance_org_type_1: 'propertys_investmen_type',
                     finance_org_type_2: 'propertys_agent_type'
                 },
-                typeKey: ''
+                typeKey: '',
+                enterpriseCreditLevelList: []
             }
         },
         mounted () {
@@ -688,6 +689,7 @@
 
             this.getTypes()
             this.getCitys()
+            this.getEnterpriseCreditLevel()
         },
         computed: {
             // 企业报告
@@ -817,6 +819,17 @@
                     }
                 })
             },
+            getEnterpriseCreditLevel () {
+                util.request({
+                    method: 'get',
+                    interface: 'findDictionaryByType',
+                    data: {
+                        typeCode: 'enterprise_credit_level'
+                    }
+                }).then(res => {
+                    this.enterpriseCreditLevelList = res.result.result
+                })
+            },
             getCitys () {
                 util.request({
                     method: 'get',
@@ -886,14 +899,6 @@
                     return false
                 }
 
-                if (!this.base.enterpriseCreditLevel) {
-                    this.$message({
-                        message: '请选择主体评级！',
-                        type: 'warning'
-                    })
-                    return false
-                }
-
                 if (!this.base.enterpriseCode) {
                     this.$message({
                         message: '请选添加组织机构代码！',
@@ -905,14 +910,6 @@
                 if (!this.base.enterpriseIndustry) {
                     this.$message({
                         message: '请选添加企业类型！',
-                        type: 'warning'
-                    })
-                    return false
-                }
-
-                if (!this.base.enterpriseLegalPerson) {
-                    this.$message({
-                        message: '请选添加机构法人！',
                         type: 'warning'
                     })
                     return false
