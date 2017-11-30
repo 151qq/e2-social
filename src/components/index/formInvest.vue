@@ -72,6 +72,7 @@
                         <span>企业类型</span>
                         <el-select class="input-box"
                                    v-model="base.enterpriseIndustry"
+                                   :disabled="!types[typeKey] || !types[typeKey].length"
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
@@ -907,7 +908,7 @@
                     return false
                 }
 
-                if (!this.base.enterpriseIndustry) {
+                if (this.base.enterpriseType != 'finance_org_type_0' && !this.base.enterpriseIndustry) {
                     this.$message({
                         message: '请选添加企业类型！',
                         type: 'warning'

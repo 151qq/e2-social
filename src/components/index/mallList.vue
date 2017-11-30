@@ -30,7 +30,9 @@
 
                 <div class="lists-box"
                     @click="getInfo(item3.nodeCode, item1.nodeCode, index1, index2, index3, item2.nodeCode)">
-                  <img class="img-box" :src="item3.imgUrl">
+                  <div class="img-box">
+                    <img v-if="item3.imgUrl" class="img-box" :src="item3.imgUrl">
+                  </div>
                   <div class="p-box">
                     <span class="title">{{item3.label}}</span>
                     <div>
@@ -431,6 +433,13 @@
             width: 50px;
             height: 30px;
             margin: 15px 15px 0 0;
+            background: #cfcfd0;
+
+            img {
+              display: block;
+              width: 50px;
+              height: 30px;
+            }
           }
 
           .p-box {

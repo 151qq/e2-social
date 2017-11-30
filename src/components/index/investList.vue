@@ -20,7 +20,9 @@
 
               <div class="lists-box"
                   @click="getInfo(item1.dictKeyCode, item2.enterpriseCode, index1, index2)">
-                <img class="img-box" :src="item2.enterpriseLogoUrl">
+                  <div class="img-box">
+                      <img v-if="item2.enterpriseLogoUrl" :src="item2.enterpriseLogoUrl">
+                  </div>
                 <div class="p-box">
                   <span class="title">{{item2.enterpriseCname}}</span>
                   <div>
@@ -358,6 +360,13 @@
             width: 50px;
             height: 30px;
             margin: 15px 15px 0 0;
+            background: #cfcfd0;
+
+            img {
+              display: block;
+              width: 50px;
+              height: 30px;
+            }
           }
 
           .p-box {
