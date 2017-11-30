@@ -487,14 +487,20 @@
             // 企业管理
             isQYGL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
             },
             // 报告管理
             isBGGL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_4']
-                return type && arr.indexOf(type) > -1
+                var typeIndustry = this.base.enterpriseIndustry
+                var arr = [
+                    'finance_org_type_0',
+                    'propertys_agent_type_3',
+                    'propertys_agent_type_1',
+                    'propertys_agent_type_5'
+                ]
+                return (typeIndustry && arr.indexOf(typeIndustry) > -1) || (type && arr.indexOf(type) > -1)
             },
             // 商圈管理
             isSQGL () {
@@ -505,13 +511,13 @@
             // 物业管理
             isWYGL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
             },
             // 物业管理经理
             isWYJL () {
                 var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0', 'finance_org_type_4']
+                var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
             },
             // 证券产品管理

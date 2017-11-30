@@ -174,6 +174,7 @@
         })
       },
       setData (item1, index1) {
+        this.addFormOne.title = ''
         this.addFormOne.type = item1.dictKeyCode
         this.addDirIndex = index1
         this.isAddTreeOne = true 

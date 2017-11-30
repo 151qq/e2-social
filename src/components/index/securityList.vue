@@ -212,6 +212,8 @@
           index2: index2
         }
 
+        this.addFormOne.title = ''
+        this.addFormOne.code = ''
         this.addFormOne.type = item2.dictKeyCode
         this.addFormOne.city = item1.dictKeyCode
 
