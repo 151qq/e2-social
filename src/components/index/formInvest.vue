@@ -254,12 +254,13 @@
                 <el-collapse-item class="formStyle" title="企业管理员" name="3">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -278,12 +279,13 @@
                 <el-collapse-item class="formStyle" title="报告管理员" name="4">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -302,12 +304,13 @@
                 <el-collapse-item class="formStyle" title="商圈管理员" name="5">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -326,12 +329,13 @@
                 <el-collapse-item class="formStyle" title="物业管理员" name="6">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -350,12 +354,13 @@
                 <el-collapse-item class="formStyle" title="物业管理经理" name="7">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -374,12 +379,13 @@
                 <el-collapse-item class="formStyle" title="证券产品管理员" name="8">
                     <span class="link-btn">新增</span>
                     <div class="qx-box">
+                        <span class="label-box">用户名</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入用户名"
                                 v-model="base.address">
                         </el-input>   
-
+                        <span class="label-box">手机号</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入手机号"
@@ -815,9 +821,17 @@
     .qx-box {
         margin-bottom: 10px;
 
+        .label-box {
+            float: left;
+            width: 70px;
+            font-size: 14px;
+            color: #666666;
+            line-height: 30px;
+        }
+
         .input-box {
             float: left;
-            width: 290px;
+            width: 220px;
             margin-right: 10px;
 
             input {
