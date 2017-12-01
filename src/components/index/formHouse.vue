@@ -1,502 +1,509 @@
 <template>
-    <div v-show="isId" class="form-b">
-        <el-collapse v-model="activeNames" @change="collChange">
-            <el-collapse-item class="formStyle" title="物业基本信息" name="1">
-                <div id="container"></div>
-                <section class="baseInput bigB">
-                    <span>楼盘名字</span>
-                    <el-input
-                            class="input-box"
-                            placeholder="请输入内容"
-                            :disabled="true"
-                            v-model="base.name">
-                    </el-input>
-                </section>
-                <div class="form-box">
-                    <div class="clear"></div>
-                    <section class="baseInput">
-                        <span>所在城市</span>
+    <div class="form-b">
+        <section v-show="isId">
+            <el-collapse v-model="activeNames" @change="collChange">
+                <el-collapse-item class="formStyle" title="物业基本信息" name="1">
+                    <div id="container"></div>
+                    <section class="baseInput bigB">
+                        <span>楼盘名字</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.city"
-                                :disabled="true">
+                                :disabled="true"
+                                v-model="base.name">
                         </el-input>
                     </section>
-                    <section class="baseInput rightF">
-                        <span>所属商圈</span>
-                        <el-select class="input-box"
-                                   v-model="base.mall"
-                                   name="investor"
-                                   :disabled="true"
-                                   placeholder="请选择投资顾问">
-                            <el-option
-                                    v-for="(item, index) in malls"
-                                    :key="index"
-                                    :label="item.label"
-                                    :value="item.nodeCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput switch-box">
-                        <span>星标</span>
-                        <el-switch
-                            v-model="base.star"
-                            :disabled="isStar"
-                            on-value="1"
-                            off-value="0">
-                        </el-switch>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>楼盘等级</span>
-                        <el-select class="input-box"
-                                    v-model="base.level"
-                                    name="level"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.level"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>楼盘地址</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.address">
-                        </el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>剩余年限</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.year"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>容积率</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.ratio"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>网站地址</span>
-                        <el-input
-                                class="input-box"
-                                @change="checkWebSite"
-                                placeholder="请输入内容"
-                                v-model="base.webSite">
-                        </el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>物业信息</span>
-                        <el-select class="input-box"
-                                    v-model="base.property"
-                                    name="property"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in housesList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>业主信息</span>
-                        <el-select class="input-box"
-                                   v-model="base.owner"
-                                   multiple
-                                   name="owner"
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in investList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>现在租户</span>
-                        <el-input
-                                class="input-box"
-                                type="textarea"
-                                autosize
-                                placeholder="请输入内容"
-                                @change="rentChange"
-                                v-model="base.rent">
-                        </el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>租户总数</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.rentCount"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>所属地块</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="base.massif">
-                        </el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>面积(m²)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.area"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>总层数</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.plies"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>层高(m)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.height"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>车位</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.park"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>电梯数</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.elevator"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>空调数</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="1" v-model="base.conditioner"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>地板类型</span>
-                        <el-select class="input-box"
-                                    v-model="base.floor"
-                                    name="floor"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.floors"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>物业持有</span>
-                        <el-select class="input-box"
-                                    v-model="base.holding"
-                                    name="holding"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in types.hold"
-                                    :key="index"
-                                    :label="item.typeName"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>交通状况</span>
-                        <el-input
-                          type="textarea"
-                          :rows="4"
-                          :maxlength="500"
-                          placeholder="请输入内容"
-                          v-model="base.traffic"
-                          @change="trafficChange">
-                        </el-input>
-                        <div class="abstract-num">剩余<span>{{trafficNum}}</span>个字</div>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>对标物业</span>
-                        <div class="input-box">
-                            <el-select
-                                    v-model="base.benchmarks"
-                                    multiple
-                                    filterable
-                                    allow-create
-                                    name="benchmarks"
-                                    :multiple-limit="3"
-                                    placeholder="请选择3个物业标签">
+                    <div class="form-box">
+                        <div class="clear"></div>
+                        <section class="baseInput">
+                            <span>所在城市</span>
+                            <el-input
+                                    class="input-box"
+                                    placeholder="请输入内容"
+                                    v-model="base.city"
+                                    :disabled="true">
+                            </el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>所属商圈</span>
+                            <el-select class="input-box"
+                                       v-model="base.mall"
+                                       name="investor"
+                                       :disabled="true"
+                                       placeholder="请选择投资顾问">
                                 <el-option
-                                        v-for="item in benchList"
-                                        :key="item.housesId"
-                                        :label="item.housesDesc"
-                                        :value="String(item.housesId)">
+                                        v-for="(item, index) in malls"
+                                        :key="index"
+                                        :label="item.label"
+                                        :value="item.nodeCode">
                                 </el-option>
                             </el-select>
-                        </div>
-                    </section>
+                        </section>
+                        <section class="baseInput switch-box">
+                            <span>星标</span>
+                            <el-switch
+                                v-model="base.star"
+                                :disabled="isStar"
+                                on-value="1"
+                                off-value="0">
+                            </el-switch>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>楼盘等级</span>
+                            <el-select class="input-box"
+                                        v-model="base.level"
+                                        name="level"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in types.level"
+                                        :key="index"
+                                        :label="item.typeName"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>楼盘地址</span>
+                            <el-input
+                                    class="input-box"
+                                    placeholder="请输入内容"
+                                    v-model="base.address">
+                            </el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>剩余年限</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.year"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>容积率</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.ratio"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>网站地址</span>
+                            <el-input
+                                    class="input-box"
+                                    @change="checkWebSite"
+                                    placeholder="请输入内容"
+                                    v-model="base.webSite">
+                            </el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>物业信息</span>
+                            <el-select class="input-box"
+                                        v-model="base.property"
+                                        name="property"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in housesList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>业主信息</span>
+                            <el-select class="input-box"
+                                       v-model="base.owner"
+                                       multiple
+                                       name="owner"
+                                       placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in investList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>现在租户</span>
+                            <el-input
+                                    class="input-box"
+                                    type="textarea"
+                                    autosize
+                                    placeholder="请输入内容"
+                                    @change="rentChange"
+                                    v-model="base.rent">
+                            </el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>租户总数</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.rentCount"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>所属地块</span>
+                            <el-input
+                                    class="input-box"
+                                    placeholder="请输入内容"
+                                    v-model="base.massif">
+                            </el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>面积(m²)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.area"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>总层数</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.plies"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>层高(m)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.height"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>车位</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.park"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>电梯数</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.elevator"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>空调数</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="1" v-model="base.conditioner"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>地板类型</span>
+                            <el-select class="input-box"
+                                        v-model="base.floor"
+                                        name="floor"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in types.floors"
+                                        :key="index"
+                                        :label="item.typeName"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>物业持有</span>
+                            <el-select class="input-box"
+                                        v-model="base.holding"
+                                        name="holding"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in types.hold"
+                                        :key="index"
+                                        :label="item.typeName"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>交通状况</span>
+                            <el-input
+                              type="textarea"
+                              :rows="4"
+                              :maxlength="500"
+                              placeholder="请输入内容"
+                              v-model="base.traffic"
+                              @change="trafficChange">
+                            </el-input>
+                            <div class="abstract-num">剩余<span>{{trafficNum}}</span>个字</div>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>对标物业</span>
+                            <div class="input-box">
+                                <el-select
+                                        v-model="base.benchmarks"
+                                        multiple
+                                        filterable
+                                        allow-create
+                                        name="benchmarks"
+                                        :multiple-limit="3"
+                                        placeholder="请选择3个物业标签">
+                                    <el-option
+                                            v-for="item in benchList"
+                                            :key="item.housesId"
+                                            :label="item.housesDesc"
+                                            :value="String(item.housesId)">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </section>
 
-                    <section class="baseInput bigB">
-                        <span>标志图片</span>
-                        <div class="input-box">
-                            <upload :path="base.housesImg"
-                                    :no-del="true"
-                                    :bg-path="true"
-                                    :is-house-id="true"
-                                    :id-name="'house-big-img'"
-                                    @changeImg="changeImg"></upload>
-                        </div>
-                    </section>
+                        <section class="baseInput bigB">
+                            <span>标志图片</span>
+                            <div class="input-box">
+                                <upload :path="base.housesImg"
+                                        :no-del="true"
+                                        :bg-path="true"
+                                        :is-house-id="true"
+                                        :id-name="'house-big-img'"
+                                        @changeImg="changeImg"></upload>
+                            </div>
+                        </section>
 
-                    <section class="baseInput bigB">
-                        <span>物业描述</span>
-                        <div class="input-box">
-                            <ueditor
-                                v-if="isBase"
-                                :editor-id="'housesDesc' + base.id"
-                                :editor-type="'text'"
-                                :content="base.housesDesc"
-                                @setContent="setContent"></ueditor>
-                        </div>
-                        <!-- <el-input
-                          type="textarea"
-                          :rows="4"
-                          :maxlength="1000"
-                          placeholder="请输入内容"
-                          v-model="base.housesDesc"
-                          @change="desChange">
-                        </el-input> -->
-                        <!-- <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div> -->
-                    </section>
+                        <section class="baseInput bigB">
+                            <span>物业描述</span>
+                            <div class="input-box">
+                                <ueditor
+                                    v-if="isBase"
+                                    :editor-id="'housesDesc' + base.id"
+                                    :editor-type="'text'"
+                                    :content="base.housesDesc"
+                                    @setContent="setContent"></ueditor>
+                            </div>
+                            <!-- <el-input
+                              type="textarea"
+                              :rows="4"
+                              :maxlength="1000"
+                              placeholder="请输入内容"
+                              v-model="base.housesDesc"
+                              @change="desChange">
+                            </el-input> -->
+                            <!-- <div class="abstract-num">剩余<span>{{abstractNum}}</span>个字</div> -->
+                        </section>
 
-                    
+                        
+                        <div class="clear"></div>
+                    </div>
+                    <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                               @click="saveBase">保存</el-button>
                     <div class="clear"></div>
-                </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
-                           @click="saveBase">保存</el-button>
-                <div class="clear"></div>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业交易历史" name="2">
-                <router-link class="link-btn" target="_blank" :to="{name: 'changes'}">明细</router-link>
-                <div class="over-box">
-                    <section class="baseInput">
-                        <span>交易日期</span>
-                        <el-date-picker
-                                class="input-box"
-                                v-model="changes.houseTradeDate"
-                                type="date"
-                                placeholder="选择日期"
-                                :picker-options="pickerPre">
-                        </el-date-picker>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>价格(万)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="changes.houseRradePrice"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>交易甲方</span>
-                        <el-select class="input-box"
-                                   v-model="changes.houseTradeACode"
-                                   name="houseTradeACode"
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in investList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>交易乙方</span>
-                        <el-select class="input-box"
-                                    v-model="changes.houseTradeBCode"
-                                    name="houseTradeBCode"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in investList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>评估机构</span>
-                        <el-select class="input-box"
-                                   v-model="changes.houseTradeEvaluationOrg"
-                                   name="houseTradeEvaluationOrg"
-                                   multiple
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentAList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput">
-                        <span>咨询机构</span>
-                        <el-select class="input-box"
-                                    name="houseTradeConsultingOrg"
-                                    v-model="changes.houseTradeConsultingOrg"
-                                    multiple
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentBList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>交易类型</span>
-                        <el-select class="input-box"
-                                    name="houseTradeType"
-                                    v-model="changes.houseTradeType"
-                                    placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in houseTradeTypeList"
-                                    :key="index"
-                                    :label="item.dictKeyValue"
-                                    :value="item.dictKeyCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput bigB">
-                        <span>交易备注</span>
-                        <el-input
-                          type="textarea"
-                          :rows="4"
-                          :maxlength="1000"
-                          placeholder="请输入内容"
-                          v-model="changes.houseTradeDesc"
-                          @change="changeDescChange">
-                        </el-input>
-                        <div class="abstract-num">剩余<span>{{houseTradeACodebstractNum}}</span>个字</div>
-                    </section>
-                    <div class="clear"></div>
-                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveChanges(true)">保存</el-button>
-                </div>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业租金历史" name="3">
-                <router-link class="link-btn" target="_blank" :to="{name: 'rents'}">明细</router-link>
-                <div class="over-box">
-                    <section class="baseInput">
-                        <span>租赁日期</span>
-                        <el-date-picker
-                                class="input-box"
-                                v-model="rents.date"
-                                type="month"
-                                placeholder="选择月">
-                        </el-date-picker>
-                    </section>
-                    <section class="baseBigLong baseInput rightF">
-                        <span>高区租金(元 ㎡/天)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="rents.priceT"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <section class="baseBigLong baseInput rightF">
-                        <span>中区租金(元 ㎡/天)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="rents.priceM"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <section class="baseBigLong baseInput rightF">
-                        <span>低区租金(元 ㎡/天)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="rents.priceB"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveRents(true)">保存</el-button>
-                </div>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业估值历史" name="4">
-                <router-link class="link-btn" target="_blank" :to="{name: 'evalues'}">明细</router-link>
-                <div class="over-box">
-                    <section class="baseInput">
-                        <span>估值日期</span>
-                        <el-date-picker
-                                class="input-box"
-                                v-model="evalues.createDate"
-                                type="year"
-                                placeholder="选择年">
-                        </el-date-picker>
-                    </section>
-                    <section class="baseLong baseInput rightF">
-                        <span>总租金(万)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="evalues.rentValue"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <section class="baseLong baseInput rightF">
-                        <span>估值(万)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="evalues.valuation"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <section class="baseLong baseInput rightF">
-                        <span>静总租金(万)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="evalues.netRentValue"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <section class="baseLong baseInput rightF">
-                        <span>资本化率</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="evalues.capRate"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveEvalues(true)">保存</el-button>
-                </div>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle editShow" title="物业空置率历史" name="5">
-                <router-link class="link-btn" target="_blank" :to="{name: 'rates'}">明细</router-link>
-                <div class="over-box">
-                    <section class="baseInput">
-                        <span>填报日期</span>
-                        <el-date-picker
-                                class="input-box"
-                                v-model="rates.date"
-                                type="month"
-                                placeholder="选择月">
-                        </el-date-picker>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>空置率</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="rates.rate"></el-input>
-                    </section>
-                    <div class="clear"></div>
-                    <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
-                               @click="saveRates(true)">保存</el-button>
-                </div>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业外观图片" name="6">
-                <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业交易历史" name="2">
+                    <router-link class="link-btn" target="_blank"
+                            :to="{name: 'changes', query: {id: base.id}}">明细</router-link>
+                    <div class="over-box">
+                        <section class="baseInput">
+                            <span>交易日期</span>
+                            <el-date-picker
+                                    class="input-box"
+                                    v-model="changes.houseTradeDate"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    :picker-options="pickerPre">
+                            </el-date-picker>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>价格(万)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="changes.houseRradePrice"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>交易甲方</span>
+                            <el-select class="input-box"
+                                       v-model="changes.houseTradeACode"
+                                       name="houseTradeACode"
+                                       placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in investList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>交易乙方</span>
+                            <el-select class="input-box"
+                                        v-model="changes.houseTradeBCode"
+                                        name="houseTradeBCode"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in investList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>评估机构</span>
+                            <el-select class="input-box"
+                                       v-model="changes.houseTradeEvaluationOrg"
+                                       name="houseTradeEvaluationOrg"
+                                       multiple
+                                       placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in agentAList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput">
+                            <span>咨询机构</span>
+                            <el-select class="input-box"
+                                        name="houseTradeConsultingOrg"
+                                        v-model="changes.houseTradeConsultingOrg"
+                                        multiple
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in agentBList"
+                                        :key="index"
+                                        :label="item.enterpriseCname"
+                                        :value="item.enterpriseCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>交易类型</span>
+                            <el-select class="input-box"
+                                        name="houseTradeType"
+                                        v-model="changes.houseTradeType"
+                                        placeholder="请选择">
+                                <el-option
+                                        v-for="(item, index) in houseTradeTypeList"
+                                        :key="index"
+                                        :label="item.dictKeyValue"
+                                        :value="item.dictKeyCode">
+                                </el-option>
+                            </el-select>
+                        </section>
+                        <section class="baseInput bigB">
+                            <span>交易备注</span>
+                            <el-input
+                              type="textarea"
+                              :rows="4"
+                              :maxlength="1000"
+                              placeholder="请输入内容"
+                              v-model="changes.houseTradeDesc"
+                              @change="changeDescChange">
+                            </el-input>
+                            <div class="abstract-num">剩余<span>{{houseTradeACodebstractNum}}</span>个字</div>
+                        </section>
+                        <div class="clear"></div>
+                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                                   @click="saveChanges(true)">保存</el-button>
+                    </div>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业租金历史" name="3">
+                    <router-link class="link-btn" target="_blank"
+                            :to="{name: 'rents', query: {id: base.id}}">明细</router-link>
+                    <div class="over-box">
+                        <section class="baseInput">
+                            <span>租赁日期</span>
+                            <el-date-picker
+                                    class="input-box"
+                                    v-model="rents.date"
+                                    type="month"
+                                    placeholder="选择月">
+                            </el-date-picker>
+                        </section>
+                        <section class="baseBigLong baseInput rightF">
+                            <span>高区租金(元 ㎡/天)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="rents.priceT"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <section class="baseBigLong baseInput rightF">
+                            <span>中区租金(元 ㎡/天)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="rents.priceM"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <section class="baseBigLong baseInput rightF">
+                            <span>低区租金(元 ㎡/天)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="rents.priceB"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                                   @click="saveRents(true)">保存</el-button>
+                    </div>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业估值历史" name="4">
+                    <router-link class="link-btn" target="_blank"
+                            :to="{name: 'evalues', query: {id: base.id}}">明细</router-link>
+                    <div class="over-box">
+                        <section class="baseInput">
+                            <span>估值日期</span>
+                            <el-date-picker
+                                    class="input-box"
+                                    v-model="evalues.createDate"
+                                    type="year"
+                                    placeholder="选择年">
+                            </el-date-picker>
+                        </section>
+                        <section class="baseLong baseInput rightF">
+                            <span>总租金(万)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="evalues.rentValue"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <section class="baseLong baseInput rightF">
+                            <span>估值(万)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="evalues.valuation"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <section class="baseLong baseInput rightF">
+                            <span>静总租金(万)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="evalues.netRentValue"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <section class="baseLong baseInput rightF">
+                            <span>资本化率</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="evalues.capRate"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                                   @click="saveEvalues(true)">保存</el-button>
+                    </div>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle editShow" title="物业空置率历史" name="5">
+                    <router-link class="link-btn" target="_blank"
+                            :to="{name: 'rates', query: {id: base.id}}">明细</router-link>
+                    <div class="over-box">
+                        <section class="baseInput">
+                            <span>填报日期</span>
+                            <el-date-picker
+                                    class="input-box"
+                                    v-model="rates.date"
+                                    type="month"
+                                    placeholder="选择月">
+                            </el-date-picker>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>空置率</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="rates.rate"></el-input>
+                        </section>
+                        <div class="clear"></div>
+                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                                   @click="saveRates(true)">保存</el-button>
+                    </div>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业外观图片" name="6">
+                    <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"
+                                    @imgChange="imgListChange"></upload-list>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
+                    <upload-list :img-lists="public" :type="'publics'" @showimg="showImg"
                                 @imgChange="imgListChange"></upload-list>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
-                <upload-list :img-lists="public" :type="'publics'" @showimg="showImg"
-                            @imgChange="imgListChange"></upload-list>
-            </el-collapse-item>
-            <div class="line-bold"></div>
-            <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
-                <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"
-                            @imgChange="imgListChange"></upload-list>
-            </el-collapse-item>
-        </el-collapse>
+                </el-collapse-item>
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
+                    <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"
+                                @imgChange="imgListChange"></upload-list>
+                </el-collapse-item>
+            </el-collapse>
 
-        <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
+            <swiper-img :is-show="isShow" :index="index" :big-imgs="bigImgs"></swiper-img>
+        
+        </section>
         <add-house :is-add="isAdd"
                 :city="houseCity"
                 :house-data="houseData"
@@ -921,7 +928,7 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    this.$parent.$refs.listBox.reloadList('reload')
+                    this.$parent.$refs.listBox.loadList('reload')
                 })
             },
             formDataDate (str) {
@@ -1241,10 +1248,13 @@
                     var pointData = this.base.point.split(',')
                     var point = new window.BMap.Point(pointData[1], pointData[0])
                 }
-                this.map.clearOverlays()
-                this.map.panTo(point)
-                var marker = new BMap.Marker(point)
-                this.map.addOverlay(marker)
+                
+                setTimeout(() => {
+                    this.map.clearOverlays()
+                    this.map.panTo(point)
+                    var marker = new BMap.Marker(point)
+                    this.map.addOverlay(marker)
+                }, 0)
             },
             getMalls () {
                 util.request({

@@ -28,6 +28,11 @@ export default {
             isSubmit: true
         }
     },
+    watch: {
+        isAdd () {
+            console.log(this.isAdd, 'isAdd')
+        }
+    },
     methods: {
         initMap () {
             this.$refs.searMap.resetKey()

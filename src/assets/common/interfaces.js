@@ -262,7 +262,7 @@ export default {
         findDictionaryByType: platform + 'houses/findDictionaryByType.json',
 
         orTree: platform + 'financeProductInfo/productTree.json',
-        saveOrUpdate: platform + 'financeProductInfo/saveOrUpdate.json',
+        saveOrUpdateFinance: platform + 'financeProductInfo/saveOrUpdate.json',
         getOrUpdate: platform + 'financeProductInfo/findByProductInfo.json',
         deleteFinanceProductInfo: platform + 'financeProductInfo/deleteFinanceProductInfo.json',
         orDic: platform + 'financeProductInfo/dic.json',
@@ -275,6 +275,8 @@ export default {
         deleteFundDetail: platform + 'fundDetail/deleteFundDetail.json',
 
         findListByProductCode: platform + 'financeProductHouse/findListByProductCode.json',
-        saveFundCashflow: platform + 'fundCashflow/saveOrUpdate.json'
+        saveFundCashflow: platform + 'fundCashflow/saveOrUpdate.json',
+
+        checkHtdAndHdAndFpi: platform + 'enterprise/checkHtdAndHdAndFpi.json'
     }
 }

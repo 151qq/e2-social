@@ -641,6 +641,7 @@
             this.getAgentPg()
             this.getAgentPj()
             this.getInvests()
+            this.getAgentYc()
         },
         methods: {
             getAllData (data) {
@@ -702,7 +703,7 @@
                     method: 'get',
                     interface: 'findEntByEntType',
                     data: {
-                        enterpriseTypes: 'propertys_agent_type_1'
+                        enterpriseTypes: 'propertys_agent_type_1,propertys_agent_type_3,propertys_agent_type_7'
                     }
                 }).then(res => {
                     this.agentYcList = res.result.result
@@ -1035,7 +1036,7 @@
 
                 util.request({
                     method: 'post',
-                    interface: 'saveOrUpdate',
+                    interface: 'saveOrUpdateFinance',
                     data: this.base
                 }).then(res => {
                     if (res.result.success == '1') {

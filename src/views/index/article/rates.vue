@@ -84,7 +84,7 @@ export default {
                 method: 'get',
                 interface: 'rates',
                 data: {
-                    houseId: localStorage.getItem("id"),
+                    houseId: this.$route.query.id,
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }
@@ -151,7 +151,7 @@ export default {
             }
             
             var formData = {
-                housesId: localStorage.getItem("id"),
+                housesId: this.$route.query.id,
                 id: this.curentData.id,
                 createDate: this.formDataDate(this.curentData.createDate),
                 vacancyRate: this.curentData.vacancyRate,

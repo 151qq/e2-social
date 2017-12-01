@@ -40,6 +40,9 @@
         <el-form-item label="标题">
             <el-input v-model="addFormOne.title" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="简称">
+            <el-input v-model="addFormOne.enterpriseNameReg" auto-complete="off"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
             <el-button @click="isAddTreeOne = false">取 消</el-button>
@@ -65,7 +68,8 @@
         addFormOne: {
           title: '',
           id: '',
-          type: ''
+          type: '',
+          enterpriseNameReg: ''
         },
         addDirIndex: ''
       }
@@ -175,6 +179,7 @@
       },
       setData (item1, index1) {
         this.addFormOne.title = ''
+        this.addFormOne.enterpriseNameReg = ''
         this.addFormOne.type = item1.dictKeyCode
         this.addDirIndex = index1
         this.isAddTreeOne = true 
@@ -186,6 +191,11 @@
           return
         }
 
+        if (!this.addFormOne.enterpriseNameReg) {
+          this.$message.error('企业机构简称不能为空！')
+          return
+        }
+
         if (!this.addFormOne.type) {
           this.$message.error('请重新添加！')
           return
@@ -193,7 +203,8 @@
 
         var formData = {
             enterpriseCname: this.addFormOne.title,
-            enterpriseType: this.addFormOne.type
+            enterpriseType: this.addFormOne.type,
+            enterpriseNameReg: this.addFormOne.enterpriseNameReg
         }
 
         util.request({
@@ -217,12 +228,53 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.deleteArticleById(id)
+          this.checkHtdAndHdAndFpi(id)
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           })
+        })
+      },
+      checkHtdAndHdAndFpi (id) {
+        util.request({
+          method: 'post',
+          interface: 'checkHtdAndHdAndFpi',
+          data: {
+            enterpriseCode: id
+          }
+        }).then(res => {
+          if (res.result.success == '1') {
+            var result = res.result.result
+            var message = []
+
+            if (result.financeProductInfoList && result.financeProductInfoList.length) {
+              result.financeProductInfoList.forEach((item) => {
+                message.push(item.productCame)
+              })
+            }
+
+            if (result.houseTradeDetaillist && result.houseTradeDetaillist.length) {
+              result.houseTradeDetaillist.forEach((item) => {
+                message.push(item.housesInfo.housesDesc + '->交易')
+              })
+            }
+
+            if (result.housesDetailList && result.housesDetailList.length) {
+              result.housesDetailList.forEach((item) => {
+                message.push(item.housesInfo.housesDesc)
+              })
+            }
+
+            if (message.length) {
+              this.$message.error('该机构与（' + message.join('、') + '）关联，不能删除！')
+            } else {
+              this.deleteArticleById(id)
+            }
+            
+          } else {
+            this.$message.error(res.result.message)
+          }
         })
       },
       getInfo (code1, code2, index1, index2) {

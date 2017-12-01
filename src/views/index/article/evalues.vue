@@ -111,7 +111,7 @@ export default {
                 method: 'get',
                 interface: 'evalues',
                 data: {
-                    id: localStorage.getItem("id"),
+                    id: this.$route.query.id,
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }

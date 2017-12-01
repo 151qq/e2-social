@@ -146,6 +146,10 @@
           this.treeData = res.result.result
 
           if (type) {
+            let data = {
+              id: localStorage.getItem("id")
+            }
+            this.$emit('getInfo', data)
             return false
           }
 
@@ -244,7 +248,7 @@
 
         util.request({
             method: 'post',
-            interface: 'saveOrUpdate',
+            interface: 'saveOrUpdateFinance',
             data: formData
         }).then(res => {
             if (res.result.success == '1') {

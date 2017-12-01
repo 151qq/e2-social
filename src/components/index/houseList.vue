@@ -336,15 +336,24 @@
               message: '删除成功!'
             })
           } else {
-            var str = ''
-            res.result.result.forEach((item, index) => {
-              if (index) {
-                str = str + '、' + item.base.name
-              } else {
-                str = str + item.base.name
-              }
-            })
-            this.$message.error('该楼盘为（' + str + '）对标楼盘，不能删除！')
+            var result = res.result.result
+            var message = []
+
+            if (result.list && result.list.length) {
+              result.list.forEach((item) => {
+                message.push(item.base.name)
+              })
+            }
+
+            if (result.financeProductHouseList && result.financeProductHouseList.length) {
+              result.financeProductHouseList.forEach((item) => {
+                message.push(item.productCame)
+              })
+            }
+
+            if (message.length) {
+              this.$message.error('该楼盘与（' + message.join('、') + '）关联，不能删除！')
+            }
           }
         })
       }

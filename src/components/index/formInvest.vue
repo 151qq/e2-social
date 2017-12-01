@@ -9,6 +9,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
+                                :disabled="true"
                                 v-model="base.enterpriseCname">
                         </el-input>
                     </section>
@@ -17,6 +18,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容,最多10个字"
+                                :disabled="true"
                                 v-model="base.enterpriseNameReg">
                         </el-input>
                     </section>

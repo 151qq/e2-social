@@ -102,7 +102,7 @@ export default {
                 method: 'get',
                 interface: 'rent',
                 data: {
-                    id: localStorage.getItem("id"),
+                    id: this.$route.query.id,
                     pageSize: this.pageSize,
                     pageNumber: this.pageNumber
                 }
@@ -169,7 +169,7 @@ export default {
             }
             
             var formData = {
-                id: localStorage.getItem("id"),
+                id: this.$route.query.id,
                 type: 'rents',
                 data: {
                     id: this.curentData.id,
