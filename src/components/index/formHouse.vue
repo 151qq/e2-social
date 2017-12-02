@@ -32,6 +32,10 @@
                                        :disabled="true"
                                        placeholder="请选择投资顾问">
                                 <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
+                                <el-option
                                         v-for="(item, index) in malls"
                                         :key="index"
                                         :label="item.label"
@@ -54,6 +58,10 @@
                                         v-model="base.level"
                                         name="level"
                                         placeholder="请选择">
+                                <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
                                 <el-option
                                         v-for="(item, index) in types.level"
                                         :key="index"
@@ -95,6 +103,10 @@
                                         v-model="base.property"
                                         name="property"
                                         placeholder="请选择">
+                                <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
                                 <el-option
                                         v-for="(item, index) in housesList"
                                         :key="index"
@@ -179,6 +191,10 @@
                                         name="floor"
                                         placeholder="请选择">
                                 <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
+                                <el-option
                                         v-for="(item, index) in types.floors"
                                         :key="index"
                                         :label="item.typeName"
@@ -192,6 +208,10 @@
                                         v-model="base.holding"
                                         name="holding"
                                         placeholder="请选择">
+                                <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
                                 <el-option
                                         v-for="(item, index) in types.hold"
                                         :key="index"
@@ -300,6 +320,11 @@
                                        name="houseTradeACode"
                                        placeholder="请选择">
                                 <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
+                                <el-option
+                                        v-if="item.enterpriseCode != changes.houseTradeBCode"
                                         v-for="(item, index) in investList"
                                         :key="index"
                                         :label="item.enterpriseCname"
@@ -314,6 +339,11 @@
                                         name="houseTradeBCode"
                                         placeholder="请选择">
                                 <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
+                                <el-option
+                                        v-if="item.enterpriseCode != changes.houseTradeACode"
                                         v-for="(item, index) in investList"
                                         :key="index"
                                         :label="item.enterpriseCname"
@@ -357,6 +387,10 @@
                                         name="houseTradeType"
                                         v-model="changes.houseTradeType"
                                         placeholder="请选择">
+                                <el-option
+                                        :label="'无'"
+                                        :value="''">
+                                </el-option>
                                 <el-option
                                         v-for="(item, index) in houseTradeTypeList"
                                         :key="index"
@@ -451,7 +485,7 @@
                         </section>
                         <div class="clear"></div>
                         <section class="baseLong baseInput rightF">
-                            <span>资本化率</span>
+                            <span>资本化率(%)</span>
                             <el-input class="input-box" type="number" size="small" 
                                         :min="0" :step="0.01" v-model="evalues.capRate"></el-input>
                         </section>
@@ -475,7 +509,7 @@
                             </el-date-picker>
                         </section>
                         <section class="baseInput rightF">
-                            <span>空置率</span>
+                            <span>空置率(%)</span>
                             <el-input class="input-box" type="number" size="small" 
                                         :min="0" :step="0.01" v-model="rates.rate"></el-input>
                         </section>
@@ -1408,7 +1442,7 @@
             float: left;
             width: 70px;
             font-size: 14px;
-            color: #666666;
+            color: #999999;
             line-height: 30px;
         }
 

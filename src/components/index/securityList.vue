@@ -146,10 +146,6 @@
           this.treeData = res.result.result
 
           if (type) {
-            let data = {
-              id: localStorage.getItem("id")
-            }
-            this.$emit('getInfo', data)
             return false
           }
 

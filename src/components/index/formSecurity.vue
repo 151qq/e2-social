@@ -20,6 +20,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
+                                    :label="'无'"
+                                    :value="''">
+                            </el-option>
+                            <el-option
                                     v-for="(item, index) in investList"
                                     :key="index"
                                     :label="item.enterpriseCname"
@@ -60,66 +64,6 @@
                                     :min="0" v-model="base.productQuotation"></el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>承销机构</span>
-                        <el-select class="input-box"
-                                   v-model="base.productSalesOrg"
-                                   name="investor"
-                                   multiple
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentCxList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput">
-                        <span>评估机构</span>
-                        <el-select class="input-box"
-                                   v-model="base.productEvaluationOrg"
-                                   name="investor"
-                                   multiple
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentPgList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>评级机构</span>
-                        <el-select class="input-box"
-                                   v-model="base.productRatingOrg"
-                                   name="investor"
-                                   multiple
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentPjList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput">
-                        <span>现金流预测机构</span>
-                        <el-select class="input-box"
-                                   v-model="base.productCashflowConsultingOrg"
-                                   name="investor"
-                                   multiple
-                                   placeholder="请选择">
-                            <el-option
-                                    v-for="(item, index) in agentYcList"
-                                    :key="index"
-                                    :label="item.enterpriseCname"
-                                    :value="item.enterpriseCode">
-                            </el-option>
-                        </el-select>
-                    </section>
-                    <section class="baseInput rightF">
                         <span>上市地点</span>
                         <el-select class="input-box"
                                v-model="base.productIpoSite"
@@ -131,6 +75,66 @@
                                     :key="index"
                                     :label="item.typeName"
                                     :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>承销机构</span>
+                        <el-select class="input-box"
+                                   v-model="productSalesOrgArr"
+                                   name="investor"
+                                   multiple
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentCxList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>评估机构</span>
+                        <el-select class="input-box"
+                                   v-model="productEvaluationOrgArr"
+                                   name="investor"
+                                   multiple
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentPgList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>评级机构</span>
+                        <el-select class="input-box"
+                                   v-model="productRatingOrgArr"
+                                   name="investor"
+                                   multiple
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentPjList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
+                            </el-option>
+                        </el-select>
+                    </section>
+                    <section class="baseInput bigB">
+                        <span>现金流预测机构</span>
+                        <el-select class="input-box"
+                                   v-model="productCashflowConsultingOrgArr"
+                                   name="investor"
+                                   multiple
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="(item, index) in agentYcList"
+                                    :key="index"
+                                    :label="item.enterpriseCname"
+                                    :value="item.enterpriseCode">
                             </el-option>
                         </el-select>
                     </section>
@@ -228,7 +232,7 @@
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>比例</span>
+                        <span>比例(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitOne.fundLevelRatio"></el-input>
@@ -261,18 +265,16 @@
                                     v-model="payAndProfitOne.fundLevelTotalPrice"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>证券预期收益率</span>
+                        <span>证券预期收益率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitOne.fundLevelForcastPayback"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>加权年限</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="payAndProfitOne.fundLevelWeightingPeriod">
-                        </el-input>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" @change="yearCheck('payAndProfitOne')"
+                                    v-model="payAndProfitOne.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
                 </div>
@@ -293,7 +295,7 @@
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>比例</span>
+                        <span>比例(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitTwo.fundLevelRatio"></el-input>
@@ -326,18 +328,16 @@
                                     v-model="payAndProfitTwo.fundLevelTotalPrice"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>证券预期收益率</span>
+                        <span>证券预期收益率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitTwo.fundLevelForcastPayback"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>加权年限</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="payAndProfitTwo.fundLevelWeightingPeriod">
-                        </el-input>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" @change="yearCheck('payAndProfitTwo')"
+                                    v-model="payAndProfitTwo.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
                 </div>
@@ -358,7 +358,7 @@
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>比例</span>
+                        <span>比例(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitThree.fundLevelRatio"></el-input>
@@ -391,18 +391,16 @@
                                     v-model="payAndProfitThree.fundLevelTotalPrice"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>证券预期收益率</span>
+                        <span>证券预期收益率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="payAndProfitThree.fundLevelForcastPayback"></el-input>
                     </section>
                     <section class="baseInput rightF">
                         <span>加权年限</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入内容"
-                                v-model="payAndProfitThree.fundLevelWeightingPeriod">
-                        </el-input>
+                        <el-input class="input-box" type="number" size="small" 
+                                    :min="0" @change="yearCheck('payAndProfitThree')"
+                                    v-model="payAndProfitThree.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
                 </div>
@@ -423,7 +421,7 @@
                             <div>物业名称：{{item.housesInfo.housesDesc}}</div>
                             <div>物业地址：{{item.housesInfo.housesAddr}}</div>
                             <div>
-                                基金占比：
+                                基金占比(%)：
                                 <el-input class="list-input" type="number" size="small" 
                                     :min="0" :step="0.01"
                                     v-model="item.productHouseRate"></el-input>
@@ -558,12 +556,16 @@
                     productHouseRate: [],
                     productEndTime: '',
                     productQuotation: '',
-                    productSalesOrg: [],
-                    productEvaluationOrg: [],
-                    productRatingOrg: [],
-                    productCashflowConsultingOrg: [],
+                    productSalesOrg: '',
+                    productEvaluationOrg: '',
+                    productRatingOrg: '',
+                    productCashflowConsultingOrg: '',
                     productArcUrl: ''
                 },
+                productSalesOrgArr: [],
+                productEvaluationOrgArr:[],
+                productRatingOrgArr: [],
+                productCashflowConsultingOrgArr: [],
                 publishTime: '',
                 endTime: '',
                 isBase: false,
@@ -596,30 +598,30 @@
                     fundLevelCode: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
-                    fundLevelResidualPrincipal: 0,
-                    fundLevelNetPrice: 0,
-                    fundLevelTotalPrice: 0,
-                    fundLevelForcastPayback: 0,
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
                     fundLevelWeightingPeriod: ''
                 },
                 payAndProfitTwo: {
                     fundLevelCode: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
-                    fundLevelResidualPrincipal: 0,
-                    fundLevelNetPrice: 0,
-                    fundLevelTotalPrice: 0,
-                    fundLevelForcastPayback: 0,
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
                     fundLevelWeightingPeriod: ''
                 },
                 payAndProfitThree: {
                     fundLevelCode: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
-                    fundLevelResidualPrincipal: 0,
-                    fundLevelNetPrice: 0,
-                    fundLevelTotalPrice: 0,
-                    fundLevelForcastPayback: 0,
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
                     fundLevelWeightingPeriod: ''
                 },
                 perList: [],
@@ -650,9 +652,9 @@
                     return false
                 }
                 
+                this.resetPayAndProfit()
                 this.isBase = false
                 this.getBase()
-                this.findByProductInfo()
 
                 if (this.timer) {
                     clearInterval(this.timer)
@@ -662,8 +664,49 @@
                 //     this.saveAll()
                 // }, 180000)
             },
+            resetPayAndProfit () {
+                this.payAndProfitOne = {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
+                    fundLevelWeightingPeriod: ''
+                }
+                this.payAndProfitTwo = {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
+                    fundLevelWeightingPeriod: ''
+                }
+                this.payAndProfitThree = {
+                    fundLevelCode: '',
+                    fundLevelRatio: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    fundLevelResidualPrincipal: '',
+                    fundLevelNetPrice: '',
+                    fundLevelTotalPrice: '',
+                    fundLevelForcastPayback: '',
+                    fundLevelWeightingPeriod: ''
+                }
+            },
             desChange () {
                 this.abstractNum = 140 - this.base.des.length
+            },
+            yearCheck (type) {
+                if (this[type].fundLevelWeightingPeriod < 0) {
+                    this[type].fundLevelWeightingPeriod = 0
+                }
+
+                if (this[type].fundLevelWeightingPeriod > 99) {
+                    this[type].fundLevelWeightingPeriod = 99
+                }
             },
             getAgentCx () {
                 util.request({
@@ -728,27 +771,27 @@
                     var result = res.result.result
 
                     if (result.productSalesOrg) {
-                        result.productSalesOrg = result.productSalesOrg.split(',')
+                        this.productSalesOrgArr = result.productSalesOrg.split(',')
                     } else {
-                        result.productSalesOrg = []
+                        this.productSalesOrgArr = []
                     }
 
                     if (result.productEvaluationOrg) {
-                        result.productEvaluationOrg = result.productEvaluationOrg.split(',')
+                        this.productEvaluationOrgArr = result.productEvaluationOrg.split(',')
                     } else {
-                        result.productEvaluationOrg = []
+                        this.productEvaluationOrgArr = []
                     }
 
                     if (result.productRatingOrg) {
-                        result.productRatingOrg = result.productRatingOrg.split(',')
+                        this.productRatingOrgArr = result.productRatingOrg.split(',')
                     } else {
-                        result.productRatingOrg = []
+                        this.productRatingOrgArr = []
                     }
 
                     if (result.productCashflowConsultingOrg) {
-                        result.productCashflowConsultingOrg = result.productCashflowConsultingOrg.split(',')
+                        this.productCashflowConsultingOrgArr = result.productCashflowConsultingOrg.split(',')
                     } else {
-                        result.productCashflowConsultingOrg = []
+                        this.productCashflowConsultingOrgArr = []
                     }
 
                     this.base = result
@@ -1002,6 +1045,16 @@
                     return false
                 }
 
+                if (this.base.productPublishTime && this.base.productEndTime) {
+                    if (new Date(this.base.productEndTime).getTime() <= new Date(this.base.productPublishTime).getTime()) {
+                        this.$message({
+                            message: '结算时间必须大于发行时间！',
+                            type: 'warning'
+                        })
+                    return false
+                    }
+                }
+
                 if (this.base.productPublishTime) {
                     this.base.productPublishTime = this.formDataDate(this.base.productPublishTime)
                 }
@@ -1010,26 +1063,26 @@
                     this.base.productEndTime = this.formDataDate(this.base.productEndTime)
                 }
 
-                if (this.base.productSalesOrg.length) {
-                    this.base.productSalesOrg = this.base.productSalesOrg.join(',')
+                if (this.productSalesOrgArr.length) {
+                    this.base.productSalesOrg = this.productSalesOrgArr.join(',')
                 } else {
                     this.base.productSalesOrg = ''
                 }
 
-                if (this.base.productEvaluationOrg.length) {
-                    this.base.productEvaluationOrg = this.base.productEvaluationOrg.join(',')
+                if (this.productEvaluationOrgArr.length) {
+                    this.base.productEvaluationOrg = this.productEvaluationOrgArr.join(',')
                 } else {
                     this.base.productEvaluationOrg = ''
                 }
 
-                if (this.base.productRatingOrg.length) {
-                    this.base.productRatingOrg = this.base.productRatingOrg.join(',')
+                if (this.productRatingOrgArr.length) {
+                    this.base.productRatingOrg = this.productRatingOrgArr.join(',')
                 } else {
                     this.base.productRatingOrg = ''
                 }
 
-                if (this.base.productCashflowConsultingOrg.length) {
-                    this.base.productCashflowConsultingOrg = this.base.productCashflowConsultingOrg.join(',')
+                if (this.productCashflowConsultingOrgArr.length) {
+                    this.base.productCashflowConsultingOrg = this.productCashflowConsultingOrgArr.join(',')
                 } else {
                     this.base.productCashflowConsultingOrg = ''
                 }
@@ -1276,7 +1329,7 @@
             width: 100px;
             height: 30px;
             font-size: 14px;
-            color: #666666;
+            color: #999999;
             line-height: 30px;
         }
 

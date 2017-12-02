@@ -82,6 +82,11 @@
                                name="changeA"
                                placeholder="请选择">
                         <el-option
+                                :label="'无'"
+                                :value="''">
+                        </el-option>
+                        <el-option
+                                v-if="item.enterpriseCode != curentData.houseTradeBCode"
                                 v-for="(item, index) in investList"
                                 :key="index"
                                 :label="item.enterpriseCname"
@@ -95,6 +100,11 @@
                                name="changeB"
                                placeholder="请选择">
                         <el-option
+                                :label="'无'"
+                                :value="''">
+                        </el-option>
+                        <el-option
+                                v-if="item.enterpriseCode != curentData.houseTradeACode"
                                 v-for="(item, index) in investList"
                                 :key="index"
                                 :label="item.enterpriseCname"
@@ -136,6 +146,10 @@
                                name="houseTradeType"
                                placeholder="请选择">
                         <el-option
+                                :label="'无'"
+                                :value="''">
+                        </el-option>
+                        <el-option
                                 v-for="(item, index) in houseTradeTypeList"
                                 :key="index"
                                 :label="item.dictKeyValue"
@@ -145,13 +159,13 @@
                 </el-form-item>
                 <el-form-item label="交易备注">
                     <el-input
-                          type="textarea"
-                          class="input-box"
-                          :rows="4"
-                          :maxlength="1000"
-                          placeholder="请输入内容"
-                          v-model="curentData.houseTradeDesc">
-                        </el-input>
+                        type="textarea"
+                        class="input-box"
+                        :rows="4"
+                        :maxlength="1000"
+                        placeholder="请输入内容"
+                        v-model="curentData.houseTradeDesc">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

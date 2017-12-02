@@ -34,9 +34,10 @@ export default {
     methods: {
       changeTitle () {
         var data = {
-            url: this.curPath,
-            title: this.curTitle
-          }
+          url: this.curPath,
+          title: this.curTitle
+        }
+
         this.$emit('changeImg', data)
       },
       postImg (e) {

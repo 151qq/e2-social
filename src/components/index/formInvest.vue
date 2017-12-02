@@ -29,6 +29,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
+                                    :label="'无'"
+                                    :value="''">
+                            </el-option>
+                            <el-option
                                     v-for="(item, index) in enterpriseCreditLevelList"
                                     :key="index"
                                     :label="item.dictKeyValue"
@@ -78,6 +82,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
+                                    :label="'无'"
+                                    :value="''">
+                            </el-option>
+                            <el-option
                                     v-for="(item, index) in types[typeKey]"
                                     :key="index"
                                     :label="item.typeName"
@@ -99,6 +107,10 @@
                                     class="input-box"
                                     @change="cityChange"
                                     filterable placeholder="请选择">
+                            <el-option
+                                    :label="'无'"
+                                    :value="''">
+                            </el-option>
                             <el-option
                               v-for="(item, index) in cityData"
                               :key="index"
@@ -131,6 +143,10 @@
                                    name="investor"
                                    placeholder="请选择">
                             <el-option
+                                    :label="'无'"
+                                    :value="''">
+                            </el-option>
+                            <el-option
                                     v-for="(item, index) in types.finance_market"
                                     :key="index"
                                     :label="item.typeName"
@@ -152,37 +168,37 @@
                                     :min="0" :step="0.01" v-model="base.enterpriseTotalAsset"></el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>资产负债率</span>
+                        <span>资产负债率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseAssetLiabilityRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>资本充足率</span>
+                        <span>资本充足率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseCapitalAdequacyRatio"></el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>核心资本充足率</span>
+                        <span>核心资本充足率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseCoreCapitialAdequacyRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>存贷款比</span>
+                        <span>存贷款比(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseDepositLoanRatio"></el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>不良贷款率</span>
+                        <span>不良贷款率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseNplRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>拨备覆盖率</span>
+                        <span>拨备覆盖率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseProvisionCoverage"></el-input>
                     </section>
                     <section class="baseInput rightF">
-                        <span>资产收益率</span>
+                        <span>资产收益率(%)</span>
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseAssetsReturn"></el-input>
                     </section>
@@ -254,154 +270,176 @@
             <template v-if="isQYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="企业管理员" name="3">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleQYGL')">新增</span>
+                    <el-table
+                        :data="roleList.roleQYGL"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
             <template v-if="isBGGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="报告管理员" name="4">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleBGGL')">新增</span>
+                    <el-table
+                        :data="roleList.roleBGGL"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
             <template v-if="isSQGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="商圈管理员" name="5">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleSQGL')">新增</span>
+                    <el-table
+                        :data="roleList.roleSQGL"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
             <template v-if="isWYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业管理员" name="6">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleWYGL')">新增</span>
+                    <el-table
+                        :data="roleList.roleWYGL"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
             <template v-if="isWYJL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业管理经理" name="7">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleWYJL')">新增</span>
+                    <el-table
+                        :data="roleList.roleWYJL"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
             <template v-if="isZQCP">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="证券产品管理员" name="8">
-                    <span class="link-btn">新增</span>
-                    <div class="qx-box">
-                        <span class="label-box">用户名</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入用户名"
-                                v-model="base.address">
-                        </el-input>   
-                        <span class="label-box">手机号</span>
-                        <el-input
-                                class="input-box"
-                                placeholder="请输入手机号"
-                                v-model="base.address">
-                        </el-input>  
-
-                        <div class="btn-box">
-                            <i class="el-icon-document"></i>
-                            <i class="el-icon-delete2"></i>
-                        </div>                  
-                    </div>
+                    <span class="link-btn" @click="addRole('roleZQCP')">新增</span>
+                    <el-table
+                        :data="roleList.roleZQCP"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userTel"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
                 </el-collapse-item>
             </template>
         </el-collapse>
+        <el-dialog title="添加用户" :visible.sync="isAddRole">
+            <el-form :label-position="'left'">
+                <el-form-item label="用户名" :label-width="'80px'">
+                  <el-input class="table-input-box" size="small"
+                        v-model="addRoleData.userName"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号" :label-width="'80px'">
+                  <el-input class="table-input-box" size="small"
+                        v-model="addRoleData.userTel"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="isAddRole = false">取 消</el-button>
+                <el-button type="primary" @click="confirmAddRole(addRoleData)">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -471,7 +509,17 @@
                 },
                 typeKey: '',
                 enterpriseCreditLevelList: [],
-                isId: false
+                isId: false,
+                roleList: {
+                    roleQYGL: [],
+                    roleBGGL: [],
+                    roleSQGL: [],
+                    roleWYGL: [],
+                    roleWYJL: [],
+                    roleZQCP: []
+                },
+                isAddRole: false,
+                addRoleData: {}
             }
         },
         mounted () {
@@ -545,6 +593,22 @@
             wbImg (data) {
                 this.base.enterpriseSinamicroblogQrcode = data.url
                 this.base.enterpriseSinamicorblogAccount = data.title
+            },
+            addRole (typeKey) {
+                this.addRoleData = {
+                    roleType: typeKey,
+                    userName: '',
+                    userTel: ''
+                }
+
+                this.isAddRole = true
+            },
+            confirmAddRole (item) {
+                this.roleList[item.roleType].push(item)
+                this.isAddRole = false
+            },
+            deleteRole (item) {
+                alert('toDo ' + item.roleType)
             },
             getAllData (data) {
                 this.isId = data.id !== null
@@ -696,6 +760,38 @@
                     return false
                 }
 
+                if (this.base.enterprisePubwechatAccount.length > 16) {
+                    this.$message({
+                        message: '微信公众账号最多16个字符！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.base.enterpriseTwitterAccount.length > 16) {
+                    this.$message({
+                        message: 'Twitter账号最多16个字！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.base.enterpriseFacebookAccount.length > 16) {
+                    this.$message({
+                        message: 'Facebook账号最多16个字！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (this.base.enterpriseSinamicorblogAccount.length > 16) {
+                    this.$message({
+                        message: '微博账号最多16个字！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
                 if (this.base.enterpriseOpenTime) {
                     this.base.enterpriseOpenTime = this.formDataDate(this.base.enterpriseOpenTime)
                 }
@@ -734,6 +830,10 @@
 
     .upload-list-box {
         width: 110%;
+    }
+
+    .el-dialog--small {
+        width: 400px;
     }
 
     .formStyle {
@@ -862,9 +962,9 @@
 
         &>span {
             float: left;
-            width: 100px;
+            width: 120px;
             font-size: 14px;
-            color: #666666;
+            color: #999999;
             line-height: 30px;
         }
 
@@ -877,7 +977,7 @@
 
         .input-box {
             float: left;
-            width: 205px;
+            width: 185px;
 
             input {
                 height: 30px;
@@ -897,15 +997,15 @@
 
     .bigB {
         .input-box {
-            width: 540px;
+            width: 520px;
 
             .el-select {
-                width: 540px;
+                width: 520px;
             }
         }
 
         .el-textarea {
-          width: 540px;
+          width: 520px;
         }
     }
 
