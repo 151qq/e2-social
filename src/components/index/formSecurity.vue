@@ -273,7 +273,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @change="yearCheck('payAndProfitOne')"
+                                    :min="0" @input="yearCheck('payAndProfitOne')"
                                     v-model="payAndProfitOne.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
@@ -336,7 +336,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @change="yearCheck('payAndProfitTwo')"
+                                    :min="0" @input="yearCheck('payAndProfitTwo')"
                                     v-model="payAndProfitTwo.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
@@ -399,7 +399,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @change="yearCheck('payAndProfitThree')"
+                                    :min="0" @input="yearCheck('payAndProfitThree')"
                                     v-model="payAndProfitThree.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
@@ -426,14 +426,6 @@
                                     :min="0" :step="0.01"
                                     v-model="item.productHouseRate"></el-input>
                             </div>
-                            <div class="btn-box">
-                                <el-button type="danger"
-                                            :plain="true" size="mini" icon="delete2"
-                                            @click="deleteRow(item)">删除</el-button>
-                                <el-button type="info"
-                                            :plain="true" size="mini" icon="document"
-                                            @click="saveRow(item)">保存</el-button>
-                            </div>
                         </div>
                     </section>
 
@@ -447,64 +439,55 @@
                           label="年">
                         </el-table-column>
                         <el-table-column
+                          prop="houseForcastCashflow"
                           label="预测现金流"
-                          width="110">
-                            <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.houseForcastCashflow"></el-input>
-                            </template>
+                          width="100">
                         </el-table-column>
                         <el-table-column
+                          prop="houseGuaranteeCashflow"
                           label="保底现金流"
                           width="100">
-                            <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.houseGuaranteeCashflow"></el-input>
-                            </template>
                         </el-table-column>
                         <el-table-column
+                          prop="houseRealCashflow"
                           label="真实现金流"
                           width="100">
-                            <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.houseRealCashflow"></el-input>
-                            </template>
                         </el-table-column>
                         <el-table-column
+                          prop="fundPriorityLevelPayback"
                           label="优先级"
-                          width="80">
-                            <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.fundPriorityLevelPayback"></el-input>
-                            </template>
+                          width="70">
                         </el-table-column>
                         <el-table-column
+                          prop="fundMiddleLevelPayback"
                           label="夹层"
-                          width="80">
-                            <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.fundMiddleLevelPayback"></el-input>
-                            </template>
+                          width="70">
                         </el-table-column>
                         <el-table-column
+                          prop="fundLastLevelPayback"
                           label="劣后"
-                          width="80">
+                          width="70">
+                        </el-table-column>
+                        <el-table-column
+                            prop="fundLastLevelPayback"
+                            label="操作"
+                            width="50">
                             <template scope="scope">
-                                <el-input class="input-box" type="number" size="small" 
-                                    :min="0"
-                                    v-model="scope.row.fundLastLevelPayback"></el-input>
+                                <i class="el-icon-delete2" @click="deleteCash(scope.row)"></i>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <div class="table-btn-box">
+
+                    <div class="btn-box">
+                        <el-button type="danger"
+                                    :plain="true" size="mini" icon="delete2"
+                                    @click="deleteRow(item)">删除</el-button>
                         <el-button type="info"
                                     :plain="true" size="mini" icon="document"
-                                    @click="saveCash(item.cashflowList)">保存</el-button>
+                                    @click="saveRow(item)">保存</el-button>
+                        <el-button type="info"
+                                    :plain="true" size="mini" icon="document"
+                                    @click="addCashRow(index)">添加</el-button>
                     </div>
                 </template>
 
@@ -526,6 +509,58 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addHouse = false">取 消</el-button>
                 <el-button type="primary" @click="saveRow(nowHouseData)">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="添加资产现金流" :visible.sync="isAddCash">
+            <el-form class="form-cash" :label-position="'left'">
+                <el-form-item label="年" :label-width="'100px'">
+                    <el-select class="table-input-box"
+                               v-model="cashData.year"
+                               name="investor"
+                               placeholder="请选择">
+                        <el-option
+                                v-for="(item, index) in yearsData"
+                                :key="index"
+                                :label="item"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="预测现金流" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.houseForcastCashflow"></el-input>
+                </el-form-item>
+                <el-form-item label="保底现金流" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.houseGuaranteeCashflow"></el-input>
+                </el-form-item>
+                <el-form-item label="真实现金流" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.houseRealCashflow"></el-input>
+                </el-form-item>
+                <el-form-item label="优先级" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.fundPriorityLevelPayback"></el-input>
+                </el-form-item>
+                <el-form-item label="夹层" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.fundMiddleLevelPayback"></el-input>
+                </el-form-item>
+                <el-form-item label="劣后" :label-width="'100px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.fundLastLevelPayback"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="isAddCash = false">取 消</el-button>
+                <el-button type="primary" @click="saveCash(cashData)">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -594,6 +629,9 @@
                 timer: null,
                 addHouse: false,
                 nowHouseData: {},
+                isAddCash: false,
+                cashData: {},
+                yearsData: [],
                 payAndProfitOne: {
                     fundLevelCode: '',
                     fundLevelRatio: '',
@@ -847,30 +885,6 @@
                     }
                 }).then(res => {
                     if (res.result.success == '1') {
-                        res.result.result.forEach((item) => {
-                            if (!item.cashflowList || !item.cashflowList.length) {
-                                var yearList = []
-                                var startYear = Number(this.base.productPublishTime.split('-')[0])
-                                var endYear = Number(this.base.productEndTime.split('-')[0])
-
-                                for (var i = startYear; i <= endYear; i++) {
-                                    yearList.push({
-                                        financeProductCode: localStorage.getItem('id'),
-                                        houseId: item.houseId,
-                                        houseForcastCashflow: '',
-                                        year: i,
-                                        houseGuaranteeCashflow: '',
-                                        houseRealCashflow: '',
-                                        fundPriorityLevelPayback: '',
-                                        fundMiddleLevelPayback: '',
-                                        fundLastLevelPayback: ''
-                                    })
-                                }
-
-                                item.cashflowList = yearList
-                            }
-                        })
-
                         this.perList = res.result.result
                     } else {
                         this.$message.error(res.result.message)
@@ -905,6 +919,18 @@
                 this.base.productInfoLink = webSite.replace(/[\u4e00-\u9fa5]/g,'')
             },
             addHouseRate () {
+                var obj = {
+                    id: '',
+                    houseCname: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    houseId: '',
+                    productHouseRate: ''
+                }
+
+                this.nowHouseData = obj
+                this.addHouse = true
+            },
+            addCashRow (index) {
                 if (!this.base.productPublishTime) {
                     this.$message({
                         message: '请先保存发行时间！',
@@ -921,16 +947,28 @@
                     return false
                 }
 
-                var obj = {
-                    id: '',
-                    houseCname: '',
+                var yearList = []
+                var startYear = Number(this.base.productPublishTime.split('-')[0])
+                var endYear = Number(this.base.productEndTime.split('-')[0])
+
+                for (var i = startYear; i <= endYear; i++) {
+                    yearList.push(i)
+                }
+                this.yearsData = yearList
+
+                this.cashData = {
                     financeProductCode: localStorage.getItem('id'),
-                    houseId: '',
-                    productHouseRate: ''
+                    houseId: this.perList[index].houseId,
+                    houseForcastCashflow: '',
+                    year: '',
+                    houseGuaranteeCashflow: '',
+                    houseRealCashflow: '',
+                    fundPriorityLevelPayback: '',
+                    fundMiddleLevelPayback: '',
+                    fundLastLevelPayback: ''
                 }
 
-                this.nowHouseData = obj
-                this.addHouse = true
+                this.isAddCash = true
             },
             deleteRow (item) {
                 util.request({
@@ -986,17 +1024,40 @@
                     interface: 'financeProductHouseSave',
                     data: row
                 }).then(res => {
-                    this.findListByProductCode()
-                    this.addHouse = false
+                    if (res.result.success == '1') {
+                        this.findListByProductCode()
+                        this.addHouse = false
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
                 })
             },
             saveCash (data) {
                 util.request({
                     method: 'post',
                     interface: 'saveFundCashflow',
-                    data: data
+                    data: [data]
                 }).then(res => {
-                    this.findListByProductCode()
+                    if (res.result.success == '1') {
+                        this.findListByProductCode()
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            deleteCash (item) {
+                util.request({
+                    method: 'post',
+                    interface: 'deleteFundCashflow',
+                    data: {
+                        id: item.id
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.findListByProductCode()
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
                 })
             },
             setContent (data) {
@@ -1144,7 +1205,7 @@
 
         .cover-img {
             width: 200px;
-            height: 160px;
+            height: 120px;
         }
 
         .right-content {
@@ -1166,13 +1227,13 @@
                     }
                 }
             }
-
-            .btn-box {
-                height: 30px;
-                margin-top: 10px;
-                text-align: right;
-            }
         }
+    }
+
+    .btn-box {
+        height: 30px;
+        margin-top: 10px;
+        text-align: right;
     }
 
     .table-btn-box {
@@ -1190,6 +1251,21 @@
         width: 110%;
     }
 
+    .form-cash {
+        .el-form-item {
+            margin-bottom: 10px;
+        }
+    }
+
+    .table-input-box {
+        width: 100%;
+        height: 30px;
+
+        .el-input__inner {
+            height: 30px;
+        }
+    }
+
     .formStyle {
         position: relative;
         width: 640px;
@@ -1201,15 +1277,6 @@
 
         .el-table__body-wrapper, .el-table__header-wrapper {
             overflow: visible;
-        }
-
-        .table-input-box {
-            width: 100%;
-            height: 30px;
-
-            .el-input__inner {
-                height: 30px;
-            }
         }
 
         .demo-table-expand {

@@ -273,6 +273,7 @@ export default {
         saveOrUpdate: platform + 'fundDetail/saveOrUpdate.json',
         findByProductInfo: platform + 'fundDetail/findByProductInfo.json',
         deleteFundDetail: platform + 'fundDetail/deleteFundDetail.json',
+        deleteFundCashflow: platform + 'fundCashflow/deleteFinanceProductInfo.json',
 
         findListByProductCode: platform + 'financeProductHouse/findListByProductCode.json',
         saveFundCashflow: platform + 'fundCashflow/saveOrUpdate.json',
