@@ -44,6 +44,7 @@
                     label="填报人">
             </el-table-column>
             <el-table-column
+                    v-if="isOperate"
                     label="操作"
                     width="100">
                 <template scope="scope">
@@ -168,7 +169,7 @@
                     </el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" v-if="isOperate" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="confirmEdit">确 定</el-button>
             </div>
@@ -206,7 +207,8 @@ export default {
             investList: [],
             agentAList: [],
             agentBList: [],
-            houseTradeTypeList: []
+            houseTradeTypeList: [],
+            hisUser: ''
         }
     },
     mounted () {
@@ -216,6 +218,11 @@ export default {
         this.getAgentB()
         this.getHouseTradeTypeList()
         document.title = '交易历史明细'
+    },
+    computed: {
+        isOperate () {
+            return this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user
+        }
     },
     methods: {
         getChanges () {
@@ -231,6 +238,8 @@ export default {
                 res.result.result.changes.forEach((item) => {
                     item.houseTradeDate = item.houseTradeDate.split(' ')[0]
                 })
+
+                this.hisUser = res.result.request
                 this.changes = res.result.result.changes
                 this.total = this.total ? Number(this.total) : 0
             })

@@ -8,7 +8,7 @@
             src="../../assets/images/page-img.jpg">
         <img v-else class="img-big" :src="curPath">
       </label>
-      <input type="file" class="ben-input" :id="idFor" @change="postImg($event)">
+      <input type="file" v-if="isOperate" class="ben-input" :id="idFor" @change="postImg($event)">
       <section v-if="isBtn">
         <el-button v-if="!noSave"
             class="op-btn"
@@ -41,7 +41,7 @@ import $ from 'Jquery'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave', 'idName', 'isHouseId'],
+    props: ['path', 'num', 'noDel', 'idx', 'isBtn', 'bgPath', 'noSave', 'idName', 'isHouseId', 'isOperate'],
     data() {
       return {
         isShow: false,

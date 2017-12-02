@@ -5,7 +5,7 @@
           src="../../assets/images/img-default.jpg">
       <img v-else class="img-big" :src="curPath">    
     </label>
-    <input class="input-u" :id="idName" type="file" name="" @change="postImg">
+    <input v-if="isOperate" class="input-u" :id="idName" type="file" name="" @change="postImg">
 
     <input class="title-box" v-model="curTitle" @input="changeTitle" :placeholder="placeHolder">
   </div>
@@ -14,7 +14,7 @@
 import util from '../../assets/common/util'
 
 export default {
-    props: ['path', 'titleName', 'idName', 'width', 'isDelete', 'placeHolder'],
+    props: ['path', 'titleName', 'idName', 'width', 'isDelete', 'placeHolder', 'isOperate'],
     data() {
       return {
         curPath: '',

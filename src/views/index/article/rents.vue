@@ -25,6 +25,7 @@
                     label="填报人">
             </el-table-column>
             <el-table-column
+                    v-if="isOperate"
                     label="操作"
                     width="100">
                 <template scope="scope">
@@ -64,7 +65,7 @@
                                     :min="0" :step="0.01" v-model="curentData.priceB"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" v-if="isOperate" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="confirmEdit">确 定</el-button>
             </div>
@@ -89,12 +90,18 @@ export default {
                 priceB: '',
                 priceM: '',
                 author: ''
-            }
+            },
+            hisUser: ''
         }
     },
     mounted () {
         this.getRents()
         document.title = '租金历史明细'
+    },
+    computed: {
+        isOperate () {
+            return this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user
+        }
     },
     methods: {
         getRents () {
@@ -111,6 +118,8 @@ export default {
                     var dateData = item.tenantStartDate.split(' ')[0].split('-')
                     item.tenantStartDate = dateData[0] + '-' + dateData[1]
                 })
+
+                this.hisUser = res.result.request
                 this.rents = res.result.result.rents
                 this.total = this.total ? Number(this.total) : 0
             })

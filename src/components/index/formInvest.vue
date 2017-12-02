@@ -206,6 +206,7 @@
                         <span>公司图片</span>
                         <div class="input-box">
                             <upload :path="base.enterpriseLogoUrl"
+                                    :is-operate="isOperate"
                                     :no-del="true"
                                     :bg-path="true"
                                     :is-house-id="true"
@@ -226,7 +227,8 @@
                     </section>
                     <div class="clear"></div>
                 </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
@@ -237,6 +239,7 @@
                                 :title-name="base.enterprisePubwechatAccount"
                                 :place-holder="'请输入微信公众号'"
                                 :id-name="'wxPulic'"
+                                :is-operate="isOperate"
                                 @changeImg='wxPulicImg'
                                 :width="'160px'"></ewm-upload>
 
@@ -244,6 +247,7 @@
                                 :title-name="base.enterpriseTwitterAccount"
                                 :place-holder="'请输入twitter账号'"
                                 :id-name="'twitterName'"
+                                :is-operate="isOperate"
                                 @changeImg='twitterImg'
                                 :width="'160px'"></ewm-upload>
 
@@ -251,6 +255,7 @@
                                 :title-name="base.enterpriseFacebookAccount"
                                 :place-holder="'请输入facebook账号'"
                                 :id-name="'facebookName'"
+                                :is-operate="isOperate"
                                 @changeImg='facebookImg'
                                 :width="'160px'"></ewm-upload>
 
@@ -258,19 +263,21 @@
                                 :title-name="base.enterpriseSinamicorblogAccount"
                                 :place-holder="'请输入微博账号'"
                                 :id-name="'wbName'"
+                                :is-operate="isOperate"
                                 @changeImg='wbImg'
                                 :width="'160px'"></ewm-upload>
                 </section>
                 
                 <div class="clear"></div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
             <template v-if="isQYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="企业管理员" name="3">
-                    <span class="link-btn" @click="addRole('roleQYGL')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('roleQYGL')">新增</span>
                     <el-table
                         :data="roleList.roleQYGL"
                         border
@@ -296,35 +303,9 @@
             <template v-if="isBGGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="报告管理员" name="4">
-                    <span class="link-btn" @click="addRole('roleBGGL')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('roleBGGL')">新增</span>
                     <el-table
                         :data="roleList.roleBGGL"
-                        border
-                        style="width: 100%">
-                        <el-table-column
-                          prop="userName"
-                          label="用户名">
-                        </el-table-column>
-                        <el-table-column
-                          prop="userTel"
-                          label="手机号">
-                        </el-table-column>
-                        <el-table-column
-                          label="操作"
-                          width="80">
-                          <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
-                          </template>
-                        </el-table-column>
-                    </el-table>
-                </el-collapse-item>
-            </template>
-            <template v-if="isSQGL">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="商圈管理员" name="5">
-                    <span class="link-btn" @click="addRole('roleSQGL')">新增</span>
-                    <el-table
-                        :data="roleList.roleSQGL"
                         border
                         style="width: 100%">
                         <el-table-column
@@ -348,35 +329,9 @@
             <template v-if="isWYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业管理员" name="6">
-                    <span class="link-btn" @click="addRole('roleWYGL')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('roleWYGL')">新增</span>
                     <el-table
                         :data="roleList.roleWYGL"
-                        border
-                        style="width: 100%">
-                        <el-table-column
-                          prop="userName"
-                          label="用户名">
-                        </el-table-column>
-                        <el-table-column
-                          prop="userTel"
-                          label="手机号">
-                        </el-table-column>
-                        <el-table-column
-                          label="操作"
-                          width="80">
-                          <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
-                          </template>
-                        </el-table-column>
-                    </el-table>
-                </el-collapse-item>
-            </template>
-            <template v-if="isWYJL">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="物业管理经理" name="7">
-                    <span class="link-btn" @click="addRole('roleWYJL')">新增</span>
-                    <el-table
-                        :data="roleList.roleWYJL"
                         border
                         style="width: 100%">
                         <el-table-column
@@ -400,7 +355,7 @@
             <template v-if="isZQCP">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="证券产品管理员" name="8">
-                    <span class="link-btn" @click="addRole('roleZQCP')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('roleZQCP')">新增</span>
                     <el-table
                         :data="roleList.roleZQCP"
                         border
@@ -485,7 +440,8 @@
                     enterpriseDepositLoanRatio: '',
                     enterpriseNplRatio: '',
                     enterpriseProvisionCoverage: '',
-                    enterpriseAssetsReturn: ''
+                    enterpriseAssetsReturn: '',
+                    unitChain: ''
                 },
                 isBase: false,
                 activeNames: ['1'],
@@ -519,7 +475,8 @@
                     roleZQCP: []
                 },
                 isAddRole: false,
-                addRoleData: {}
+                addRoleData: {},
+                hisUser: ''
             }
         },
         mounted () {
@@ -534,6 +491,9 @@
             this.getEnterpriseCreditLevel()
         },
         computed: {
+            isOperate () {
+                return this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain
+            },
             // 企业管理
             isQYGL () {
                 var type = this.base.enterpriseType
@@ -552,20 +512,8 @@
                 ]
                 return (typeIndustry && arr.indexOf(typeIndustry) > -1) || (type && arr.indexOf(type) > -1)
             },
-            // 商圈管理
-            isSQGL () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0']
-                return type && arr.indexOf(type) > -1
-            },
             // 物业管理
             isWYGL () {
-                var type = this.base.enterpriseType
-                var arr = ['finance_org_type_0']
-                return type && arr.indexOf(type) > -1
-            },
-            // 物业管理经理
-            isWYJL () {
                 var type = this.base.enterpriseType
                 var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
@@ -644,6 +592,7 @@
                         return
                     }
 
+                    this.hisUser = res.result.request
                     this.base = res.result.result
 
                     setTimeout(() => {

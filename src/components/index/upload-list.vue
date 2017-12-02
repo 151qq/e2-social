@@ -2,7 +2,7 @@
   <div class="imgs-box">
     <section class="img-box" v-for="(item, index) in imgLists">
       <img class="img-big" :src="item.link" @click="showImg">
-      <div>
+      <div v-if="isBtn">
         <img class="del-btn" @click="deleteImg(index)" src="../../assets/images/del-icon.png">
         <!-- <p>
           <img src="../../assets/images/pen-icon.png">
@@ -10,7 +10,7 @@
         </p> -->
       </div>
     </section>
-    <section class="img-btn">
+    <section v-if="isBtn" class="img-btn">
       <img class="img-big" src="../../assets/images/add-img.jpg">
       <input type="file" name="file" class="img-input" @change="postImg($event)">
     </section>
@@ -22,7 +22,7 @@ import interfaces from '../../assets/common/interfaces'
 import util from '../../assets/common/util'
 
 export default {
-    props: ['imgLists', 'type'],
+    props: ['imgLists', 'type', 'isBtn'],
     data() {
       return {
         imgList: []

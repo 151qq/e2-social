@@ -45,8 +45,7 @@
                         <el-date-picker
                                 class="input-box"
                                 v-model="base.productPublishTime"
-                                placeholder="选择日期"
-                                :picker-options="pickerPre">
+                                placeholder="选择日期">
                         </el-date-picker>
                     </section>
                     <section class="baseInput rightF">
@@ -54,8 +53,7 @@
                         <el-date-picker
                                 class="input-box"
                                 v-model="base.productEndTime"
-                                placeholder="选择日期"
-                                :picker-options="pickerPre">
+                                placeholder="选择日期">
                         </el-date-picker>
                     </section>
                     <section class="baseInput">
@@ -184,6 +182,7 @@
                                     :no-del="true"
                                     :bg-path="true"
                                     :is-house-id="true"
+                                    :is-operate="isOperate"
                                     :id-name="'productLogo'"
                                     @changeImg="changeImg"></upload>
                         </div>
@@ -195,6 +194,7 @@
                                     :no-del="true"
                                     :bg-path="true"
                                     :is-house-id="true"
+                                    :is-operate="isOperate"
                                     :id-name="'productArcUrl'"
                                     @changeImg="changeArcImg"></upload>
                         </div>
@@ -215,7 +215,8 @@
                     
                     <div class="clear"></div>
                 </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
@@ -278,7 +279,8 @@
                     </section>
                     <div class="clear"></div>
                 </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="savePayAndProfit('payAndProfitOne')">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
@@ -341,7 +343,8 @@
                     </section>
                     <div class="clear"></div>
                 </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="savePayAndProfit('payAndProfitTwo')">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
@@ -404,13 +407,15 @@
                     </section>
                     <div class="clear"></div>
                 </div>
-                <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                <el-button v-if="isOperate"
+                            class="save-btn" type="info" :plain="true" size="small" icon="document"
                            @click="savePayAndProfit('payAndProfitThree')">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
             <div class="line-bold"></div>
             <el-collapse-item class="formStyle" title="资产现金流" name="5">
-                <el-button class="add-btn" type="primary" size="small" @click="addHouseRate">新增</el-button>
+                <el-button v-if="isOperate" 
+                        class="add-btn" type="primary" size="small" @click="addHouseRate">新增</el-button>
                 
                 <template v-for="(item, index) in perList">
                     <div class="line-sper" v-if="index"></div>
@@ -469,6 +474,7 @@
                           width="80">
                         </el-table-column>
                         <el-table-column
+                            v-if="isOperate"
                             prop="fundLastLevelPayback"
                             label="操作"
                             width="50">
@@ -478,7 +484,7 @@
                         </el-table-column>
                     </el-table>
 
-                    <div class="btn-box">
+                    <div v-if="isOperate" class="btn-box">
                         <el-button type="danger"
                                     :plain="true" size="mini" icon="delete2"
                                     @click="deleteRow(item)">删除</el-button>
@@ -595,7 +601,8 @@
                     productEvaluationOrg: '',
                     productRatingOrg: '',
                     productCashflowConsultingOrg: '',
-                    productArcUrl: ''
+                    productArcUrl: '',
+                    unitChain: ''
                 },
                 productSalesOrgArr: [],
                 productEvaluationOrgArr:[],
@@ -667,7 +674,8 @@
                 agentPgList: [],
                 agentPjList: [],
                 agentYcList: [],
-                isId: false
+                isId: false,
+                hisUser: ''
             }
         },
         mounted () {
@@ -682,6 +690,11 @@
             this.getAgentPj()
             this.getInvests()
             this.getAgentYc()
+        },
+        computed: {
+            isOperate () {
+                return this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain
+            }
         },
         methods: {
             getAllData (data) {
@@ -806,6 +819,7 @@
                         return
                     }
 
+                    this.hisUser = res.result.request
                     var result = res.result.result
 
                     if (result.productSalesOrg) {

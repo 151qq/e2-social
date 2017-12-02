@@ -10,7 +10,8 @@
       <el-submenu class="one-box" v-for="(item1, index1) in treeData" :index="index1 + ''">
         <template slot="title">
           {{item1.label}}
-          <span @click.stop="setDir(item1, index1)" class="add-box">
+          <span v-if="isAddMall"
+                @click.stop="setDir(item1, index1)" class="add-box">
             +
           </span>
         </template>
@@ -18,12 +19,14 @@
           <template slot="title">
             {{item2.label}}
 
-            <span @click.stop="setData(item1, item2, index1, index2)" class="add-box">
+            <span v-if="isAddHouse && hisUser == item2.unitChain"
+                @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
-            <span @click.stop="deleteDir(item1, item2)"
+            <span
+                  @click.stop="deleteDir(item1, item2)"
                   class="delete-box el-icon-delete2"
-                  v-if="!item2.children.length || !item2.children"></span>
+                  v-if="isDelete && (!item2.children.length || !item2.children)"></span>
           </template>
           <el-menu-item v-for="(item3, index3) in item2.children"
               :index="index1 + '-' + index2 + '-' + index3">
@@ -37,6 +40,7 @@
                     <span class="title">{{item3.label}}</span>
                     <div>
                       <img
+                          v-if="isDelete"
                           @click.stop="delItem(item3.nodeCode)"
                           src="../../assets/images/delete-icon.png">
                     </div>
@@ -70,7 +74,9 @@
         isAdd: {
           value: false
         },
-        clickDir: {}
+        clickDir: {},
+        permission: '',
+        hisUser: ''
       }
     },
     components: {
@@ -122,6 +128,20 @@
         this.openeds = opens
       }
     },
+    computed: {
+      isAddMall () {
+        var arrs = this.permission.split('')
+        return arrs[1] == '1'
+      },
+      isAddHouse () {
+        var arrs = this.permission.split('')
+        return arrs[1] == '1'
+      },
+      isDelete () {
+        var arrs = this.permission.split('')
+        return arrs[2] == '1'
+      }
+    },
     methods: {
       loadList(type){
         var formData = {}
@@ -130,6 +150,10 @@
           interface: this.$route.name + 'Tree',
           data: formData
         }).then(res => {
+          this.permission = res.result.permission
+          
+          this.hisUser = res.result.request
+
           this.treeData = res.result.result
 
           if (type) {
@@ -148,6 +172,7 @@
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
             localStorage.setItem("cityCode", cityCode)
+            this.activeName = '0-0-0'
             this.$emit('getInfo', data)
           } else {
             let data = {
@@ -166,6 +191,7 @@
           interface: this.$route.name + 'Tree',
           data: {}
         }).then(res => {
+          this.permission = res.result.permission
           this.treeData = res.result.result
           var tree = {}
           if (!this.addData) {

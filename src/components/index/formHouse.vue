@@ -257,6 +257,7 @@
                             <span>标志图片</span>
                             <div class="input-box">
                                 <upload :path="base.housesImg"
+                                        :is-operate="isOperate"
                                         :no-del="true"
                                         :bg-path="true"
                                         :is-house-id="true"
@@ -289,14 +290,15 @@
                         
                         <div class="clear"></div>
                     </div>
-                    <el-button class="save-btn" type="info" :plain="true" size="small" icon="document"
+                    <el-button v-if="isOperate"
+                                class="save-btn" type="info" :plain="true" size="small" icon="document"
                                @click="saveBase">保存</el-button>
                     <div class="clear"></div>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业交易历史" name="2">
                     <router-link class="link-btn" target="_blank"
-                            :to="{name: 'changes', query: {id: base.id}}">明细</router-link>
+                            :to="{name: 'changes', query: {id: base.id, user: base.unitChain}}">明细</router-link>
                     <div class="over-box">
                         <section class="baseInput">
                             <span>交易日期</span>
@@ -412,14 +414,15 @@
                             <div class="abstract-num">剩余<span>{{houseTradeACodebstractNum}}</span>个字</div>
                         </section>
                         <div class="clear"></div>
-                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                        <el-button v-if="isOperate"
+                                    class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                    @click="saveChanges(true)">保存</el-button>
                     </div>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业租金历史" name="3">
                     <router-link class="link-btn" target="_blank"
-                            :to="{name: 'rents', query: {id: base.id}}">明细</router-link>
+                            :to="{name: 'rents', query: {id: base.id, user: base.unitChain}}">明细</router-link>
                     <div class="over-box">
                         <section class="baseInput">
                             <span>租赁日期</span>
@@ -448,14 +451,15 @@
                                         :min="0" :step="0.01" v-model="rents.priceB"></el-input>
                         </section>
                         <div class="clear"></div>
-                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                        <el-button v-if="isOperate"
+                                    class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                    @click="saveRents(true)">保存</el-button>
                     </div>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业估值历史" name="4">
                     <router-link class="link-btn" target="_blank"
-                            :to="{name: 'evalues', query: {id: base.id}}">明细</router-link>
+                            :to="{name: 'evalues', query: {id: base.id, user: base.unitChain}}">明细</router-link>
                     <div class="over-box">
                         <section class="baseInput">
                             <span>估值日期</span>
@@ -490,14 +494,15 @@
                                         :min="0" :step="0.01" v-model="evalues.capRate"></el-input>
                         </section>
                         <div class="clear"></div>
-                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                        <el-button v-if="isOperate"
+                                    class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                    @click="saveEvalues(true)">保存</el-button>
                     </div>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle editShow" title="物业空置率历史" name="5">
                     <router-link class="link-btn" target="_blank"
-                            :to="{name: 'rates', query: {id: base.id}}">明细</router-link>
+                            :to="{name: 'rates', query: {id: base.id, user: base.unitChain}}">明细</router-link>
                     <div class="over-box">
                         <section class="baseInput">
                             <span>填报日期</span>
@@ -514,23 +519,27 @@
                                         :min="0" :step="0.01" v-model="rates.rate"></el-input>
                         </section>
                         <div class="clear"></div>
-                        <el-button class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
+                        <el-button  v-if="isOperate"
+                                     class="save-sub-btn" type="info" :plain="true" size="small" icon="document"
                                    @click="saveRates(true)">保存</el-button>
                     </div>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业外观图片" name="6">
-                    <upload-list :img-lists="appearance" :type="'appearance'" @showimg="showImg"
+                    <upload-list :img-lists="appearance" :type="'appearance'" :is-btn="isOperate"
+                                    @showimg="showImg"
                                     @imgChange="imgListChange"></upload-list>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业公共区域图片" name="7">
-                    <upload-list :img-lists="public" :type="'publics'" @showimg="showImg"
+                    <upload-list :img-lists="public" :type="'publics'" :is-btn="isOperate"
+                                @showimg="showImg"
                                 @imgChange="imgListChange"></upload-list>
                 </el-collapse-item>
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业周围环境图片" name="8">
-                    <upload-list :img-lists="surround" :type="'surround'" @showimg="showImg"
+                    <upload-list :img-lists="surround" :type="'surround'" :is-btn="isOperate"
+                                @showimg="showImg"
                                 @imgChange="imgListChange"></upload-list>
                 </el-collapse-item>
             </el-collapse>
@@ -595,7 +604,8 @@
                     park: 0,
                     webSite: '',
                     housesDesc: '',
-                    bondCode: ''
+                    bondCode: '',
+                    unitChain: ''
                 },
                 isBase: false,
                 abstractNum: 1000,
@@ -686,7 +696,8 @@
                 housesList: [],
                 agentAList: [],
                 agentBList: [],
-                isId: false
+                isId: false,
+                hisUser: ''
             }
         },
         mounted () {
@@ -709,6 +720,11 @@
             }
             document.title = '写字楼'
             this.addBase = Object.assign({}, this.base)
+        },
+        computed: {
+          isOperate () {
+            return this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain
+          }
         },
         methods: {
             getAllData (data) {
@@ -836,6 +852,7 @@
                         res.result.result.base.owner = []
                     }
                     
+                    this.hisUser = res.result.request
 
                     var base = res.result.result.base
 

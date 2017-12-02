@@ -16,7 +16,7 @@
           <template slot="title">
             {{item2.dictKeyValue}}
 
-            <span @click.stop="setData(item1, item2, index1, index2)" class="add-box">
+            <span v-if="isAddInvest" @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
           </template>
@@ -32,6 +32,7 @@
                     <span class="title">{{item3.productCame}}</span>
                     <div>
                       <img
+                          v-if="isDelete"
                           @click.stop="delItem(item3.productCode)"
                           src="../../assets/images/delete-icon.png">
                     </div>
@@ -92,6 +93,16 @@
     mounted(){
       this.loadList()
     },
+    computed: {
+      isAddInvest () {
+        var arrs = this.permission.split('')
+        return arrs[1] == '1'
+      },
+      isDelete () {
+        var arrs = this.permission.split('')
+        return arrs[2] == '1'
+      }
+    },
     watch: {
       filterText (value) {
         var opens = []
@@ -143,6 +154,7 @@
           interface: 'orTree',
           data: formData
         }).then(res => {
+          this.permission = res.result.permission
           this.treeData = res.result.result
 
           if (type) {
@@ -159,6 +171,7 @@
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
             localStorage.setItem("dirCode", dirCode)
+            this.activeName = '0-0-0'
             this.$emit('getInfo', data)
           } else {
             let data = {
@@ -177,6 +190,7 @@
           interface: 'orTree',
           data: {}
         }).then(res => {
+          this.permission = res.result.permission
           this.treeData = res.result.result
           var tree = {
             index1: this.addData.index1,
