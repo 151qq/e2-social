@@ -436,37 +436,37 @@
                         style="width: 100%">
                         <el-table-column
                           prop="year"
-                          label="年">
+                          label="年(现金流 万)">
                         </el-table-column>
                         <el-table-column
                           prop="houseForcastCashflow"
-                          label="预测现金流"
-                          width="100">
+                          label="预测"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="houseGuaranteeCashflow"
-                          label="保底现金流"
-                          width="100">
+                          label="保底"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="houseRealCashflow"
-                          label="真实现金流"
-                          width="100">
+                          label="真实"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="fundPriorityLevelPayback"
                           label="优先级"
-                          width="70">
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="fundMiddleLevelPayback"
                           label="夹层"
-                          width="70">
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="fundLastLevelPayback"
                           label="劣后"
-                          width="70">
+                          width="80">
                         </el-table-column>
                         <el-table-column
                             prop="fundLastLevelPayback"
@@ -527,32 +527,32 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="预测现金流" :label-width="'100px'">
+                <el-form-item label="预测(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseForcastCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="保底现金流" :label-width="'100px'">
+                <el-form-item label="保底(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseGuaranteeCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="真实现金流" :label-width="'100px'">
+                <el-form-item label="真实(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseRealCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="优先级" :label-width="'100px'">
+                <el-form-item label="优先级(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundPriorityLevelPayback"></el-input>
                 </el-form-item>
-                <el-form-item label="夹层" :label-width="'100px'">
+                <el-form-item label="夹层(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundMiddleLevelPayback"></el-input>
                 </el-form-item>
-                <el-form-item label="劣后" :label-width="'100px'">
+                <el-form-item label="劣后(万)" :label-width="'100px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundLastLevelPayback"></el-input>
