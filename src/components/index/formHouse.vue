@@ -1,6 +1,6 @@
 <template>
     <div class="form-b">
-        <section v-show="isId">
+        <section v-if="isId">
             <el-collapse v-model="activeNames" @change="collChange">
                 <el-collapse-item class="formStyle" title="物业基本信息" name="1">
                     <div id="container"></div>
@@ -699,15 +699,11 @@
                 agentBList: [],
                 isId: false,
                 hisUser: '',
-                permission: ''
+                permission: '',
+                isFirst: true
             }
         },
         mounted () {
-            var map = new window.BMap.Map('container')
-            this.map = map
-            var point = new window.BMap.Point(116.409, 39.918)
-            map.centerAndZoom(point, 15)
-
             this.getTypes()
             this.getInvestors()
             this.getInvests()
@@ -735,6 +731,17 @@
                 if (!this.isId) {
                     return false
                 }
+
+                if (this.isFirst) {
+                    setTimeout(() => {
+                        var map = new window.BMap.Map('container')
+                        this.map = map
+                        var point = new window.BMap.Point(116.409, 39.918)
+                        map.centerAndZoom(point, 15)
+                    }, 0)
+                }
+
+                this.isFirst = false
 
                 this.permission = data.permission
                 
