@@ -19,7 +19,7 @@
           <template slot="title">
             {{item2.label}}
 
-            <span v-if="isAddHouse && hisUser == item2.unitChain"
+            <span v-if="(isAddHouse && hisUser == item2.unitChain) || isRoot"
                 @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>
@@ -129,6 +129,9 @@
       }
     },
     computed: {
+      isRoot () {
+        return this.permission == '111'
+      },
       isAddMall () {
         var arrs = this.permission.split('')
         return arrs[1] == '1'
@@ -166,7 +169,8 @@
             let cityCode = this.treeData[0].nodeCode
 
             let data = {
-              id: id
+              id: id,
+              permission: this.permission
             }
             // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
             localStorage.setItem("id", id)
@@ -222,7 +226,8 @@
           }
 
           let formData = {
-            id: newId
+            id: newId,
+            permission: this.permission
           }
           // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
           localStorage.setItem("id", newId)
@@ -333,7 +338,8 @@
         }
         this.activeName = curIndex
         var data = {
-          id: id
+          id: id,
+          permission: this.permission
         }
         // 设置页面ID，公编辑展示使用，防止直接输入地址相应错误
         localStorage.setItem("id", id)

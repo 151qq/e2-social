@@ -274,9 +274,36 @@
                            @click="saveBase">保存</el-button>
                 <div class="clear"></div>
             </el-collapse-item>
-            <template v-if="isQYGL">
+            <template v-if="isCJGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="企业管理员" name="3">
+                    <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_root')">新增</span>
+                    <el-table
+                        :data="roleList.enterprise_root"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="userLoginName"
+                          label="用户名">
+                        </el-table-column>
+                        <el-table-column
+                          prop="userMobile"
+                          label="手机号">
+                        </el-table-column>
+                        <el-table-column
+                          v-if="isOperate"
+                          label="操作"
+                          width="80">
+                          <template scope="scope">
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row, 'enterprise_root')"></i>
+                          </template>
+                        </el-table-column>
+                    </el-table>
+                </el-collapse-item>
+            </template>
+            <template v-if="isQYGL">
+                <div class="line-bold"></div>
+                <el-collapse-item class="formStyle" title="企业管理员" name="4">
                     <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_editor')">新增</span>
                     <el-table
                         :data="roleList.enterprise_editor"
@@ -446,11 +473,13 @@
                 roleList: {
                     enterprise_editor: [],
                     property_editor: [],
-                    stock_editor: []
+                    stock_editor: [],
+                    enterprise_root: []
                 },
                 isAddRole: false,
                 addRoleData: {},
-                hisUser: ''
+                hisUser: '',
+                permission: ''
             }
         },
         mounted () {
@@ -466,7 +495,14 @@
         },
         computed: {
             isOperate () {
-                return this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain
+                var isUser = (this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain)
+                return isUser || this.permission == '111'
+            },
+            // 企业超级管理员
+            isCJGL () {
+                var type = this.base.enterpriseType
+                var arr = ['finance_org_type_0']
+                return type && arr.indexOf(type) == -1
             },
             // 企业管理
             isQYGL () {
@@ -569,6 +605,8 @@
                 if (!this.isId) {
                     return false
                 }
+
+                this.permission = data.permission
 
                 this.typeKey = this.typeData[localStorage.getItem('dirCode')]
                 this.isBase = false

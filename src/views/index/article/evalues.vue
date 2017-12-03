@@ -100,7 +100,8 @@ export default {
                 capRate: '',
                 author: ''
             },
-            hisUser: ''
+            hisUser: '',
+            permission: ''
         }
     },
     mounted () {
@@ -109,7 +110,8 @@ export default {
     },
     computed: {
         isOperate () {
-            return this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user
+            var isUser = (this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user)
+            return isUser || this.permission == '111'
         }
     },
     methods: {
@@ -128,6 +130,7 @@ export default {
                     item.createDate = dateData[0]
                 })
 
+                this.permission = res.result.permission
                 this.hisUser = res.result.request
                 this.evalues = res.result.result.valuation
                 this.total = this.total ? Number(this.total) : 0

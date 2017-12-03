@@ -675,7 +675,8 @@
                 agentPjList: [],
                 agentYcList: [],
                 isId: false,
-                hisUser: ''
+                hisUser: '',
+                permission: ''
             }
         },
         mounted () {
@@ -693,7 +694,8 @@
         },
         computed: {
             isOperate () {
-                return this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain
+                var isUser = (this.hisUser && this.base.unitChain && this.hisUser == this.base.unitChain)
+                return isUser || this.permission == '111'
             }
         },
         methods: {
@@ -703,6 +705,7 @@
                     return false
                 }
                 
+                this.permission = data.permission
                 this.resetPayAndProfit()
                 this.isBase = false
                 this.getBase()

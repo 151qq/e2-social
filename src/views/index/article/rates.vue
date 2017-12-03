@@ -73,7 +73,8 @@ export default {
                 createDate: '',
                 vacancyRate: ''
             },
-            hisUser: ''
+            hisUser: '',
+            permission: ''
         }
     },
     mounted () {
@@ -82,7 +83,8 @@ export default {
     },
     computed: {
         isOperate () {
-            return this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user
+            var isUser = (this.hisUser && this.$route.query.user && this.hisUser == this.$route.query.user)
+            return isUser || this.permission == '111'
         }
     },
     methods: {
@@ -101,6 +103,7 @@ export default {
                     item.createDate = dateData[0] + '-' + dateData[1]
                 })
 
+                this.permission = res.result.permission
                 this.hisUser = res.result.request
                 this.rates = res.result.result
                 this.total = this.total ? Number(this.total) : 0
