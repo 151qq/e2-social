@@ -11,7 +11,6 @@
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
             <div class="r">
-                <div class="message-box">欢迎来到商房云管理平台。通过商房云管理平台。物业管理员可以创建、更新物业信息；企业管理员可以创建和管理企业信息；证券管理员可以创建和更新证券信息。请使用您的手机号和商房云管理平台密码登录。如果您无法登录，请主动联系商房云平台的运营经理，请其为您创建账号、设置初始化密码和相应的权限。</div>
                 <el-form class="login-box" :label-position="'left'" label-width="80px">
                     <el-form-item label="用户名称">
                         <el-input v-model="userLoginAccount"></el-input>
@@ -26,6 +25,7 @@
                         <el-button type="primary" @click="subBtn">登录</el-button>
                     </el-form-item>
                 </el-form>
+                <div class="message-box">欢迎来到商房云管理平台。通过商房云管理平台。物业管理员可以创建、更新物业信息；企业管理员可以创建和管理企业信息；证券管理员可以创建和更新证券信息。请使用您的手机号和商房云管理平台密码登录。如果您无法登录，请主动联系商房云平台的运营经理，请其为您创建账号、设置初始化密码和相应的权限。</div>
             </div>
         </div>
         <el-dialog
