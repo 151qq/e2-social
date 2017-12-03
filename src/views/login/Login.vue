@@ -22,7 +22,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="subBtn">登录</el-button>
+                        <el-button type="primary" @click="subBtn">平台登录</el-button>
                     </el-form-item>
                 </el-form>
                 <div class="message-box">欢迎来到商房云管理平台。通过商房云管理平台。物业管理员可以创建、更新物业信息；企业管理员可以创建和管理企业信息；证券管理员可以创建和更新证券信息。请使用您的手机号和商房云管理平台密码登录。如果您无法登录，请主动联系商房云平台的运营经理，请其为您创建账号、设置初始化密码和相应的权限。</div>
