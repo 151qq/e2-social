@@ -278,6 +278,10 @@ export default {
         findListByProductCode: platform + 'financeProductHouse/findListByProductCode.json',
         saveFundCashflow: platform + 'fundCashflow/saveOrUpdate.json',
 
-        checkHtdAndHdAndFpi: platform + 'enterprise/checkHtdAndHdAndFpi.json'
+        checkHtdAndHdAndFpi: platform + 'enterprise/checkHtdAndHdAndFpi.json',
+
+        getRolesAllType: platform + 'role/findRoleUserByRoleCode.json',
+        deleteRoleById: platform + 'role/deleteRoleUser.json',
+        addRoleByType: platform + 'role/setRoleUserByRoleCode.json'
     }
 }

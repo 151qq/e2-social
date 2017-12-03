@@ -7,7 +7,7 @@
       <router-link :to="{ name: 'mall'}">购物中心</router-link>
       <router-link :to="{ name: 'apartment'}">租赁公寓</router-link>
       <router-link :to="{ name: 'park'}">大型园区</router-link>
-      <router-link :to="{ name: 'report'}">报告发布</router-link>
+      <!-- <router-link :to="{ name: 'report'}">报告发布</router-link> -->
       <router-link :to="{ name: 'invest'}">企业信息</router-link>
       <router-link :to="{ name: 'security'}">证券产品</router-link>
     </div>

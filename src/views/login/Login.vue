@@ -11,7 +11,8 @@
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
             <div class="r">
-                <el-form :label-position="'left'" label-width="80px">
+                <div class="message-box">欢迎来到商房云管理平台。通过商房云管理平台。物业管理员可以创建、更新物业信息；企业管理员可以创建和管理企业信息；证券管理员可以创建和更新证券信息。请使用您的手机号和商房云管理平台密码登录。如果您无法登录，请主动联系商房云平台的运营经理，请其为您创建账号、设置初始化密码和相应的权限。</div>
+                <el-form class="login-box" :label-position="'left'" label-width="80px">
                     <el-form-item label="用户名称">
                         <el-input v-model="userLoginAccount"></el-input>
                     </el-form-item>
@@ -23,26 +24,6 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="subBtn">登录</el-button>
-                    </el-form-item>
-                </el-form>
-                
-                <div class="dased-border"></div>
-
-                <el-form :label-position="'left'" label-width="80px">
-                    <el-form-item label="公司名称">
-                        <el-input v-model="enterpriseCname"></el-input>
-                        <div class="message-box">
-                            请填写公司的工商注册名称，填写不正确或填写公司简称等都会影响贵公司体验的申请。
-                        </div>
-                    </el-form-item>
-                    <el-form-item label="申请人名">
-                        <el-input v-model="userCname"></el-input>
-                    </el-form-item>
-                    <el-form-item label="注册手机">
-                        <el-input v-model="userPhone"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="regBtn">申请体验</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -253,42 +234,6 @@
                     }
                     
                 });
-            },
-            regBtn(){
-
-                if (this.enterpriseCname == '') {
-                    this.$message.error('请输入公司名称')
-                    return;
-                }
-
-                if (this.userCname == '') {
-                    this.$message.error('请输入申请人')
-                    return;
-                }
-                if (this.userPhone == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.userPhone.trim())) {
-                    this.$message.error('请输入11位注册手机号')
-                    return;
-                }
-
-                var data = {
-                    enterpriseCname: this.enterpriseCname,
-                    enterpriseIndustry: this.enterpriseIndustry,
-                    userCname: this.userCname,
-                    userPhone: this.userPhone
-                }
-
-                util.request({
-                    method: 'post',
-                    interface: 'authentication',
-                    data: data
-                }).then((res) => {
-                    if (res.result.success == '1') {
-                        window.location.href = 'index.html#/'
-                    } else {
-                        this.$message.error(res.result.message)
-                    }
-                });
-
             }
         }
     }

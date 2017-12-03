@@ -277,50 +277,25 @@
             <template v-if="isQYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="企业管理员" name="3">
-                    <span v-if="isOperate" class="link-btn" @click="addRole('roleQYGL')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_editor')">新增</span>
                     <el-table
-                        :data="roleList.roleQYGL"
+                        :data="roleList.enterprise_editor"
                         border
                         style="width: 100%">
                         <el-table-column
-                          prop="userName"
+                          prop="userLoginName"
                           label="用户名">
                         </el-table-column>
                         <el-table-column
-                          prop="userTel"
+                          prop="userMobile"
                           label="手机号">
                         </el-table-column>
                         <el-table-column
+                          v-if="isOperate"
                           label="操作"
                           width="80">
                           <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
-                          </template>
-                        </el-table-column>
-                    </el-table>
-                </el-collapse-item>
-            </template>
-            <template v-if="isBGGL">
-                <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="报告管理员" name="4">
-                    <span v-if="isOperate" class="link-btn" @click="addRole('roleBGGL')">新增</span>
-                    <el-table
-                        :data="roleList.roleBGGL"
-                        border
-                        style="width: 100%">
-                        <el-table-column
-                          prop="userName"
-                          label="用户名">
-                        </el-table-column>
-                        <el-table-column
-                          prop="userTel"
-                          label="手机号">
-                        </el-table-column>
-                        <el-table-column
-                          label="操作"
-                          width="80">
-                          <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row, 'enterprise_editor')"></i>
                           </template>
                         </el-table-column>
                     </el-table>
@@ -329,24 +304,25 @@
             <template v-if="isWYGL">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="物业管理员" name="6">
-                    <span v-if="isOperate" class="link-btn" @click="addRole('roleWYGL')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('property_editor')">新增</span>
                     <el-table
-                        :data="roleList.roleWYGL"
+                        :data="roleList.property_editor"
                         border
                         style="width: 100%">
                         <el-table-column
-                          prop="userName"
+                          prop="userLoginName"
                           label="用户名">
                         </el-table-column>
                         <el-table-column
-                          prop="userTel"
+                          prop="userMobile"
                           label="手机号">
                         </el-table-column>
                         <el-table-column
+                          v-if="isOperate"
                           label="操作"
                           width="80">
                           <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row, 'property_editor')"></i>
                           </template>
                         </el-table-column>
                     </el-table>
@@ -355,24 +331,25 @@
             <template v-if="isZQCP">
                 <div class="line-bold"></div>
                 <el-collapse-item class="formStyle" title="证券产品管理员" name="8">
-                    <span v-if="isOperate" class="link-btn" @click="addRole('roleZQCP')">新增</span>
+                    <span v-if="isOperate" class="link-btn" @click="addRole('stock_editor')">新增</span>
                     <el-table
-                        :data="roleList.roleZQCP"
+                        :data="roleList.stock_editor"
                         border
                         style="width: 100%">
                         <el-table-column
-                          prop="userName"
+                          prop="userLoginName"
                           label="用户名">
                         </el-table-column>
                         <el-table-column
-                          prop="userTel"
+                          prop="userMobile"
                           label="手机号">
                         </el-table-column>
                         <el-table-column
+                          v-if="isOperate"
                           label="操作"
                           width="80">
                           <template scope="scope">
-                            <i class="el-icon-delete2" @click="deleteRole(scope.row)"></i>
+                            <i class="el-icon-delete2" @click="deleteRole(scope.row, 'stock_editor')"></i>
                           </template>
                         </el-table-column>
                     </el-table>
@@ -392,7 +369,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="isAddRole = false">取 消</el-button>
-                <el-button type="primary" @click="confirmAddRole(addRoleData)">确 定</el-button>
+                <el-button type="primary" @click="confirmAddRole">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -467,12 +444,9 @@
                 enterpriseCreditLevelList: [],
                 isId: false,
                 roleList: {
-                    roleQYGL: [],
-                    roleBGGL: [],
-                    roleSQGL: [],
-                    roleWYGL: [],
-                    roleWYJL: [],
-                    roleZQCP: []
+                    enterprise_editor: [],
+                    property_editor: [],
+                    stock_editor: []
                 },
                 isAddRole: false,
                 addRoleData: {},
@@ -499,18 +473,6 @@
                 var type = this.base.enterpriseType
                 var arr = ['finance_org_type_0']
                 return type && arr.indexOf(type) > -1
-            },
-            // 报告管理
-            isBGGL () {
-                var type = this.base.enterpriseType
-                var typeIndustry = this.base.enterpriseIndustry
-                var arr = [
-                    'finance_org_type_0',
-                    'propertys_agent_type_3',
-                    'propertys_agent_type_1',
-                    'propertys_agent_type_5'
-                ]
-                return (typeIndustry && arr.indexOf(typeIndustry) > -1) || (type && arr.indexOf(type) > -1)
             },
             // 物业管理
             isWYGL () {
@@ -544,19 +506,63 @@
             },
             addRole (typeKey) {
                 this.addRoleData = {
-                    roleType: typeKey,
+                    enterpriseCode: localStorage.getItem('id'),
+                    roleCode: typeKey,
                     userName: '',
                     userTel: ''
                 }
 
                 this.isAddRole = true
             },
-            confirmAddRole (item) {
-                this.roleList[item.roleType].push(item)
-                this.isAddRole = false
+            confirmAddRole () {
+                if (this.addRoleData.userTel.trim() == '' || !(/^1[3|4|5|8][0-9]\d{4,8}$/).test(this.addRoleData.userTel.trim())) {
+                    this.$message.error('请输入11位注册手机号')
+                    return
+                }
+
+                util.request({
+                    method: 'post',
+                    interface: 'addRoleByType',
+                    data: this.addRoleData
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.getRoles(this.addRoleData.roleCode)
+                        this.isAddRole = false
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
             },
-            deleteRole (item) {
-                alert('toDo ' + item.roleType)
+            getRoles (type) {
+                util.request({
+                    method: 'get',
+                    interface: 'getRolesAllType',
+                    data: {
+                        roleCode: type
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.roleList[type] = res.result.result
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
+            },
+            deleteRole (item, roleCode) {
+                util.request({
+                    method: 'post',
+                    interface: 'deleteRoleById',
+                    data: {
+                        roleCode: roleCode,
+                        userTel: item.userMobile
+                    }
+                }).then(res => {
+                    if (res.result.success == '1') {
+                        this.getRoles(roleCode)
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
+                })
             },
             getAllData (data) {
                 this.isId = data.id !== null
@@ -567,6 +573,9 @@
                 this.typeKey = this.typeData[localStorage.getItem('dirCode')]
                 this.isBase = false
                 this.getBase()
+                this.getRoles('enterprise_editor')
+                this.getRoles('property_editor')
+                this.getRoles('stock_editor')
 
                 if (this.timer) {
                     clearInterval(this.timer)

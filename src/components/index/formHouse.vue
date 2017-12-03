@@ -118,7 +118,7 @@
                         <section class="baseInput bigB">
                             <span>业主信息</span>
                             <el-select class="input-box"
-                                       v-model="base.owner"
+                                       v-model="ownerList"
                                        multiple
                                        name="owner"
                                        placeholder="请选择">
@@ -607,6 +607,7 @@
                     bondCode: '',
                     unitChain: ''
                 },
+                ownerList: [],
                 isBase: false,
                 abstractNum: 1000,
                 houseTradeACodebstractNum: 1000,
@@ -847,9 +848,9 @@
                     res.result.result.base.id = localStorage.getItem('id')
 
                     if (res.result.result.base.owner) {
-                        res.result.result.base.owner = res.result.result.base.owner.split(',')
+                        this.ownerList = res.result.result.base.owner.split(',')
                     } else {
-                        res.result.result.base.owner = []
+                        this.ownerList = []
                     }
                     
                     this.hisUser = res.result.request
@@ -970,8 +971,10 @@
                     return false
                 }
 
-                if (this.base.owner) {
-                    this.base.owner = this.base.owner.join(',')
+                if (this.ownerList.length) {
+                    this.base.owner = this.ownerList.join(',')
+                } else {
+                    this.base.owner = ''
                 }
 
                 util.request({

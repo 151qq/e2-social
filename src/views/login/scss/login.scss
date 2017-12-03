@@ -51,12 +51,17 @@ html, body, #app {
 
   .r {
     width: 360px;
+    height: 426px;
     background-color: #424458;
     float: right;
     overflow: hidden;
     box-sizing: border-box;
     padding: 30px 24px 20px;
     box-shadow: 0 0 10px 1px #1f1e1e;
+
+    .login-box {
+      margin-top: 30px;
+    }
 
     .el-form-item__label {
       color: #ffffff;
@@ -91,10 +96,9 @@ html, body, #app {
     }
 
     .message-box {
-      font-size: 12px;
+      font-size: 14px;
       color: #75778d;
-      line-height: 20px;
-      margin-top: 8px;
+      line-height: 26px;
     }
   }
 }
