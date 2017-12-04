@@ -37,7 +37,8 @@ export default {
           event: e,
           data: {
             fileCode: localStorage.getItem("id"),
-            catalogCode: this.type
+            catalogCode: this.type,
+            deleteUrl: ''
           }
         }
 

@@ -78,6 +78,7 @@ export default {
         if (this.isHouseId) {
           opotion.data = {}
           opotion.data.fileCode = localStorage.getItem('id')
+          opotion.data.deleteUrl = this.curPath
         }
 
         util.uploadFile(opotion).then(res => {

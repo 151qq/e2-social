@@ -45,7 +45,8 @@ export default {
           url: 'uploadArticleAreaImage',
           event: e,
           data: {
-            fileCode: localStorage.getItem('id')
+            fileCode: localStorage.getItem('id'),
+            deleteUrl: this.curPath
           }
         }
 
