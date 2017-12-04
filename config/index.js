@@ -43,7 +43,7 @@ module.exports = {
     // 112.126.90.50 192.168.2.103:8080/E2-Platform
     proxyTable: {
       '/e2-platform-api': {
-        target: 'http://192.168.2.102:8080',
+        target: 'http://192.168.2.108:8080/E2-Platform',
         changeOrigin: true,
         pathRewrite: {
           '^/e2-platform-api': ''
