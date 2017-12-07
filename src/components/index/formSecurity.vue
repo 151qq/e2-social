@@ -605,7 +605,7 @@
                     productIpoSite: '',
                     productPublishTime: '',
                     productMarketCode: '',
-                    productState: '',
+                    productState: '0',
                     productInfoLink: '',
                     productLogo: '',
                     productDesc: '',
