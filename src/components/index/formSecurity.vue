@@ -441,37 +441,53 @@
                         style="width: 100%">
                         <el-table-column
                           prop="year"
-                          label="年(现金流 万)">
+                          label="年"
+                          width="80">
                         </el-table-column>
                         <el-table-column
                           prop="houseForcastCashflow"
-                          label="预测"
-                          width="80">
+                          label="预测现金流(万)">
                         </el-table-column>
                         <el-table-column
                           prop="houseGuaranteeCashflow"
-                          label="保底"
-                          width="80">
+                          label="保底现金流(万)">
                         </el-table-column>
                         <el-table-column
                           prop="houseRealCashflow"
-                          label="真实"
+                          label="真实现金流(万)">
+                        </el-table-column>
+                        <el-table-column
+                            v-if="isOperate"
+                            prop="fundLastLevelPayback"
+                            label="操作"
+                            width="50">
+                            <template scope="scope">
+                                <i class="el-icon-delete2" @click="deleteCash(scope.row)"></i>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <el-table
+                        :data="item.cashflowList"
+                        class="cashBox"
+                        border
+                        style="width: 100%">
+                        <el-table-column
+                          prop="year"
+                          label="年"
                           width="80">
                         </el-table-column>
                         <el-table-column
                           prop="fundPriorityLevelPayback"
-                          label="优先级"
-                          width="80">
+                          label="优先级现金流(万)">
                         </el-table-column>
                         <el-table-column
                           prop="fundMiddleLevelPayback"
-                          label="夹层"
-                          width="80">
+                          label="夹层现金流(万)">
                         </el-table-column>
                         <el-table-column
                           prop="fundLastLevelPayback"
-                          label="劣后"
-                          width="80">
+                          label="劣后现金流(万)">
                         </el-table-column>
                         <el-table-column
                             v-if="isOperate"
@@ -594,7 +610,6 @@
                     productLogo: '',
                     productDesc: '',
                     productType: '',
-                    productHouseRate: [],
                     productEndTime: '',
                     productQuotation: '',
                     productSalesOrg: '',
@@ -1056,6 +1071,7 @@
                     data: [data]
                 }).then(res => {
                     if (res.result.success == '1') {
+                        this.isAddCash = false
                         this.findListByProductCode()
                     } else {
                         this.$message.error(res.result.message)
@@ -1107,7 +1123,7 @@
                     return false
                 }
 
-                if (this.publishTime && this.publishTime != this.base.productPublishTime && this.perList.length) {
+                if (this.publishTime != this.base.productPublishTime && this.perList.length) {
                     this.$message({
                         message: '要更改发行时间，请先清空资产现金流！',
                         type: 'warning'
@@ -1115,7 +1131,7 @@
                     return false
                 }
 
-                if (this.endTime && this.endTime != this.base.productEndTime && this.perList.length) {
+                if (this.endTime != this.base.productEndTime && this.perList.length) {
                     this.$message({
                         message: '要更改结算时间，请先清空资产现金流！',
                         type: 'warning'

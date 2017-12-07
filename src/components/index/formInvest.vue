@@ -276,7 +276,7 @@
             </el-collapse-item>
             <template v-if="isCJGL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="企业管理员" name="3">
+                <el-collapse-item class="formStyle" title="企业授权" name="3">
                     <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_root')">新增</span>
                     <el-table
                         :data="roleList.enterprise_root"
@@ -574,6 +574,7 @@
                     method: 'get',
                     interface: 'getRolesAllType',
                     data: {
+                        enterpriseCode: localStorage.getItem('id'),
                         roleCode: type
                     }
                 }).then(res => {
@@ -611,6 +612,7 @@
                 this.typeKey = this.typeData[localStorage.getItem('dirCode')]
                 this.isBase = false
                 this.getBase()
+                this.getRoles('enterprise_root')
                 this.getRoles('enterprise_editor')
                 this.getRoles('property_editor')
                 this.getRoles('stock_editor')
