@@ -951,18 +951,6 @@
                 this.base.productInfoLink = webSite.replace(/[\u4e00-\u9fa5]/g,'')
             },
             addHouseRate () {
-                var obj = {
-                    id: '',
-                    houseCname: '',
-                    financeProductCode: localStorage.getItem('id'),
-                    houseId: '',
-                    productHouseRate: ''
-                }
-
-                this.nowHouseData = obj
-                this.addHouse = true
-            },
-            addCashRow (index) {
                 if (!this.base.productPublishTime) {
                     this.$message({
                         message: '请先保存发行时间！',
@@ -979,6 +967,18 @@
                     return false
                 }
 
+                var obj = {
+                    id: '',
+                    houseCname: '',
+                    financeProductCode: localStorage.getItem('id'),
+                    houseId: '',
+                    productHouseRate: ''
+                }
+
+                this.nowHouseData = obj
+                this.addHouse = true
+            },
+            addCashRow (index) {
                 var yearList = []
                 var startYear = Number(this.base.productPublishTime.split('-')[0])
                 var endYear = Number(this.base.productEndTime.split('-')[0])
@@ -1035,9 +1035,9 @@
                 })
             },
             saveRow (row) {
-                if (!row.productHouseRate) {
+                if (!row.houseId) {
                     this.$message({
-                        message: '占比不能为空！',
+                        message: '楼盘不能为空！',
                         type: 'warning'
                     })
                     return false
