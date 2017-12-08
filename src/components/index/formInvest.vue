@@ -172,36 +172,38 @@
                         <el-input class="input-box" type="number" size="small" 
                                     :min="0" :step="0.01" v-model="base.enterpriseAssetLiabilityRatio"></el-input>
                     </section>
-                    <section class="baseInput">
-                        <span>资本充足率(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseCapitalAdequacyRatio"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>核心资本充足率(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseCoreCapitialAdequacyRatio"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>存贷款比(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseDepositLoanRatio"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>不良贷款率(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseNplRatio"></el-input>
-                    </section>
-                    <section class="baseInput">
-                        <span>拨备覆盖率(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseProvisionCoverage"></el-input>
-                    </section>
-                    <section class="baseInput rightF">
-                        <span>资产收益率(%)</span>
-                        <el-input class="input-box" type="number" size="small" 
-                                    :min="0" :step="0.01" v-model="base.enterpriseAssetsReturn"></el-input>
-                    </section>
+                    <template v-if="['propertys_investmen_type_3', 'propertys_investmen_type_4'].indexOf(base.enterpriseIndustry) > -1">
+                        <section class="baseInput">
+                            <span>资本充足率(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseCapitalAdequacyRatio"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>核心资本充足率(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseCoreCapitialAdequacyRatio"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>存贷款比(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseDepositLoanRatio"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>不良贷款率(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseNplRatio"></el-input>
+                        </section>
+                        <section class="baseInput">
+                            <span>拨备覆盖率(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseProvisionCoverage"></el-input>
+                        </section>
+                        <section class="baseInput rightF">
+                            <span>资产收益率(%)</span>
+                            <el-input class="input-box" type="number" size="small" 
+                                        :min="0" :step="0.01" v-model="base.enterpriseAssetsReturn"></el-input>
+                        </section>
+                    </template>
                     <section class="baseInput bigB">
                         <span>公司图片</span>
                         <div class="input-box">
@@ -276,8 +278,9 @@
             </el-collapse-item>
             <template v-if="isCJGL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="企业授权" name="3">
-                    <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_root')">新增</span>
+                <el-collapse-item class="formStyle" title="企业管理员授权" name="3">
+                    <span v-if="isOperate && !roleList.enterprise_root.length" class="link-btn"
+                            @click="addRole('enterprise_root')">新增</span>
                     <el-table
                         :data="roleList.enterprise_root"
                         border
