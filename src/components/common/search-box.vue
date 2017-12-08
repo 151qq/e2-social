@@ -54,7 +54,8 @@ export default {
         onSearchComplete (results) {
           // 更新调用记录
           _self.count++
-          _self.messDate = results.vr
+          console.log(results)
+          _self.messDate = results.vr ? results.vr : results.wr
         }
       }
       
