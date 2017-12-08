@@ -11,7 +11,7 @@
         <template slot="title">
           {{item1.dictKeyValue}}
 
-          <span v-if="isAddInvest" @click.stop="setData(item1, index1)" class="add-box">
+          <span v-if="isAddInvest && !(item1.dictKeyCode == 'finance_org_type_0' && item1.childNodes.length)" @click.stop="setData(item1, index1)" class="add-box">
           +
           </span>
         </template>

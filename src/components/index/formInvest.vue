@@ -306,7 +306,7 @@
             </template>
             <template v-if="isQYGL">
                 <div class="line-bold"></div>
-                <el-collapse-item class="formStyle" title="企业管理员" name="4">
+                <el-collapse-item class="formStyle" title="企业客户代表" name="4">
                     <span v-if="isOperate" class="link-btn" @click="addRole('enterprise_editor')">新增</span>
                     <el-table
                         :data="roleList.enterprise_editor"
