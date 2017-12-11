@@ -219,7 +219,8 @@
                     userLoginAccount: this.userLoginAccount,
                     userPassword: this.userPassword,
                     corpId: this.corpId,
-                    wechatName: this.wechatName
+                    wechatName: this.wechatName,
+                    platform: true
                 }
 
                 util.request({
