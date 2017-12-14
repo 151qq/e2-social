@@ -5,6 +5,16 @@
                     @mapChange="drawMap"
                     :city="city"
                     ref="searMap"></search-box>
+
+            <section class="baseInput bigB">
+                <span>楼盘简称</span>
+                <el-input
+                        class="input-box"
+                        placeholder="请输入内容"
+                        v-model="houseDatas.name">
+                </el-input>
+            </section>
+
             <div id="containerhouse"></div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="isAdd.value = false">取 消</el-button>
@@ -23,14 +33,10 @@ export default {
         return {
             houseDatas: {
                 name: '',
-                point: ''
+                point: '',
+                cname: ''
             },
             isSubmit: true
-        }
-    },
-    watch: {
-        isAdd () {
-            console.log(this.isAdd, 'isAdd')
         }
     },
     methods: {
@@ -49,7 +55,7 @@ export default {
         },
         drawMap (mapInfo) {
             this.houseDatas.point = mapInfo.point.lat + ',' + mapInfo.point.lng
-            this.houseDatas.name = mapInfo.title
+            this.houseDatas.cname = mapInfo.title
             this.houseDatas.address = mapInfo.address
             var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
             this.map.clearOverlays()
@@ -60,14 +66,22 @@ export default {
         confirmHandle () {
             if (this.houseDatas.name == '') {
                 this.$message({
-                  message: '楼盘名称不能为空！',
+                  message: '楼盘简称不能为空！',
                   type: 'warning'
                 })
                 return false
             }
             if (this.houseDatas.name.length > 25) {
                 this.$message({
-                  message: '楼盘名称最多25个字！',
+                  message: '楼盘简称最多25个字！',
+                  type: 'warning'
+                })
+                return false
+            }
+
+            if (this.houseDatas.cname == '') {
+                this.$message({
+                  message: '楼盘名称不能为空！',
                   type: 'warning'
                 })
                 return false
@@ -117,6 +131,37 @@ export default {
         width: 640px;
         height: 180px;
         margin: 0 0 15px;
+    }
+    .baseInput {
+        float: left;
+        margin-bottom: 20px;
+
+        &>span {
+            float: left;
+            width: 65px;
+            font-size: 14px;
+            color: #1F2D3D;
+            line-height: 36px;
+        }
+
+        .input-box {
+            float: left;
+            width: 235px;
+
+            input {
+                height: 36px;
+            }
+        }
+    }
+
+    .bigB {
+        .input-box {
+            width: 575px;
+        }
+    }
+
+    .clear {
+        clear: both;
     }
 }
 </style>

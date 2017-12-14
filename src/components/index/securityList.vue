@@ -43,12 +43,12 @@
       </el-submenu>
     </el-menu>
 
-    <el-dialog title="添加证券" :visible.sync="isAddTreeTwo">
+    <el-dialog title="资产管理产品" :visible.sync="isAddTreeTwo">
       <el-form :label-position="'left'" :model="addFormOne" label-width="80px">
-        <el-form-item label="证券名称">
+        <el-form-item label="产品名称">
             <el-input v-model="addFormOne.title" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="证券代码">
+        <el-form-item label="产品代码">
             <el-input v-model="addFormOne.code" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>

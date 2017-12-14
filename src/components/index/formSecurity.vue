@@ -5,7 +5,7 @@
                 <div class="form-box">
                     <div class="clear"></div>
                     <section class="baseInput bigB">
-                        <span>证券名称</span>
+                        <span>产品名称</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -32,7 +32,7 @@
                         </el-select>
                     </section>
                     <section class="baseInput rightF">
-                        <span>证券代码</span>
+                        <span>产品代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -225,11 +225,11 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>分层</span>
+                        <span>产品名称</span>
                         <el-input
                                 class="input-box"
-                                placeholder="优先级"
-                                :disabled="true">
+                                placeholder="请输入内容"
+                                v-model="payAndProfitOne.fundLevelCname">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -239,12 +239,11 @@
                                     v-model="payAndProfitOne.fundLevelRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>证券代码</span>
+                        <span>产品代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                :disabled="true"
-                                v-model="payAndProfitOne.fundLevelCode">
+                                v-model="payAndProfitOne.fundLevelSku">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -289,11 +288,11 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>分层</span>
+                        <span>产品名称</span>
                         <el-input
                                 class="input-box"
-                                placeholder="夹层"
-                                :disabled="true">
+                                placeholder="请输入内容"
+                                v-model="payAndProfitTwo.fundLevelCname">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -303,12 +302,11 @@
                                     v-model="payAndProfitTwo.fundLevelRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>证券代码</span>
+                        <span>产品代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                :disabled="true"
-                                v-model="payAndProfitTwo.fundLevelCode">
+                                v-model="payAndProfitTwo.fundLevelSku">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -353,11 +351,11 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>分层</span>
+                        <span>产品名称</span>
                         <el-input
                                 class="input-box"
-                                placeholder="劣后级"
-                                :disabled="true">
+                                placeholder="请输入内容"
+                                v-model="payAndProfitThree.fundLevelCname">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -371,8 +369,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                :disabled="true"
-                                v-model="payAndProfitThree.fundLevelCode">
+                                v-model="payAndProfitThree.fundLevelSku">
                         </el-input>
                     </section>
                     <section class="baseInput rightF">
@@ -479,15 +476,15 @@
                         </el-table-column>
                         <el-table-column
                           prop="fundPriorityLevelPayback"
-                          label="优先级现金流(万)">
+                          label="优先级回报(万)">
                         </el-table-column>
                         <el-table-column
                           prop="fundMiddleLevelPayback"
-                          label="夹层现金流(万)">
+                          label="夹层回报(万)">
                         </el-table-column>
                         <el-table-column
                           prop="fundLastLevelPayback"
-                          label="劣后现金流(万)">
+                          label="劣后回报(万)">
                         </el-table-column>
                         <el-table-column
                             v-if="isOperate"
@@ -536,7 +533,7 @@
 
         <el-dialog title="添加资产现金流" :visible.sync="isAddCash">
             <el-form class="form-cash" :label-position="'left'">
-                <el-form-item label="年" :label-width="'100px'">
+                <el-form-item label="年" :label-width="'110px'">
                     <el-select class="table-input-box"
                                v-model="cashData.year"
                                name="investor"
@@ -549,32 +546,32 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="预测(万)" :label-width="'100px'">
+                <el-form-item label="预测现金流(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseForcastCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="保底(万)" :label-width="'100px'">
+                <el-form-item label="保底现金流(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseGuaranteeCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="真实(万)" :label-width="'100px'">
+                <el-form-item label="真实现金流(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.houseRealCashflow"></el-input>
                 </el-form-item>
-                <el-form-item label="优先级(万)" :label-width="'100px'">
+                <el-form-item label="优先级回报(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundPriorityLevelPayback"></el-input>
                 </el-form-item>
-                <el-form-item label="夹层(万)" :label-width="'100px'">
+                <el-form-item label="夹层回报(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundMiddleLevelPayback"></el-input>
                 </el-form-item>
-                <el-form-item label="劣后(万)" :label-width="'100px'">
+                <el-form-item label="劣后回报(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
                             size="small"  :min="0" :step="0.01"
                         v-model="cashData.fundLastLevelPayback"></el-input>
@@ -655,7 +652,10 @@
                 cashData: {},
                 yearsData: [],
                 payAndProfitOne: {
+                    fundLevelType: 'fund_level_1',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -665,7 +665,10 @@
                     fundLevelWeightingPeriod: ''
                 },
                 payAndProfitTwo: {
+                    fundLevelType: 'fund_level_2',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -675,7 +678,10 @@
                     fundLevelWeightingPeriod: ''
                 },
                 payAndProfitThree: {
+                    fundLevelType: 'fund_level_3',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -735,7 +741,10 @@
             },
             resetPayAndProfit () {
                 this.payAndProfitOne = {
+                    fundLevelType: 'fund_level_1',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -745,7 +754,10 @@
                     fundLevelWeightingPeriod: ''
                 }
                 this.payAndProfitTwo = {
+                    fundLevelType: 'fund_level_2',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -755,7 +767,10 @@
                     fundLevelWeightingPeriod: ''
                 }
                 this.payAndProfitThree = {
+                    fundLevelType: 'fund_level_3',
                     fundLevelCode: '',
+                    fundLevelCname: '',
+                    fundLevelSku: '',
                     fundLevelRatio: '',
                     financeProductCode: localStorage.getItem('id'),
                     fundLevelResidualPrincipal: '',
@@ -870,18 +885,6 @@
                         this.findByProductInfo()
                         this.findListByProductCode()
                         this.isBase = true
-                        if (!this.payAndProfitOne.id) {
-                            this.payAndProfitOne.fundLevelCode = this.base.productMarketCode + '1'
-                        }
-
-                        if (!this.payAndProfitTwo.id) {
-                            this.payAndProfitTwo.fundLevelCode = this.base.productMarketCode + '2'
-                        }
-
-                        if (!this.payAndProfitThree.id) {
-                            this.payAndProfitThree.fundLevelCode = this.base.productMarketCode + '3'
-                        }
-
 
                         // 保存时间
                         if (this.base.productPublishTime) {
@@ -933,11 +936,11 @@
                 }).then(res => {
                     if (res.result.success == '1') {
                         res.result.result.forEach((item) => {
-                            if (item.fundLevelCode == this.base.productMarketCode + '1') {
+                            if (item.fundLevelType == 'fund_level_1') {
                                 this.payAndProfitOne = item
-                            } else if (item.fundLevelCode == this.base.productMarketCode + '2') {
+                            } else if (item.fundLevelType == 'fund_level_2') {
                                 this.payAndProfitTwo = item
-                            } else if (item.fundLevelCode == this.base.productMarketCode + '3') {
+                            } else if (item.fundLevelType == 'fund_level_3') {
                                 this.payAndProfitThree = item
                             }
                         })
@@ -1022,10 +1025,29 @@
                 })
             },
             savePayAndProfit (type) {
+                var data = this[type]
+
+                if (!data.fundLevelCname) {
+                    this.$message({
+                        message: '产品名称不能为空！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+                if (!data.fundLevelSku) {
+                    this.$message({
+                        message: '产品代码不能为空！',
+                        type: 'warning'
+                    })
+                    return false
+                }
+
+
                 util.request({
                     method: 'post',
                     interface: 'saveOrUpdate',
-                    data: this[type]
+                    data: data
                 }).then(res => {
                     if (res.result.success == '1') {
                         this.findByProductInfo()

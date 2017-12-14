@@ -4,13 +4,22 @@
             <el-collapse v-model="activeNames" @change="collChange">
                 <el-collapse-item class="formStyle" title="物业基本信息" name="1">
                     <div id="container"></div>
-                    <section class="baseInput bigB">
+                    <section class="baseInput">
                         <span>楼盘名字</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
                                 :disabled="true"
-                                v-model="base.name">
+                                v-model="base.housesCname">
+                        </el-input>
+                    </section>
+                    <section class="baseInput rightF">
+                        <span>楼盘简称</span>
+                        <el-input
+                                class="input-box"
+                                placeholder="请输入内容"
+                                v-model="base.name"
+                                @blur="validateHouseCname">
                         </el-input>
                     </section>
                     <div class="form-box">
@@ -572,6 +581,7 @@
                 base: {
                     id: '',
                     name: '',
+                    housesCname: '',
                     point: {
                         lng: '',
                         lat: ''
@@ -580,7 +590,6 @@
                     mall: '',
                     address: '',
                     bondType: '',
-                    logisticsType: 'house_type1',
                     level: '',
                     massif: '',
                     year: 0,
@@ -700,7 +709,8 @@
                 isId: false,
                 hisUser: '',
                 permission: '',
-                isFirst: true
+                isFirst: true,
+                isSaveBase: true
             }
         },
         mounted () {
@@ -746,6 +756,7 @@
                 this.permission = data.permission
                 
                 this.isBase = false
+                this.isSaveBase = true
                 this.getBase()
                 this.getAppearance()
                 this.getPublic()
@@ -760,6 +771,34 @@
                 // }, 180000)
                 
                 this.bigImgs = []
+            },
+            validateHouseCname () {
+                if (this.base.name == '') {
+                    return false
+                }
+
+                util.request({
+                  method: 'post',
+                  interface: 'validateHousesName',
+                  data: {
+                    name: this.base.name
+                  }
+                }).then(res => {
+                  if (res.result.success == '1') {
+                    if (res.result.result) {
+                        this.isSaveBase = true
+                    } else {
+                        this.isSaveBase = false
+                        this.$message({
+                          message: '已存在该楼盘简称，不能重复添加！',
+                          type: 'warning'
+                        })
+                    }
+                  } else {
+                    this.$message.error(res.result.message)
+                  }
+                  this.isSubmit = true
+                })
             },
             getInvests () {
                 util.request({
@@ -972,6 +1011,14 @@
                     id: localStorage.getItem("id"),
                     type: 'base',
                     data: this.base
+                }
+
+                if (!this.isSaveBase) {
+                    this.$message({
+                      message: '已存在该楼盘简称，不能重复添加！',
+                      type: 'warning'
+                    })
+                    return false
                 }
 
                 if (this.base.benchmarks.length > 3) {
@@ -1248,16 +1295,17 @@
                     this.getMalls()
                     this.houseData = {
                         name: '',
+                        cname: '',
                         pointer: {}
                     }
                     this.$refs.addHouse.initMap()
                 }, 0)
             },
             addHouse (data) {
-                this.addBase.name = data.name
+                this.addBase.name = data.cname
+                this.addBase.housesCname = data.name
                 this.addBase.point = data.point
                 this.addBase.address = data.address
-                this.addBase.logisticsType = 'house_type1'
 
                 var formData = {
                     type: 'base',
@@ -1270,12 +1318,6 @@
                     data: formData
                 }).then(res => {
                     localStorage.setItem("id", res.result.result.id)
-                    var obj = {
-                        id: '',
-                        title: this.base.name,
-                        html5CatalogCode: res.result.result.id,
-                        isHouse: true
-                    }
                     this.isAdd.value = false
                     this.$parent.$refs.listBox.reloadList(res.result.result.id)
                 })
@@ -1307,7 +1349,7 @@
                         lng: mapInfo.point.lng,
                         lat: mapInfo.point.lat
                     }
-                    this.base.name = mapInfo.title
+                    this.base.housesCname = mapInfo.title
                     var point = new window.BMap.Point(mapInfo.point.lng, mapInfo.point.lat)
                 } else {
                     var pointData = this.base.point.split(',')
