@@ -19,7 +19,7 @@
           <template slot="title">
             {{item2.label}}
 
-            <span v-if="(isAddHouse && hisUser == item2.unitChain) || isRoot"
+            <span 
                 @click.stop="setData(item1, item2, index1, index2)" class="add-box">
             +
             </span>

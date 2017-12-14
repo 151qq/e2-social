@@ -558,7 +558,6 @@
         </section>
         <add-house :is-add="isAdd"
                 :city="houseCity"
-                :house-data="houseData"
                 @addHouse="addHouse"
                 ref="addHouse"></add-house>
     </div>
@@ -578,6 +577,7 @@
         data () {
             return {
                 productType: '',
+                oldName: '',
                 base: {
                     id: '',
                     name: '',
@@ -696,10 +696,6 @@
                 isAdd: {
                     value: false
                 },
-                houseData: {
-                    name: '',
-                    pointer: {}
-                },
                 timer: null,
                 isStar: false,
                 investList: [],
@@ -773,7 +769,7 @@
                 this.bigImgs = []
             },
             validateHouseCname () {
-                if (this.base.name == '') {
+                if (this.base.name == '' || this.base.name.trim() == this.oldName) {
                     return false
                 }
 
@@ -797,7 +793,6 @@
                   } else {
                     this.$message.error(res.result.message)
                   }
-                  this.isSubmit = true
                 })
             },
             getInvests () {
@@ -904,6 +899,7 @@
                     }
                     
                     this.hisUser = res.result.request
+                    this.oldName = res.result.result.base.name
 
                     var base = res.result.result.base
 
@@ -1012,6 +1008,8 @@
                     type: 'base',
                     data: this.base
                 }
+
+                formData.data.houseCname = this.base.housesCname
 
                 if (!this.isSaveBase) {
                     this.$message({
@@ -1293,17 +1291,12 @@
                 this.isAdd.value = true
                 setTimeout(() => {
                     this.getMalls()
-                    this.houseData = {
-                        name: '',
-                        cname: '',
-                        pointer: {}
-                    }
                     this.$refs.addHouse.initMap()
                 }, 0)
             },
             addHouse (data) {
-                this.addBase.name = data.cname
-                this.addBase.housesCname = data.name
+                this.addBase.name = data.name
+                this.addBase.houseCname = data.cname
                 this.addBase.point = data.point
                 this.addBase.address = data.address
 

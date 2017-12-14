@@ -28,7 +28,7 @@ import util from '../../assets/common/util'
 import searchBox from '../common/search-box.vue'
 
 export default {
-    props: ['isAdd', 'city', 'houseData'],
+    props: ['isAdd', 'city'],
     data () {
         return {
             houseDatas: {
@@ -42,6 +42,11 @@ export default {
     methods: {
         initMap () {
             this.$refs.searMap.resetKey()
+            this.houseDatas = {
+                name: '',
+                point: '',
+                cname: ''
+            }
             this.isSubmit = true
             
             if (this.map) {
