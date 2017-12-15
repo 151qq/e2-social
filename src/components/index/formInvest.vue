@@ -62,7 +62,7 @@
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
-                                v-model="base.enterpriseCode">
+                                v-model="base.enterpriseLincenseCode">
                         </el-input>
                     </section>
                     <section class="baseInput">
@@ -419,6 +419,7 @@
                     enterpriseCname: '',
                     enterpriseNameReg: '',
                     enterpriseCode: '',
+                    enterpriseLincenseCode: '',
                     enterpriseOpenTime: '',
                     enterpriseType: '',
                     enterpriseLevel: '',
