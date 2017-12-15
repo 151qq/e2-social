@@ -1038,7 +1038,12 @@
                     interface: 'houseInfo',
                     data: formData
                 }).then(res => {
-                    this.$parent.$refs.listBox.loadList('reload')
+                    if (res.result.success == '1') {
+                        this.oldName = this.base.name
+                        this.$parent.$refs.listBox.loadList('reload')
+                    } else {
+                        this.$message.error(res.result.message)
+                    }
                 })
             },
             formDataDate (str) {
