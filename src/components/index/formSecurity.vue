@@ -224,7 +224,7 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>产品名称</span>
+                        <span>证券名称</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -238,7 +238,7 @@
                                     v-model="payAndProfitOne.fundLevelRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>产品代码</span>
+                        <span>证券代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -272,7 +272,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @input="yearCheck('payAndProfitOne')"
+                                    :min="0" :step="0.01" @input="yearCheck('payAndProfitOne')"
                                     v-model="payAndProfitOne.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
@@ -287,7 +287,7 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>产品名称</span>
+                        <span>证券名称</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -301,7 +301,7 @@
                                     v-model="payAndProfitTwo.fundLevelRatio"></el-input>
                     </section>
                     <section class="baseInput">
-                        <span>产品代码</span>
+                        <span>证券代码</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -335,7 +335,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @input="yearCheck('payAndProfitTwo')"
+                                    :min="0" :step="0.01" @input="yearCheck('payAndProfitTwo')"
                                     v-model="payAndProfitTwo.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
@@ -350,7 +350,7 @@
                 <div class="form-big-box">
                     <div class="clear"></div>
                     <section class="baseInput">
-                        <span>产品名称</span>
+                        <span>证券名称</span>
                         <el-input
                                 class="input-box"
                                 placeholder="请输入内容"
@@ -398,7 +398,7 @@
                     <section class="baseInput rightF">
                         <span>加权年限</span>
                         <el-input class="input-box" type="number" size="small" 
-                                    :min="0" @input="yearCheck('payAndProfitThree')"
+                                    :min="0" :step="0.01" @input="yearCheck('payAndProfitThree')"
                                     v-model="payAndProfitThree.fundLevelWeightingPeriod"></el-input>
                     </section>
                     <div class="clear"></div>
