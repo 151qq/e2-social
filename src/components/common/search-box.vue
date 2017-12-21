@@ -56,7 +56,7 @@ export default {
           // 更新调用记录
           _self.count++
           console.log(results)
-          _self.messDate = results.vr ? results.vr : results.wr
+          _self.messDate = results.yr
         }
       }
       
