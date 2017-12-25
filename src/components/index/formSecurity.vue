@@ -474,6 +474,10 @@
                           width="80">
                         </el-table-column>
                         <el-table-column
+                          prop="fundEvaluation"
+                          label="估值(万)">
+                        </el-table-column>
+                        <el-table-column
                           prop="fundPriorityLevelPayback"
                           label="优先级回报(万)">
                         </el-table-column>
@@ -544,6 +548,11 @@
                                 :value="item">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="估值(万)" :label-width="'110px'">
+                  <el-input class="table-input-box" type="number"
+                            size="small"  :min="0" :step="0.01"
+                        v-model="cashData.fundEvaluation"></el-input>
                 </el-form-item>
                 <el-form-item label="预测现金流(万)" :label-width="'110px'">
                   <el-input class="table-input-box" type="number"
@@ -995,6 +1004,7 @@
                     houseId: this.perList[index].houseId,
                     houseForcastCashflow: '',
                     year: '',
+                    fundEvaluation: '',
                     houseGuaranteeCashflow: '',
                     houseRealCashflow: '',
                     fundPriorityLevelPayback: '',
@@ -1222,7 +1232,7 @@
                     method: 'get',
                     interface: 'findEntByEntType',
                     data: {
-                        enterpriseTypes: 'propertys_investmen_type_1,propertys_investmen_type_2'
+                        enterpriseTypes: 'propertys_investmen_type_1,propertys_investmen_type_2,propertys_investmen_type_3,propertys_investmen_type_6'
                     }
                 }).then(res => {
                     this.investList = res.result.result
